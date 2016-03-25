@@ -18,6 +18,14 @@ public class ParagonHero {
     }
     
     /**
+     * Returns the hero name
+     * @return string
+     */
+    public String getName() {
+        return this.heroName;
+    }
+    
+    /**
      * Grabs an array of affinities in string format
      * @return string array
      */

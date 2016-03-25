@@ -1,6 +1,8 @@
 
 package com.lyonsdensoftware.paragon;
 
+import java.nio.file.Paths;
+
 /**
  *
  * @author Joshua Lyons
@@ -8,6 +10,7 @@ package com.lyonsdensoftware.paragon;
 public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     
     private ParagonDeck masterDeck;                 // Holds a reference to the master deck
+    private ParagonHero myHero;                     // Holds a reference to the selected hero
 
     /**
      * Creates new form ParagonDeckBuilderMain
@@ -15,10 +18,28 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     public ParagonDeckBuilderMain() {
         initComponents();
         
-        // Create the master deck
-        masterDeck = new ParagonDeck(true);
+        // Create the default Hero
+        this.myHero = new ParagonHero("Default");
         
-        //System.out.println(masterDeck.getCards()[1].getCardName());
+        // Create the master deck
+        this.masterDeck = new ParagonDeck(true);
+        
+        // Refresh the gui
+        this.refreshGui();
+    }
+    
+    /**
+     * Refreshes the gui based off the variables
+     */
+    public void refreshGui() {
+        
+        // Set the hero button image to the correct image
+        String imgPath = Paths.get("./Art/Heroes/" + 
+                this.myHero.getName() + ".png").toString();
+        
+        this.btn_HeroSelect.setIcon(new StretchIcon(imgPath));
+        
+        
     }
 
     /**
@@ -30,21 +51,40 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        btn_HeroSelect = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btn_HeroSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_HeroSelectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 573, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(1125, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 424, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(776, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_HeroSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_HeroSelectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_HeroSelectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -82,5 +122,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_HeroSelect;
+    private javax.swing.JPopupMenu jPopupMenu1;
     // End of variables declaration//GEN-END:variables
 }
