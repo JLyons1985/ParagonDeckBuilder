@@ -7,7 +7,7 @@
 <Stats.Durability>10</Stats.Durability>
 <Stats.Mobility>5</Stats.Mobility>
 <Stats.Difficulty>3</Stats.Difficulty>
-<MaxLevel>MaxLevel</MaxLevel>
+<MaxLevel>15</MaxLevel>
 <XPToLevel>
 <lvl1>100</lvl1>
 <lvl2>118.182</lvl2>
@@ -45,7 +45,7 @@
 <lvl2>65</lvl2>
 <lvl3>76.818</lvl3>
 <lvl4>90.785</lvl4>
-<lvl5>107.292</lvl5>
+<lvl5>107.291</lvl5>
 <lvl6>126.799</lvl6>
 <lvl7>149.853</lvl7>
 <lvl8>177.1</lvl8>

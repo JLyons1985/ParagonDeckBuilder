@@ -1,1401 +1,1401 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Dekker>
-<Affinity>Affinity.Growth</Affinity>
-<Affinity>Affinity.Order</Affinity>
-<Stats.BasicAttack>1</Stats.BasicAttack>
-<Stats.AbilityAttack>6</Stats.AbilityAttack>
-<Stats.Durability>4</Stats.Durability>
-<Stats.Mobility>6</Stats.Mobility>
-<Stats.Difficulty>5</Stats.Difficulty>
-<MaxLevel>MaxLevel</MaxLevel>
-<XPToLevel>
-<lvl1>100</lvl1>
-<lvl2>118.182</lvl2>
-<lvl3>139.669</lvl3>
-<lvl4>165.064</lvl4>
-<lvl5>195.076</lvl5>
-<lvl6>230.544</lvl6>
-<lvl7>272.461</lvl7>
-<lvl8>321.999</lvl8>
-<lvl9>380.544</lvl9>
-<lvl10>449.734</lvl10>
-<lvl11>531.504</lvl11>
-<lvl12>628.141</lvl12>
-<lvl13>742.349</lvl13>
-<lvl14>877.321</lvl14>
-<lvl15>1036.834</lvl15>
-<lvl16>1225.35</lvl16>
-<lvl17>1448.14</lvl17>
-<lvl18>1711.439</lvl18>
-<lvl19>2022.609</lvl19>
-<lvl20>2390.356</lvl20>
-<lvl21>2824.967</lvl21>
-<lvl22>3338.597</lvl22>
-<lvl23>3945.615</lvl23>
-<lvl24>4662.999</lvl24>
-<lvl25>5510.817</lvl25>
-<lvl26>6512.784</lvl26>
-<lvl27>7696.927</lvl27>
-<lvl28>9096.368</lvl28>
-<lvl29>10750.25</lvl29>
-<lvl30>12704.84</lvl30>
-</XPToLevel>
-<XPBounty>
-<lvl1>55</lvl1>
-<lvl2>65</lvl2>
-<lvl3>76.818</lvl3>
-<lvl4>90.785</lvl4>
-<lvl5>107.292</lvl5>
-<lvl6>126.799</lvl6>
-<lvl7>149.853</lvl7>
-<lvl8>177.1</lvl8>
-<lvl9>209.299</lvl9>
-<lvl10>247.354</lvl10>
-<lvl11>292.327</lvl11>
-<lvl12>345.478</lvl12>
-<lvl13>408.292</lvl13>
-<lvl14>482.527</lvl14>
-<lvl15>570.259</lvl15>
-<lvl16>673.942</lvl16>
-<lvl17>796.477</lvl17>
-<lvl18>941.291</lvl18>
-<lvl19>1112.435</lvl19>
-<lvl20>1314.696</lvl20>
-<lvl21>1553.732</lvl21>
-<lvl22>1836.228</lvl22>
-<lvl23>2170.088</lvl23>
-<lvl24>2564.65</lvl24>
-<lvl25>3030.95</lvl25>
-<lvl26>3582.031</lvl26>
-<lvl27>4233.31</lvl27>
-<lvl28>5003.002</lvl28>
-<lvl29>5912.639</lvl29>
-<lvl30>6987.664</lvl30>
-</XPBounty>
-<GainXPFromKills>
-<lvl1>1</lvl1>
-<lvl2>1</lvl2>
-<lvl3>1</lvl3>
-<lvl4>1</lvl4>
-<lvl5>1</lvl5>
-<lvl6>1</lvl6>
-<lvl7>1</lvl7>
-<lvl8>1</lvl8>
-<lvl9>1</lvl9>
-<lvl10>1</lvl10>
-<lvl11>1</lvl11>
-<lvl12>1</lvl12>
-<lvl13>1</lvl13>
-<lvl14>1</lvl14>
-<lvl15>1</lvl15>
-<lvl16>1</lvl16>
-<lvl17>1</lvl17>
-<lvl18>1</lvl18>
-<lvl19>1</lvl19>
-<lvl20>1</lvl20>
-<lvl21>1</lvl21>
-<lvl22>1</lvl22>
-<lvl23>1</lvl23>
-<lvl24>1</lvl24>
-<lvl25>1</lvl25>
-<lvl26>1</lvl26>
-<lvl27>1</lvl27>
-<lvl28>1</lvl28>
-<lvl29>1</lvl29>
-<lvl30>1</lvl30>
-</GainXPFromKills>
-<MaxCardLevel>
-<lvl1>20</lvl1>
-<lvl2>20</lvl2>
-<lvl3>20</lvl3>
-<lvl4>20</lvl4>
-<lvl5>20</lvl5>
-<lvl6>20</lvl6>
-<lvl7>20</lvl7>
-<lvl8>20</lvl8>
-<lvl9>20</lvl9>
-<lvl10>20</lvl10>
-<lvl11>20</lvl11>
-<lvl12>20</lvl12>
-<lvl13>20</lvl13>
-<lvl14>20</lvl14>
-<lvl15>20</lvl15>
-<lvl16>20</lvl16>
-<lvl17>20</lvl17>
-<lvl18>20</lvl18>
-<lvl19>20</lvl19>
-<lvl20>20</lvl20>
-<lvl21>20</lvl21>
-<lvl22>20</lvl22>
-<lvl23>20</lvl23>
-<lvl24>20</lvl24>
-<lvl25>20</lvl25>
-<lvl26>20</lvl26>
-<lvl27>20</lvl27>
-<lvl28>20</lvl28>
-<lvl29>20</lvl29>
-<lvl30>20</lvl30>
-</MaxCardLevel>
-<CardXPToLevel>
-<lvl1>1400</lvl1>
-<lvl2>2000</lvl2>
-<lvl3>2600</lvl3>
-<lvl4>2800</lvl4>
-<lvl5>2800</lvl5>
-<lvl6>2800</lvl6>
-<lvl7>2800</lvl7>
-<lvl8>2800</lvl8>
-<lvl9>2800</lvl9>
-<lvl10>2800</lvl10>
-<lvl11>2800</lvl11>
-<lvl12>2800</lvl12>
-<lvl13>2800</lvl13>
-<lvl14>2800</lvl14>
-<lvl15>2800</lvl15>
-<lvl16>2800</lvl16>
-<lvl17>2800</lvl17>
-<lvl18>2800</lvl18>
-<lvl19>2800</lvl19>
-<lvl20>1</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</CardXPToLevel>
-<MaxHealth>
-<lvl1>425</lvl1>
-<lvl2>510</lvl2>
-<lvl3>595</lvl3>
-<lvl4>680</lvl4>
-<lvl5>765</lvl5>
-<lvl6>850</lvl6>
-<lvl7>935</lvl7>
-<lvl8>1020</lvl8>
-<lvl9>1105</lvl9>
-<lvl10>1190</lvl10>
-<lvl11>1275</lvl11>
-<lvl12>1360</lvl12>
-<lvl13>1445</lvl13>
-<lvl14>1530</lvl14>
-<lvl15>1615</lvl15>
-<lvl16>1700</lvl16>
-<lvl17>1785</lvl17>
-<lvl18>1870</lvl18>
-<lvl19>1955</lvl19>
-<lvl20>2040</lvl20>
-<lvl21>2125</lvl21>
-<lvl22>2210</lvl22>
-<lvl23>2295</lvl23>
-<lvl24>2380</lvl24>
-<lvl25>2465</lvl25>
-<lvl26>2550</lvl26>
-<lvl27>2635</lvl27>
-<lvl28>2720</lvl28>
-<lvl29>2805</lvl29>
-<lvl30>2890</lvl30>
-</MaxHealth>
-<HealthRegenRate>
-<lvl1>0.85</lvl1>
-<lvl2>1.02</lvl2>
-<lvl3>1.19</lvl3>
-<lvl4>1.36</lvl4>
-<lvl5>1.53</lvl5>
-<lvl6>1.7</lvl6>
-<lvl7>1.87</lvl7>
-<lvl8>2.04</lvl8>
-<lvl9>2.21</lvl9>
-<lvl10>2.38</lvl10>
-<lvl11>2.55</lvl11>
-<lvl12>2.72</lvl12>
-<lvl13>2.89</lvl13>
-<lvl14>3.06</lvl14>
-<lvl15>3.23</lvl15>
-<lvl16>3.4</lvl16>
-<lvl17>3.57</lvl17>
-<lvl18>3.74</lvl18>
-<lvl19>3.91</lvl19>
-<lvl20>4.08</lvl20>
-<lvl21>4.25</lvl21>
-<lvl22>4.42</lvl22>
-<lvl23>4.59</lvl23>
-<lvl24>4.76</lvl24>
-<lvl25>4.93</lvl25>
-<lvl26>5.1</lvl26>
-<lvl27>5.27</lvl27>
-<lvl28>5.44</lvl28>
-<lvl29>5.61</lvl29>
-<lvl30>5.78</lvl30>
-</HealthRegenRate>
-<CriticallyWoundedThresholdPCT>
-<lvl1>0.25</lvl1>
-<lvl2>0.25</lvl2>
-<lvl3>0.25</lvl3>
-<lvl4>0.25</lvl4>
-<lvl5>0.25</lvl5>
-<lvl6>0.25</lvl6>
-<lvl7>0.25</lvl7>
-<lvl8>0.25</lvl8>
-<lvl9>0.25</lvl9>
-<lvl10>0.25</lvl10>
-<lvl11>0.25</lvl11>
-<lvl12>0.25</lvl12>
-<lvl13>0.25</lvl13>
-<lvl14>0.25</lvl14>
-<lvl15>0.25</lvl15>
-<lvl16>0.25</lvl16>
-<lvl17>0.25</lvl17>
-<lvl18>0.25</lvl18>
-<lvl19>0.25</lvl19>
-<lvl20>0.25</lvl20>
-<lvl21>0.25</lvl21>
-<lvl22>0.25</lvl22>
-<lvl23>0.25</lvl23>
-<lvl24>0.25</lvl24>
-<lvl25>0.25</lvl25>
-<lvl26>0.25</lvl26>
-<lvl27>0.25</lvl27>
-<lvl28>0.25</lvl28>
-<lvl29>0.25</lvl29>
-<lvl30>0.25</lvl30>
-</CriticallyWoundedThresholdPCT>
-<EnergyResistanceRating>
-<lvl1>6</lvl1>
-<lvl2>6.6</lvl2>
-<lvl3>7.2</lvl3>
-<lvl4>7.8</lvl4>
-<lvl5>8.4</lvl5>
-<lvl6>9</lvl6>
-<lvl7>9.6</lvl7>
-<lvl8>10.2</lvl8>
-<lvl9>10.8</lvl9>
-<lvl10>11.4</lvl10>
-<lvl11>12</lvl11>
-<lvl12>12.6</lvl12>
-<lvl13>13.2</lvl13>
-<lvl14>13.8</lvl14>
-<lvl15>14.4</lvl15>
-<lvl16>15</lvl16>
-<lvl17>15.6</lvl17>
-<lvl18>16.2</lvl18>
-<lvl19>16.8</lvl19>
-<lvl20>17.4</lvl20>
-<lvl21>18</lvl21>
-<lvl22>18.6</lvl22>
-<lvl23>19.2</lvl23>
-<lvl24>19.8</lvl24>
-<lvl25>20.4</lvl25>
-<lvl26>21</lvl26>
-<lvl27>21.6</lvl27>
-<lvl28>22.2</lvl28>
-<lvl29>22.8</lvl29>
-<lvl30>23.4</lvl30>
-</EnergyResistanceRating>
-<PhysicalResistanceRating>
-<lvl1>6</lvl1>
-<lvl2>6.6</lvl2>
-<lvl3>7.2</lvl3>
-<lvl4>7.8</lvl4>
-<lvl5>8.4</lvl5>
-<lvl6>9</lvl6>
-<lvl7>9.6</lvl7>
-<lvl8>10.2</lvl8>
-<lvl9>10.8</lvl9>
-<lvl10>11.4</lvl10>
-<lvl11>12</lvl11>
-<lvl12>12.6</lvl12>
-<lvl13>13.2</lvl13>
-<lvl14>13.8</lvl14>
-<lvl15>14.4</lvl15>
-<lvl16>15</lvl16>
-<lvl17>15.6</lvl17>
-<lvl18>16.2</lvl18>
-<lvl19>16.8</lvl19>
-<lvl20>17.4</lvl20>
-<lvl21>18</lvl21>
-<lvl22>18.6</lvl22>
-<lvl23>19.2</lvl23>
-<lvl24>19.8</lvl24>
-<lvl25>20.4</lvl25>
-<lvl26>21</lvl26>
-<lvl27>21.6</lvl27>
-<lvl28>22.2</lvl28>
-<lvl29>22.8</lvl29>
-<lvl30>23.4</lvl30>
-</PhysicalResistanceRating>
-<AttackRating>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</AttackRating>
-<BaseAttackTime>
-<lvl1>1.5</lvl1>
-<lvl2>1.5</lvl2>
-<lvl3>1.5</lvl3>
-<lvl4>1.5</lvl4>
-<lvl5>1.5</lvl5>
-<lvl6>1.5</lvl6>
-<lvl7>1.5</lvl7>
-<lvl8>1.5</lvl8>
-<lvl9>1.5</lvl9>
-<lvl10>1.5</lvl10>
-<lvl11>1.5</lvl11>
-<lvl12>1.5</lvl12>
-<lvl13>1.5</lvl13>
-<lvl14>1.5</lvl14>
-<lvl15>1.5</lvl15>
-<lvl16>1.5</lvl16>
-<lvl17>1.5</lvl17>
-<lvl18>1.5</lvl18>
-<lvl19>1.5</lvl19>
-<lvl20>1.5</lvl20>
-<lvl21>1.5</lvl21>
-<lvl22>1.5</lvl22>
-<lvl23>1.5</lvl23>
-<lvl24>1.5</lvl24>
-<lvl25>1.5</lvl25>
-<lvl26>1.5</lvl26>
-<lvl27>1.5</lvl27>
-<lvl28>1.5</lvl28>
-<lvl29>1.5</lvl29>
-<lvl30>1.5</lvl30>
-</BaseAttackTime>
-<AttackSpeedRating>
-<lvl1>100</lvl1>
-<lvl2>101.4</lvl2>
-<lvl3>102.8</lvl3>
-<lvl4>104.2</lvl4>
-<lvl5>105.6</lvl5>
-<lvl6>107</lvl6>
-<lvl7>108.4</lvl7>
-<lvl8>109.8</lvl8>
-<lvl9>111.2</lvl9>
-<lvl10>112.6</lvl10>
-<lvl11>114</lvl11>
-<lvl12>115.4</lvl12>
-<lvl13>116.8</lvl13>
-<lvl14>118.2</lvl14>
-<lvl15>119.6</lvl15>
-<lvl16>121</lvl16>
-<lvl17>122.4</lvl17>
-<lvl18>123.8</lvl18>
-<lvl19>125.2</lvl19>
-<lvl20>126.6</lvl20>
-<lvl21>128</lvl21>
-<lvl22>129.4</lvl22>
-<lvl23>130.8</lvl23>
-<lvl24>132.2</lvl24>
-<lvl25>133.6</lvl25>
-<lvl26>135</lvl26>
-<lvl27>136.4</lvl27>
-<lvl28>137.8</lvl28>
-<lvl29>139.2</lvl29>
-<lvl30>140.6</lvl30>
-</AttackSpeedRating>
-<CleaveRating>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</CleaveRating>
-<CriticalDamageBonus>
-<lvl1>2</lvl1>
-<lvl2>2</lvl2>
-<lvl3>2</lvl3>
-<lvl4>2</lvl4>
-<lvl5>2</lvl5>
-<lvl6>2</lvl6>
-<lvl7>2</lvl7>
-<lvl8>2</lvl8>
-<lvl9>2</lvl9>
-<lvl10>2</lvl10>
-<lvl11>2</lvl11>
-<lvl12>2</lvl12>
-<lvl13>2</lvl13>
-<lvl14>2</lvl14>
-<lvl15>2</lvl15>
-<lvl16>2</lvl16>
-<lvl17>2</lvl17>
-<lvl18>2</lvl18>
-<lvl19>2</lvl19>
-<lvl20>2</lvl20>
-<lvl21>2</lvl21>
-<lvl22>2</lvl22>
-<lvl23>2</lvl23>
-<lvl24>2</lvl24>
-<lvl25>2</lvl25>
-<lvl26>2</lvl26>
-<lvl27>2</lvl27>
-<lvl28>2</lvl28>
-<lvl29>2</lvl29>
-<lvl30>2</lvl30>
-</CriticalDamageBonus>
-<EnergyPenetrationRating>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</EnergyPenetrationRating>
-<PhysicalPenetrationRating>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</PhysicalPenetrationRating>
-<MaxMoveSpeed>
-<lvl1>400</lvl1>
-<lvl2>400</lvl2>
-<lvl3>400</lvl3>
-<lvl4>400</lvl4>
-<lvl5>400</lvl5>
-<lvl6>400</lvl6>
-<lvl7>400</lvl7>
-<lvl8>400</lvl8>
-<lvl9>400</lvl9>
-<lvl10>400</lvl10>
-<lvl11>400</lvl11>
-<lvl12>400</lvl12>
-<lvl13>400</lvl13>
-<lvl14>400</lvl14>
-<lvl15>400</lvl15>
-<lvl16>400</lvl16>
-<lvl17>400</lvl17>
-<lvl18>400</lvl18>
-<lvl19>400</lvl19>
-<lvl20>400</lvl20>
-<lvl21>400</lvl21>
-<lvl22>400</lvl22>
-<lvl23>400</lvl23>
-<lvl24>400</lvl24>
-<lvl25>400</lvl25>
-<lvl26>400</lvl26>
-<lvl27>400</lvl27>
-<lvl28>400</lvl28>
-<lvl29>400</lvl29>
-<lvl30>400</lvl30>
-</MaxMoveSpeed>
-<MaxEnergy>
-<lvl1>200</lvl1>
-<lvl2>225.8</lvl2>
-<lvl3>251.6</lvl3>
-<lvl4>277.4</lvl4>
-<lvl5>303.2</lvl5>
-<lvl6>329</lvl6>
-<lvl7>354.8</lvl7>
-<lvl8>380.6</lvl8>
-<lvl9>406.4</lvl9>
-<lvl10>432.2</lvl10>
-<lvl11>458</lvl11>
-<lvl12>483.8</lvl12>
-<lvl13>509.6</lvl13>
-<lvl14>535.4</lvl14>
-<lvl15>561.2</lvl15>
-<lvl16>587</lvl16>
-<lvl17>612.8</lvl17>
-<lvl18>638.6</lvl18>
-<lvl19>664.4</lvl19>
-<lvl20>690.2</lvl20>
-<lvl21>716</lvl21>
-<lvl22>741.8</lvl22>
-<lvl23>767.6</lvl23>
-<lvl24>793.4</lvl24>
-<lvl25>819.2</lvl25>
-<lvl26>845</lvl26>
-<lvl27>870.8</lvl27>
-<lvl28>896.6</lvl28>
-<lvl29>922.4</lvl29>
-<lvl30>948.2</lvl30>
-</MaxEnergy>
-<EnergyRegenRate>
-<lvl1>0.8</lvl1>
-<lvl2>0.903</lvl2>
-<lvl3>1.006</lvl3>
-<lvl4>1.11</lvl4>
-<lvl5>1.213</lvl5>
-<lvl6>1.316</lvl6>
-<lvl7>1.419</lvl7>
-<lvl8>1.522</lvl8>
-<lvl9>1.626</lvl9>
-<lvl10>1.729</lvl10>
-<lvl11>1.832</lvl11>
-<lvl12>1.935</lvl12>
-<lvl13>2.038</lvl13>
-<lvl14>2.142</lvl14>
-<lvl15>2.245</lvl15>
-<lvl16>2.348</lvl16>
-<lvl17>2.451</lvl17>
-<lvl18>2.554</lvl18>
-<lvl19>2.658</lvl19>
-<lvl20>2.761</lvl20>
-<lvl21>2.864</lvl21>
-<lvl22>2.967</lvl22>
-<lvl23>3.07</lvl23>
-<lvl24>3.174</lvl24>
-<lvl25>3.277</lvl25>
-<lvl26>3.38</lvl26>
-<lvl27>3.483</lvl27>
-<lvl28>3.586</lvl28>
-<lvl29>3.69</lvl29>
-<lvl30>3.793</lvl30>
-</EnergyRegenRate>
-<VisionRadius>
-<lvl1>5000</lvl1>
-<lvl2>5000</lvl2>
-<lvl3>5000</lvl3>
-<lvl4>5000</lvl4>
-<lvl5>5000</lvl5>
-<lvl6>5000</lvl6>
-<lvl7>5000</lvl7>
-<lvl8>5000</lvl8>
-<lvl9>5000</lvl9>
-<lvl10>5000</lvl10>
-<lvl11>5000</lvl11>
-<lvl12>5000</lvl12>
-<lvl13>5000</lvl13>
-<lvl14>5000</lvl14>
-<lvl15>5000</lvl15>
-<lvl16>5000</lvl16>
-<lvl17>5000</lvl17>
-<lvl18>5000</lvl18>
-<lvl19>5000</lvl19>
-<lvl20>5000</lvl20>
-<lvl21>5000</lvl21>
-<lvl22>5000</lvl22>
-<lvl23>5000</lvl23>
-<lvl24>5000</lvl24>
-<lvl25>5000</lvl25>
-<lvl26>5000</lvl26>
-<lvl27>5000</lvl27>
-<lvl28>5000</lvl28>
-<lvl29>5000</lvl29>
-<lvl30>5000</lvl30>
-</VisionRadius>
-<Passive>
-<Name.Passive>Power Share</Name.Passive>
-<Description.Passive>When Dekker uses an ability, she grants nearby allies a percentage of the mana she expended to cast it.</Description.Passive>
-</Passive>
-<BasicAttack>
-<BasePower.Basic.Primary>
-<lvl1>49.95</lvl1>
-<lvl2>56.194</lvl2>
-<lvl3>62.438</lvl3>
-<lvl4>68.681</lvl4>
-<lvl5>74.925</lvl5>
-<lvl6>81.169</lvl6>
-<lvl7>87.412</lvl7>
-<lvl8>93.656</lvl8>
-<lvl9>99.9</lvl9>
-<lvl10>106.144</lvl10>
-<lvl11>112.388</lvl11>
-<lvl12>118.631</lvl12>
-<lvl13>124.875</lvl13>
-<lvl14>131.119</lvl14>
-<lvl15>137.362</lvl15>
-<lvl16>143.606</lvl16>
-<lvl17>149.85</lvl17>
-<lvl18>156.094</lvl18>
-<lvl19>162.338</lvl19>
-<lvl20>168.581</lvl20>
-<lvl21>174.825</lvl21>
-<lvl22>181.069</lvl22>
-<lvl23>187.312</lvl23>
-<lvl24>193.556</lvl24>
-<lvl25>199.8</lvl25>
-<lvl26>206.044</lvl26>
-<lvl27>212.288</lvl27>
-<lvl28>218.531</lvl28>
-<lvl29>224.775</lvl29>
-<lvl30>231.019</lvl30>
-</BasePower.Basic.Primary>
-<ARC.Basic.Primary>
-<lvl1>0.375</lvl1>
-<lvl2>0.375</lvl2>
-<lvl3>0.375</lvl3>
-<lvl4>0.375</lvl4>
-<lvl5>0.375</lvl5>
-<lvl6>0.375</lvl6>
-<lvl7>0.375</lvl7>
-<lvl8>0.375</lvl8>
-<lvl9>0.375</lvl9>
-<lvl10>0.375</lvl10>
-<lvl11>0.375</lvl11>
-<lvl12>0.375</lvl12>
-<lvl13>0.375</lvl13>
-<lvl14>0.375</lvl14>
-<lvl15>0.375</lvl15>
-<lvl16>0.375</lvl16>
-<lvl17>0.375</lvl17>
-<lvl18>0.375</lvl18>
-<lvl19>0.375</lvl19>
-<lvl20>0.375</lvl20>
-<lvl21>0.375</lvl21>
-<lvl22>0.375</lvl22>
-<lvl23>0.375</lvl23>
-<lvl24>0.375</lvl24>
-<lvl25>0.375</lvl25>
-<lvl26>0.375</lvl26>
-<lvl27>0.375</lvl27>
-<lvl28>0.375</lvl28>
-<lvl29>0.375</lvl29>
-<lvl30>0.375</lvl30>
-</ARC.Basic.Primary>
-<Cost.Energy.Basic.Primary>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</Cost.Energy.Basic.Primary>
-<Cooldown.Basic.Primary>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</Cooldown.Basic.Primary>
-<Range.Basic.Primary>
-<lvl1/>
-<lvl2/>
-<lvl3/>
-<lvl4/>
-<lvl5/>
-<lvl6/>
-<lvl7/>
-<lvl8/>
-<lvl9/>
-<lvl10/>
-<lvl11/>
-<lvl12/>
-<lvl13/>
-<lvl14/>
-<lvl15/>
-<lvl16/>
-<lvl17/>
-<lvl18/>
-<lvl19/>
-<lvl20/>
-<lvl21/>
-<lvl22/>
-<lvl23/>
-<lvl24/>
-<lvl25/>
-<lvl26/>
-<lvl27/>
-<lvl28/>
-<lvl29/>
-<lvl30/>
-</Range.Basic.Primary>
-</BasicAttack>
-<AlternateAbility>
-<BasePower.Ability.Alternate>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</BasePower.Ability.Alternate>
-<ARC.Ability.Alternate>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</ARC.Ability.Alternate>
-<Cost.Energy.Ability.Alternate>
-<lvl1>-52</lvl1>
-<lvl2>-56</lvl2>
-<lvl3>-60</lvl3>
-<lvl4>-64</lvl4>
-<lvl5>-68</lvl5>
-<lvl6>-72</lvl6>
-<lvl7>-76</lvl7>
-<lvl8>-80</lvl8>
-<lvl9>-84</lvl9>
-<lvl10>-88</lvl10>
-<lvl11>-92</lvl11>
-<lvl12>-96</lvl12>
-<lvl13>-100</lvl13>
-<lvl14>-104</lvl14>
-<lvl15>-108</lvl15>
-<lvl16>-112</lvl16>
-<lvl17>-116</lvl17>
-<lvl18>-120</lvl18>
-<lvl19>-124</lvl19>
-<lvl20>-128</lvl20>
-<lvl21>-132</lvl21>
-<lvl22>-136</lvl22>
-<lvl23>-140</lvl23>
-<lvl24>-144</lvl24>
-<lvl25>-148</lvl25>
-<lvl26>-152</lvl26>
-<lvl27>-156</lvl27>
-<lvl28>-160</lvl28>
-<lvl29>-164</lvl29>
-<lvl30>-168</lvl30>
-</Cost.Energy.Ability.Alternate>
-<Cooldown.Ability.Alternate>
-<lvl1>15</lvl1>
-<lvl2>14</lvl2>
-<lvl3>13</lvl3>
-<lvl4>12</lvl4>
-<lvl5>11</lvl5>
-<lvl6>10</lvl6>
-<lvl7>9</lvl7>
-<lvl8>8</lvl8>
-<lvl9>7</lvl9>
-<lvl10>6</lvl10>
-<lvl11>5</lvl11>
-<lvl12>4</lvl12>
-<lvl13>3</lvl13>
-<lvl14>2</lvl14>
-<lvl15>1</lvl15>
-<lvl16>0</lvl16>
-<lvl17>-1</lvl17>
-<lvl18>-2</lvl18>
-<lvl19>-3</lvl19>
-<lvl20>-4</lvl20>
-<lvl21>-5</lvl21>
-<lvl22>-6</lvl22>
-<lvl23>-7</lvl23>
-<lvl24>-8</lvl24>
-<lvl25>-9</lvl25>
-<lvl26>-10</lvl26>
-<lvl27>-11</lvl27>
-<lvl28>-12</lvl28>
-<lvl29>-13</lvl29>
-<lvl30>-14</lvl30>
-</Cooldown.Ability.Alternate>
-<Range.Ability.Alternate>
-<lvl1/>
-<lvl2/>
-<lvl3/>
-<lvl4/>
-<lvl5/>
-<lvl6/>
-<lvl7/>
-<lvl8/>
-<lvl9/>
-<lvl10/>
-<lvl11/>
-<lvl12/>
-<lvl13/>
-<lvl14/>
-<lvl15/>
-<lvl16/>
-<lvl17/>
-<lvl18/>
-<lvl19/>
-<lvl20/>
-<lvl21/>
-<lvl22/>
-<lvl23/>
-<lvl24/>
-<lvl25/>
-<lvl26/>
-<lvl27/>
-<lvl28/>
-<lvl29/>
-<lvl30/>
-</Range.Ability.Alternate>
-</AlternateAbility>
-<PrimaryAbility>
-<BasePower.Ability.Primary>
-<lvl1>75</lvl1>
-<lvl2>105</lvl2>
-<lvl3>135</lvl3>
-<lvl4>165</lvl4>
-<lvl5>195</lvl5>
-<lvl6>225</lvl6>
-<lvl7>255</lvl7>
-<lvl8>285</lvl8>
-<lvl9>315</lvl9>
-<lvl10>345</lvl10>
-<lvl11>375</lvl11>
-<lvl12>405</lvl12>
-<lvl13>435</lvl13>
-<lvl14>465</lvl14>
-<lvl15>495</lvl15>
-<lvl16>525</lvl16>
-<lvl17>555</lvl17>
-<lvl18>585</lvl18>
-<lvl19>615</lvl19>
-<lvl20>645</lvl20>
-<lvl21>675</lvl21>
-<lvl22>705</lvl22>
-<lvl23>735</lvl23>
-<lvl24>765</lvl24>
-<lvl25>795</lvl25>
-<lvl26>825</lvl26>
-<lvl27>855</lvl27>
-<lvl28>885</lvl28>
-<lvl29>915</lvl29>
-<lvl30>945</lvl30>
-</BasePower.Ability.Primary>
-<ARC.Ability.Primary>
-<lvl1>0.75</lvl1>
-<lvl2>0.75</lvl2>
-<lvl3>0.75</lvl3>
-<lvl4>0.75</lvl4>
-<lvl5>0.75</lvl5>
-<lvl6>0.75</lvl6>
-<lvl7>0.75</lvl7>
-<lvl8>0.75</lvl8>
-<lvl9>0.75</lvl9>
-<lvl10>0.75</lvl10>
-<lvl11>0.75</lvl11>
-<lvl12>0.75</lvl12>
-<lvl13>0.75</lvl13>
-<lvl14>0.75</lvl14>
-<lvl15>0.75</lvl15>
-<lvl16>0.75</lvl16>
-<lvl17>0.75</lvl17>
-<lvl18>0.75</lvl18>
-<lvl19>0.75</lvl19>
-<lvl20>0.75</lvl20>
-<lvl21>0.75</lvl21>
-<lvl22>0.75</lvl22>
-<lvl23>0.75</lvl23>
-<lvl24>0.75</lvl24>
-<lvl25>0.75</lvl25>
-<lvl26>0.75</lvl26>
-<lvl27>0.75</lvl27>
-<lvl28>0.75</lvl28>
-<lvl29>0.75</lvl29>
-<lvl30>0.75</lvl30>
-</ARC.Ability.Primary>
-<Cost.Energy.Ability.Primary>
-<lvl1>-52</lvl1>
-<lvl2>-56</lvl2>
-<lvl3>-60</lvl3>
-<lvl4>-64</lvl4>
-<lvl5>-68</lvl5>
-<lvl6>-72</lvl6>
-<lvl7>-76</lvl7>
-<lvl8>-80</lvl8>
-<lvl9>-84</lvl9>
-<lvl10>-88</lvl10>
-<lvl11>-92</lvl11>
-<lvl12>-96</lvl12>
-<lvl13>-100</lvl13>
-<lvl14>-104</lvl14>
-<lvl15>-108</lvl15>
-<lvl16>-112</lvl16>
-<lvl17>-116</lvl17>
-<lvl18>-120</lvl18>
-<lvl19>-124</lvl19>
-<lvl20>-128</lvl20>
-<lvl21>-132</lvl21>
-<lvl22>-136</lvl22>
-<lvl23>-140</lvl23>
-<lvl24>-144</lvl24>
-<lvl25>-148</lvl25>
-<lvl26>-152</lvl26>
-<lvl27>-156</lvl27>
-<lvl28>-160</lvl28>
-<lvl29>-164</lvl29>
-<lvl30>-168</lvl30>
-</Cost.Energy.Ability.Primary>
-<Cooldown.Ability.Primary>
-<lvl1>20</lvl1>
-<lvl2>20</lvl2>
-<lvl3>20</lvl3>
-<lvl4>20</lvl4>
-<lvl5>20</lvl5>
-<lvl6>20</lvl6>
-<lvl7>20</lvl7>
-<lvl8>20</lvl8>
-<lvl9>20</lvl9>
-<lvl10>20</lvl10>
-<lvl11>20</lvl11>
-<lvl12>20</lvl12>
-<lvl13>20</lvl13>
-<lvl14>20</lvl14>
-<lvl15>20</lvl15>
-<lvl16>20</lvl16>
-<lvl17>20</lvl17>
-<lvl18>20</lvl18>
-<lvl19>20</lvl19>
-<lvl20>20</lvl20>
-<lvl21>20</lvl21>
-<lvl22>20</lvl22>
-<lvl23>20</lvl23>
-<lvl24>20</lvl24>
-<lvl25>20</lvl25>
-<lvl26>20</lvl26>
-<lvl27>20</lvl27>
-<lvl28>20</lvl28>
-<lvl29>20</lvl29>
-<lvl30>20</lvl30>
-</Cooldown.Ability.Primary>
-</PrimaryAbility>
-<SecondaryAbility>
-<BasePower.Ability.Secondary>
-<lvl1>60</lvl1>
-<lvl2>90</lvl2>
-<lvl3>120</lvl3>
-<lvl4>150</lvl4>
-<lvl5>180</lvl5>
-<lvl6>210</lvl6>
-<lvl7>240</lvl7>
-<lvl8>270</lvl8>
-<lvl9>300</lvl9>
-<lvl10>330</lvl10>
-<lvl11>360</lvl11>
-<lvl12>390</lvl12>
-<lvl13>420</lvl13>
-<lvl14>450</lvl14>
-<lvl15>480</lvl15>
-<lvl16>510</lvl16>
-<lvl17>540</lvl17>
-<lvl18>570</lvl18>
-<lvl19>600</lvl19>
-<lvl20>630</lvl20>
-<lvl21>660</lvl21>
-<lvl22>690</lvl22>
-<lvl23>720</lvl23>
-<lvl24>750</lvl24>
-<lvl25>780</lvl25>
-<lvl26>810</lvl26>
-<lvl27>840</lvl27>
-<lvl28>870</lvl28>
-<lvl29>900</lvl29>
-<lvl30>930</lvl30>
-</BasePower.Ability.Secondary>
-<ARC.Ability.Secondary>
-<lvl1>0.25</lvl1>
-<lvl2>0.25</lvl2>
-<lvl3>0.25</lvl3>
-<lvl4>0.25</lvl4>
-<lvl5>0.25</lvl5>
-<lvl6>0.25</lvl6>
-<lvl7>0.25</lvl7>
-<lvl8>0.25</lvl8>
-<lvl9>0.25</lvl9>
-<lvl10>0.25</lvl10>
-<lvl11>0.25</lvl11>
-<lvl12>0.25</lvl12>
-<lvl13>0.25</lvl13>
-<lvl14>0.25</lvl14>
-<lvl15>0.25</lvl15>
-<lvl16>0.25</lvl16>
-<lvl17>0.25</lvl17>
-<lvl18>0.25</lvl18>
-<lvl19>0.25</lvl19>
-<lvl20>0.25</lvl20>
-<lvl21>0.25</lvl21>
-<lvl22>0.25</lvl22>
-<lvl23>0.25</lvl23>
-<lvl24>0.25</lvl24>
-<lvl25>0.25</lvl25>
-<lvl26>0.25</lvl26>
-<lvl27>0.25</lvl27>
-<lvl28>0.25</lvl28>
-<lvl29>0.25</lvl29>
-<lvl30>0.25</lvl30>
-</ARC.Ability.Secondary>
-<Cost.Energy.Ability.Secondary>
-<lvl1>-56</lvl1>
-<lvl2>-60.5</lvl2>
-<lvl3>-65</lvl3>
-<lvl4>-69.5</lvl4>
-<lvl5>-74</lvl5>
-<lvl6>-78.5</lvl6>
-<lvl7>-83</lvl7>
-<lvl8>-87.5</lvl8>
-<lvl9>-92</lvl9>
-<lvl10>-96.5</lvl10>
-<lvl11>-101</lvl11>
-<lvl12>-105.5</lvl12>
-<lvl13>-110</lvl13>
-<lvl14>-114.5</lvl14>
-<lvl15>-119</lvl15>
-<lvl16>-123.5</lvl16>
-<lvl17>-128</lvl17>
-<lvl18>-132.5</lvl18>
-<lvl19>-137</lvl19>
-<lvl20>-141.5</lvl20>
-<lvl21>-146</lvl21>
-<lvl22>-150.5</lvl22>
-<lvl23>-155</lvl23>
-<lvl24>-159.5</lvl24>
-<lvl25>-164</lvl25>
-<lvl26>-168.5</lvl26>
-<lvl27>-173</lvl27>
-<lvl28>-177.5</lvl28>
-<lvl29>-182</lvl29>
-<lvl30>-186.5</lvl30>
-</Cost.Energy.Ability.Secondary>
-<Cooldown.Ability.Secondary>
-<lvl1>17</lvl1>
-<lvl2>16</lvl2>
-<lvl3>15</lvl3>
-<lvl4>14</lvl4>
-<lvl5>13</lvl5>
-<lvl6>12</lvl6>
-<lvl7>11</lvl7>
-<lvl8>10</lvl8>
-<lvl9>9</lvl9>
-<lvl10>8</lvl10>
-<lvl11>7</lvl11>
-<lvl12>6</lvl12>
-<lvl13>5</lvl13>
-<lvl14>4</lvl14>
-<lvl15>3</lvl15>
-<lvl16>2</lvl16>
-<lvl17>1</lvl17>
-<lvl18>0</lvl18>
-<lvl19>-1</lvl19>
-<lvl20>-2</lvl20>
-<lvl21>-3</lvl21>
-<lvl22>-4</lvl22>
-<lvl23>-5</lvl23>
-<lvl24>-6</lvl24>
-<lvl25>-7</lvl25>
-<lvl26>-8</lvl26>
-<lvl27>-9</lvl27>
-<lvl28>-10</lvl28>
-<lvl29>-11</lvl29>
-<lvl30>-12</lvl30>
-</Cooldown.Ability.Secondary>
-</SecondaryAbility>
-<UltimateAbility>
-<BasePower.Ability.Ultimate>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</BasePower.Ability.Ultimate>
-<ARC.Ability.Ultimate>
-<lvl1>0</lvl1>
-<lvl2>0</lvl2>
-<lvl3>0</lvl3>
-<lvl4>0</lvl4>
-<lvl5>0</lvl5>
-<lvl6>0</lvl6>
-<lvl7>0</lvl7>
-<lvl8>0</lvl8>
-<lvl9>0</lvl9>
-<lvl10>0</lvl10>
-<lvl11>0</lvl11>
-<lvl12>0</lvl12>
-<lvl13>0</lvl13>
-<lvl14>0</lvl14>
-<lvl15>0</lvl15>
-<lvl16>0</lvl16>
-<lvl17>0</lvl17>
-<lvl18>0</lvl18>
-<lvl19>0</lvl19>
-<lvl20>0</lvl20>
-<lvl21>0</lvl21>
-<lvl22>0</lvl22>
-<lvl23>0</lvl23>
-<lvl24>0</lvl24>
-<lvl25>0</lvl25>
-<lvl26>0</lvl26>
-<lvl27>0</lvl27>
-<lvl28>0</lvl28>
-<lvl29>0</lvl29>
-<lvl30>0</lvl30>
-</ARC.Ability.Ultimate>
-<Cost.Energy.Ability.Ultimate>
-<lvl1>-100</lvl1>
-<lvl2>-100</lvl2>
-<lvl3>-100</lvl3>
-<lvl4>-100</lvl4>
-<lvl5>-100</lvl5>
-<lvl6>-100</lvl6>
-<lvl7>-100</lvl7>
-<lvl8>-100</lvl8>
-<lvl9>-100</lvl9>
-<lvl10>-100</lvl10>
-<lvl11>-100</lvl11>
-<lvl12>-100</lvl12>
-<lvl13>-100</lvl13>
-<lvl14>-100</lvl14>
-<lvl15>-100</lvl15>
-<lvl16>-100</lvl16>
-<lvl17>-100</lvl17>
-<lvl18>-100</lvl18>
-<lvl19>-100</lvl19>
-<lvl20>-100</lvl20>
-<lvl21>-100</lvl21>
-<lvl22>-100</lvl22>
-<lvl23>-100</lvl23>
-<lvl24>-100</lvl24>
-<lvl25>-100</lvl25>
-<lvl26>-100</lvl26>
-<lvl27>-100</lvl27>
-<lvl28>-100</lvl28>
-<lvl29>-100</lvl29>
-<lvl30>-100</lvl30>
-</Cost.Energy.Ability.Ultimate>
-<Cooldown.Ability.Ultimate>
-<lvl1>100</lvl1>
-<lvl2>90</lvl2>
-<lvl3>80</lvl3>
-<lvl4>70</lvl4>
-<lvl5>60</lvl5>
-<lvl6>50</lvl6>
-<lvl7>40</lvl7>
-<lvl8>30</lvl8>
-<lvl9>20</lvl9>
-<lvl10>10</lvl10>
-<lvl11>0</lvl11>
-<lvl12>-10</lvl12>
-<lvl13>-20</lvl13>
-<lvl14>-30</lvl14>
-<lvl15>-40</lvl15>
-<lvl16>-50</lvl16>
-<lvl17>-60</lvl17>
-<lvl18>-70</lvl18>
-<lvl19>-80</lvl19>
-<lvl20>-90</lvl20>
-<lvl21>-100</lvl21>
-<lvl22>-110</lvl22>
-<lvl23>-120</lvl23>
-<lvl24>-130</lvl24>
-<lvl25>-140</lvl25>
-<lvl26>-150</lvl26>
-<lvl27>-160</lvl27>
-<lvl28>-170</lvl28>
-<lvl29>-180</lvl29>
-<lvl30>-190</lvl30>
-</Cooldown.Ability.Ultimate>
-</UltimateAbility>
+    <Affinity>Affinity.Growth</Affinity>
+    <Affinity>Affinity.Order</Affinity>
+    <Stats.BasicAttack>1</Stats.BasicAttack>
+    <Stats.AbilityAttack>6</Stats.AbilityAttack>
+    <Stats.Durability>4</Stats.Durability>
+    <Stats.Mobility>6</Stats.Mobility>
+    <Stats.Difficulty>5</Stats.Difficulty>
+    <MaxLevel>15</MaxLevel>
+    <XPToLevel>
+        <lvl1>100</lvl1>
+        <lvl2>118.182</lvl2>
+        <lvl3>139.669</lvl3>
+        <lvl4>165.064</lvl4>
+        <lvl5>195.076</lvl5>
+        <lvl6>230.544</lvl6>
+        <lvl7>272.461</lvl7>
+        <lvl8>321.999</lvl8>
+        <lvl9>380.544</lvl9>
+        <lvl10>449.734</lvl10>
+        <lvl11>531.504</lvl11>
+        <lvl12>628.141</lvl12>
+        <lvl13>742.349</lvl13>
+        <lvl14>877.321</lvl14>
+        <lvl15>1036.834</lvl15>
+        <lvl16>1225.35</lvl16>
+        <lvl17>1448.14</lvl17>
+        <lvl18>1711.439</lvl18>
+        <lvl19>2022.609</lvl19>
+        <lvl20>2390.356</lvl20>
+        <lvl21>2824.967</lvl21>
+        <lvl22>3338.597</lvl22>
+        <lvl23>3945.615</lvl23>
+        <lvl24>4662.999</lvl24>
+        <lvl25>5510.817</lvl25>
+        <lvl26>6512.784</lvl26>
+        <lvl27>7696.927</lvl27>
+        <lvl28>9096.368</lvl28>
+        <lvl29>10750.25</lvl29>
+        <lvl30>12704.84</lvl30>
+    </XPToLevel>
+    <XPBounty>
+        <lvl1>55</lvl1>
+        <lvl2>65</lvl2>
+        <lvl3>76.818</lvl3>
+        <lvl4>90.785</lvl4>
+        <lvl5>107.291</lvl5>
+        <lvl6>126.799</lvl6>
+        <lvl7>149.853</lvl7>
+        <lvl8>177.1</lvl8>
+        <lvl9>209.299</lvl9>
+        <lvl10>247.354</lvl10>
+        <lvl11>292.327</lvl11>
+        <lvl12>345.478</lvl12>
+        <lvl13>408.292</lvl13>
+        <lvl14>482.527</lvl14>
+        <lvl15>570.259</lvl15>
+        <lvl16>673.942</lvl16>
+        <lvl17>796.477</lvl17>
+        <lvl18>941.291</lvl18>
+        <lvl19>1112.435</lvl19>
+        <lvl20>1314.696</lvl20>
+        <lvl21>1553.732</lvl21>
+        <lvl22>1836.228</lvl22>
+        <lvl23>2170.088</lvl23>
+        <lvl24>2564.65</lvl24>
+        <lvl25>3030.95</lvl25>
+        <lvl26>3582.031</lvl26>
+        <lvl27>4233.31</lvl27>
+        <lvl28>5003.002</lvl28>
+        <lvl29>5912.639</lvl29>
+        <lvl30>6987.664</lvl30>
+    </XPBounty>
+    <GainXPFromKills>
+        <lvl1>1</lvl1>
+        <lvl2>1</lvl2>
+        <lvl3>1</lvl3>
+        <lvl4>1</lvl4>
+        <lvl5>1</lvl5>
+        <lvl6>1</lvl6>
+        <lvl7>1</lvl7>
+        <lvl8>1</lvl8>
+        <lvl9>1</lvl9>
+        <lvl10>1</lvl10>
+        <lvl11>1</lvl11>
+        <lvl12>1</lvl12>
+        <lvl13>1</lvl13>
+        <lvl14>1</lvl14>
+        <lvl15>1</lvl15>
+        <lvl16>1</lvl16>
+        <lvl17>1</lvl17>
+        <lvl18>1</lvl18>
+        <lvl19>1</lvl19>
+        <lvl20>1</lvl20>
+        <lvl21>1</lvl21>
+        <lvl22>1</lvl22>
+        <lvl23>1</lvl23>
+        <lvl24>1</lvl24>
+        <lvl25>1</lvl25>
+        <lvl26>1</lvl26>
+        <lvl27>1</lvl27>
+        <lvl28>1</lvl28>
+        <lvl29>1</lvl29>
+        <lvl30>1</lvl30>
+    </GainXPFromKills>
+    <MaxCardLevel>
+        <lvl1>20</lvl1>
+        <lvl2>20</lvl2>
+        <lvl3>20</lvl3>
+        <lvl4>20</lvl4>
+        <lvl5>20</lvl5>
+        <lvl6>20</lvl6>
+        <lvl7>20</lvl7>
+        <lvl8>20</lvl8>
+        <lvl9>20</lvl9>
+        <lvl10>20</lvl10>
+        <lvl11>20</lvl11>
+        <lvl12>20</lvl12>
+        <lvl13>20</lvl13>
+        <lvl14>20</lvl14>
+        <lvl15>20</lvl15>
+        <lvl16>20</lvl16>
+        <lvl17>20</lvl17>
+        <lvl18>20</lvl18>
+        <lvl19>20</lvl19>
+        <lvl20>20</lvl20>
+        <lvl21>20</lvl21>
+        <lvl22>20</lvl22>
+        <lvl23>20</lvl23>
+        <lvl24>20</lvl24>
+        <lvl25>20</lvl25>
+        <lvl26>20</lvl26>
+        <lvl27>20</lvl27>
+        <lvl28>20</lvl28>
+        <lvl29>20</lvl29>
+        <lvl30>20</lvl30>
+    </MaxCardLevel>
+    <CardXPToLevel>
+        <lvl1>1400</lvl1>
+        <lvl2>2000</lvl2>
+        <lvl3>2600</lvl3>
+        <lvl4>2800</lvl4>
+        <lvl5>2800</lvl5>
+        <lvl6>2800</lvl6>
+        <lvl7>2800</lvl7>
+        <lvl8>2800</lvl8>
+        <lvl9>2800</lvl9>
+        <lvl10>2800</lvl10>
+        <lvl11>2800</lvl11>
+        <lvl12>2800</lvl12>
+        <lvl13>2800</lvl13>
+        <lvl14>2800</lvl14>
+        <lvl15>2800</lvl15>
+        <lvl16>2800</lvl16>
+        <lvl17>2800</lvl17>
+        <lvl18>2800</lvl18>
+        <lvl19>2800</lvl19>
+        <lvl20>1</lvl20>
+        <lvl21>0</lvl21>
+        <lvl22>0</lvl22>
+        <lvl23>0</lvl23>
+        <lvl24>0</lvl24>
+        <lvl25>0</lvl25>
+        <lvl26>0</lvl26>
+        <lvl27>0</lvl27>
+        <lvl28>0</lvl28>
+        <lvl29>0</lvl29>
+        <lvl30>0</lvl30>
+    </CardXPToLevel>
+    <MaxHealth>
+        <lvl1>425</lvl1>
+        <lvl2>510</lvl2>
+        <lvl3>595</lvl3>
+        <lvl4>680</lvl4>
+        <lvl5>765</lvl5>
+        <lvl6>850</lvl6>
+        <lvl7>935</lvl7>
+        <lvl8>1020</lvl8>
+        <lvl9>1105</lvl9>
+        <lvl10>1190</lvl10>
+        <lvl11>1275</lvl11>
+        <lvl12>1360</lvl12>
+        <lvl13>1445</lvl13>
+        <lvl14>1530</lvl14>
+        <lvl15>1615</lvl15>
+        <lvl16>1700</lvl16>
+        <lvl17>1785</lvl17>
+        <lvl18>1870</lvl18>
+        <lvl19>1955</lvl19>
+        <lvl20>2040</lvl20>
+        <lvl21>2125</lvl21>
+        <lvl22>2210</lvl22>
+        <lvl23>2295</lvl23>
+        <lvl24>2380</lvl24>
+        <lvl25>2465</lvl25>
+        <lvl26>2550</lvl26>
+        <lvl27>2635</lvl27>
+        <lvl28>2720</lvl28>
+        <lvl29>2805</lvl29>
+        <lvl30>2890</lvl30>
+    </MaxHealth>
+    <HealthRegenRate>
+        <lvl1>0.85</lvl1>
+        <lvl2>1.02</lvl2>
+        <lvl3>1.19</lvl3>
+        <lvl4>1.36</lvl4>
+        <lvl5>1.53</lvl5>
+        <lvl6>1.7</lvl6>
+        <lvl7>1.87</lvl7>
+        <lvl8>2.04</lvl8>
+        <lvl9>2.21</lvl9>
+        <lvl10>2.38</lvl10>
+        <lvl11>2.55</lvl11>
+        <lvl12>2.72</lvl12>
+        <lvl13>2.89</lvl13>
+        <lvl14>3.06</lvl14>
+        <lvl15>3.23</lvl15>
+        <lvl16>3.4</lvl16>
+        <lvl17>3.57</lvl17>
+        <lvl18>3.74</lvl18>
+        <lvl19>3.91</lvl19>
+        <lvl20>4.08</lvl20>
+        <lvl21>4.25</lvl21>
+        <lvl22>4.42</lvl22>
+        <lvl23>4.59</lvl23>
+        <lvl24>4.76</lvl24>
+        <lvl25>4.93</lvl25>
+        <lvl26>5.1</lvl26>
+        <lvl27>5.27</lvl27>
+        <lvl28>5.44</lvl28>
+        <lvl29>5.61</lvl29>
+        <lvl30>5.78</lvl30>
+    </HealthRegenRate>
+    <CriticallyWoundedThresholdPCT>
+        <lvl1>0.25</lvl1>
+        <lvl2>0.25</lvl2>
+        <lvl3>0.25</lvl3>
+        <lvl4>0.25</lvl4>
+        <lvl5>0.25</lvl5>
+        <lvl6>0.25</lvl6>
+        <lvl7>0.25</lvl7>
+        <lvl8>0.25</lvl8>
+        <lvl9>0.25</lvl9>
+        <lvl10>0.25</lvl10>
+        <lvl11>0.25</lvl11>
+        <lvl12>0.25</lvl12>
+        <lvl13>0.25</lvl13>
+        <lvl14>0.25</lvl14>
+        <lvl15>0.25</lvl15>
+        <lvl16>0.25</lvl16>
+        <lvl17>0.25</lvl17>
+        <lvl18>0.25</lvl18>
+        <lvl19>0.25</lvl19>
+        <lvl20>0.25</lvl20>
+        <lvl21>0.25</lvl21>
+        <lvl22>0.25</lvl22>
+        <lvl23>0.25</lvl23>
+        <lvl24>0.25</lvl24>
+        <lvl25>0.25</lvl25>
+        <lvl26>0.25</lvl26>
+        <lvl27>0.25</lvl27>
+        <lvl28>0.25</lvl28>
+        <lvl29>0.25</lvl29>
+        <lvl30>0.25</lvl30>
+    </CriticallyWoundedThresholdPCT>
+    <EnergyResistanceRating>
+        <lvl1>6</lvl1>
+        <lvl2>6.6</lvl2>
+        <lvl3>7.2</lvl3>
+        <lvl4>7.8</lvl4>
+        <lvl5>8.4</lvl5>
+        <lvl6>9</lvl6>
+        <lvl7>9.6</lvl7>
+        <lvl8>10.2</lvl8>
+        <lvl9>10.8</lvl9>
+        <lvl10>11.4</lvl10>
+        <lvl11>12</lvl11>
+        <lvl12>12.6</lvl12>
+        <lvl13>13.2</lvl13>
+        <lvl14>13.8</lvl14>
+        <lvl15>14.4</lvl15>
+        <lvl16>15</lvl16>
+        <lvl17>15.6</lvl17>
+        <lvl18>16.2</lvl18>
+        <lvl19>16.8</lvl19>
+        <lvl20>17.4</lvl20>
+        <lvl21>18</lvl21>
+        <lvl22>18.6</lvl22>
+        <lvl23>19.2</lvl23>
+        <lvl24>19.8</lvl24>
+        <lvl25>20.4</lvl25>
+        <lvl26>21</lvl26>
+        <lvl27>21.6</lvl27>
+        <lvl28>22.2</lvl28>
+        <lvl29>22.8</lvl29>
+        <lvl30>23.4</lvl30>
+    </EnergyResistanceRating>
+    <PhysicalResistanceRating>
+        <lvl1>6</lvl1>
+        <lvl2>6.6</lvl2>
+        <lvl3>7.2</lvl3>
+        <lvl4>7.8</lvl4>
+        <lvl5>8.4</lvl5>
+        <lvl6>9</lvl6>
+        <lvl7>9.6</lvl7>
+        <lvl8>10.2</lvl8>
+        <lvl9>10.8</lvl9>
+        <lvl10>11.4</lvl10>
+        <lvl11>12</lvl11>
+        <lvl12>12.6</lvl12>
+        <lvl13>13.2</lvl13>
+        <lvl14>13.8</lvl14>
+        <lvl15>14.4</lvl15>
+        <lvl16>15</lvl16>
+        <lvl17>15.6</lvl17>
+        <lvl18>16.2</lvl18>
+        <lvl19>16.8</lvl19>
+        <lvl20>17.4</lvl20>
+        <lvl21>18</lvl21>
+        <lvl22>18.6</lvl22>
+        <lvl23>19.2</lvl23>
+        <lvl24>19.8</lvl24>
+        <lvl25>20.4</lvl25>
+        <lvl26>21</lvl26>
+        <lvl27>21.6</lvl27>
+        <lvl28>22.2</lvl28>
+        <lvl29>22.8</lvl29>
+        <lvl30>23.4</lvl30>
+    </PhysicalResistanceRating>
+    <AttackRating>
+        <lvl1>0</lvl1>
+        <lvl2>0</lvl2>
+        <lvl3>0</lvl3>
+        <lvl4>0</lvl4>
+        <lvl5>0</lvl5>
+        <lvl6>0</lvl6>
+        <lvl7>0</lvl7>
+        <lvl8>0</lvl8>
+        <lvl9>0</lvl9>
+        <lvl10>0</lvl10>
+        <lvl11>0</lvl11>
+        <lvl12>0</lvl12>
+        <lvl13>0</lvl13>
+        <lvl14>0</lvl14>
+        <lvl15>0</lvl15>
+        <lvl16>0</lvl16>
+        <lvl17>0</lvl17>
+        <lvl18>0</lvl18>
+        <lvl19>0</lvl19>
+        <lvl20>0</lvl20>
+        <lvl21>0</lvl21>
+        <lvl22>0</lvl22>
+        <lvl23>0</lvl23>
+        <lvl24>0</lvl24>
+        <lvl25>0</lvl25>
+        <lvl26>0</lvl26>
+        <lvl27>0</lvl27>
+        <lvl28>0</lvl28>
+        <lvl29>0</lvl29>
+        <lvl30>0</lvl30>
+    </AttackRating>
+    <BaseAttackTime>
+        <lvl1>1.5</lvl1>
+        <lvl2>1.5</lvl2>
+        <lvl3>1.5</lvl3>
+        <lvl4>1.5</lvl4>
+        <lvl5>1.5</lvl5>
+        <lvl6>1.5</lvl6>
+        <lvl7>1.5</lvl7>
+        <lvl8>1.5</lvl8>
+        <lvl9>1.5</lvl9>
+        <lvl10>1.5</lvl10>
+        <lvl11>1.5</lvl11>
+        <lvl12>1.5</lvl12>
+        <lvl13>1.5</lvl13>
+        <lvl14>1.5</lvl14>
+        <lvl15>1.5</lvl15>
+        <lvl16>1.5</lvl16>
+        <lvl17>1.5</lvl17>
+        <lvl18>1.5</lvl18>
+        <lvl19>1.5</lvl19>
+        <lvl20>1.5</lvl20>
+        <lvl21>1.5</lvl21>
+        <lvl22>1.5</lvl22>
+        <lvl23>1.5</lvl23>
+        <lvl24>1.5</lvl24>
+        <lvl25>1.5</lvl25>
+        <lvl26>1.5</lvl26>
+        <lvl27>1.5</lvl27>
+        <lvl28>1.5</lvl28>
+        <lvl29>1.5</lvl29>
+        <lvl30>1.5</lvl30>
+    </BaseAttackTime>
+    <AttackSpeedRating>
+        <lvl1>100</lvl1>
+        <lvl2>101.4</lvl2>
+        <lvl3>102.8</lvl3>
+        <lvl4>104.2</lvl4>
+        <lvl5>105.6</lvl5>
+        <lvl6>107</lvl6>
+        <lvl7>108.4</lvl7>
+        <lvl8>109.8</lvl8>
+        <lvl9>111.2</lvl9>
+        <lvl10>112.6</lvl10>
+        <lvl11>114</lvl11>
+        <lvl12>115.4</lvl12>
+        <lvl13>116.8</lvl13>
+        <lvl14>118.2</lvl14>
+        <lvl15>119.6</lvl15>
+        <lvl16>121</lvl16>
+        <lvl17>122.4</lvl17>
+        <lvl18>123.8</lvl18>
+        <lvl19>125.2</lvl19>
+        <lvl20>126.6</lvl20>
+        <lvl21>128</lvl21>
+        <lvl22>129.4</lvl22>
+        <lvl23>130.8</lvl23>
+        <lvl24>132.2</lvl24>
+        <lvl25>133.6</lvl25>
+        <lvl26>135</lvl26>
+        <lvl27>136.4</lvl27>
+        <lvl28>137.8</lvl28>
+        <lvl29>139.2</lvl29>
+        <lvl30>140.6</lvl30>
+    </AttackSpeedRating>
+    <CleaveRating>
+        <lvl1>0</lvl1>
+        <lvl2>0</lvl2>
+        <lvl3>0</lvl3>
+        <lvl4>0</lvl4>
+        <lvl5>0</lvl5>
+        <lvl6>0</lvl6>
+        <lvl7>0</lvl7>
+        <lvl8>0</lvl8>
+        <lvl9>0</lvl9>
+        <lvl10>0</lvl10>
+        <lvl11>0</lvl11>
+        <lvl12>0</lvl12>
+        <lvl13>0</lvl13>
+        <lvl14>0</lvl14>
+        <lvl15>0</lvl15>
+        <lvl16>0</lvl16>
+        <lvl17>0</lvl17>
+        <lvl18>0</lvl18>
+        <lvl19>0</lvl19>
+        <lvl20>0</lvl20>
+        <lvl21>0</lvl21>
+        <lvl22>0</lvl22>
+        <lvl23>0</lvl23>
+        <lvl24>0</lvl24>
+        <lvl25>0</lvl25>
+        <lvl26>0</lvl26>
+        <lvl27>0</lvl27>
+        <lvl28>0</lvl28>
+        <lvl29>0</lvl29>
+        <lvl30>0</lvl30>
+    </CleaveRating>
+    <CriticalDamageBonus>
+        <lvl1>2</lvl1>
+        <lvl2>2</lvl2>
+        <lvl3>2</lvl3>
+        <lvl4>2</lvl4>
+        <lvl5>2</lvl5>
+        <lvl6>2</lvl6>
+        <lvl7>2</lvl7>
+        <lvl8>2</lvl8>
+        <lvl9>2</lvl9>
+        <lvl10>2</lvl10>
+        <lvl11>2</lvl11>
+        <lvl12>2</lvl12>
+        <lvl13>2</lvl13>
+        <lvl14>2</lvl14>
+        <lvl15>2</lvl15>
+        <lvl16>2</lvl16>
+        <lvl17>2</lvl17>
+        <lvl18>2</lvl18>
+        <lvl19>2</lvl19>
+        <lvl20>2</lvl20>
+        <lvl21>2</lvl21>
+        <lvl22>2</lvl22>
+        <lvl23>2</lvl23>
+        <lvl24>2</lvl24>
+        <lvl25>2</lvl25>
+        <lvl26>2</lvl26>
+        <lvl27>2</lvl27>
+        <lvl28>2</lvl28>
+        <lvl29>2</lvl29>
+        <lvl30>2</lvl30>
+    </CriticalDamageBonus>
+    <EnergyPenetrationRating>
+        <lvl1>0</lvl1>
+        <lvl2>0</lvl2>
+        <lvl3>0</lvl3>
+        <lvl4>0</lvl4>
+        <lvl5>0</lvl5>
+        <lvl6>0</lvl6>
+        <lvl7>0</lvl7>
+        <lvl8>0</lvl8>
+        <lvl9>0</lvl9>
+        <lvl10>0</lvl10>
+        <lvl11>0</lvl11>
+        <lvl12>0</lvl12>
+        <lvl13>0</lvl13>
+        <lvl14>0</lvl14>
+        <lvl15>0</lvl15>
+        <lvl16>0</lvl16>
+        <lvl17>0</lvl17>
+        <lvl18>0</lvl18>
+        <lvl19>0</lvl19>
+        <lvl20>0</lvl20>
+        <lvl21>0</lvl21>
+        <lvl22>0</lvl22>
+        <lvl23>0</lvl23>
+        <lvl24>0</lvl24>
+        <lvl25>0</lvl25>
+        <lvl26>0</lvl26>
+        <lvl27>0</lvl27>
+        <lvl28>0</lvl28>
+        <lvl29>0</lvl29>
+        <lvl30>0</lvl30>
+    </EnergyPenetrationRating>
+    <PhysicalPenetrationRating>
+        <lvl1>0</lvl1>
+        <lvl2>0</lvl2>
+        <lvl3>0</lvl3>
+        <lvl4>0</lvl4>
+        <lvl5>0</lvl5>
+        <lvl6>0</lvl6>
+        <lvl7>0</lvl7>
+        <lvl8>0</lvl8>
+        <lvl9>0</lvl9>
+        <lvl10>0</lvl10>
+        <lvl11>0</lvl11>
+        <lvl12>0</lvl12>
+        <lvl13>0</lvl13>
+        <lvl14>0</lvl14>
+        <lvl15>0</lvl15>
+        <lvl16>0</lvl16>
+        <lvl17>0</lvl17>
+        <lvl18>0</lvl18>
+        <lvl19>0</lvl19>
+        <lvl20>0</lvl20>
+        <lvl21>0</lvl21>
+        <lvl22>0</lvl22>
+        <lvl23>0</lvl23>
+        <lvl24>0</lvl24>
+        <lvl25>0</lvl25>
+        <lvl26>0</lvl26>
+        <lvl27>0</lvl27>
+        <lvl28>0</lvl28>
+        <lvl29>0</lvl29>
+        <lvl30>0</lvl30>
+    </PhysicalPenetrationRating>
+    <MaxMoveSpeed>
+        <lvl1>400</lvl1>
+        <lvl2>400</lvl2>
+        <lvl3>400</lvl3>
+        <lvl4>400</lvl4>
+        <lvl5>400</lvl5>
+        <lvl6>400</lvl6>
+        <lvl7>400</lvl7>
+        <lvl8>400</lvl8>
+        <lvl9>400</lvl9>
+        <lvl10>400</lvl10>
+        <lvl11>400</lvl11>
+        <lvl12>400</lvl12>
+        <lvl13>400</lvl13>
+        <lvl14>400</lvl14>
+        <lvl15>400</lvl15>
+        <lvl16>400</lvl16>
+        <lvl17>400</lvl17>
+        <lvl18>400</lvl18>
+        <lvl19>400</lvl19>
+        <lvl20>400</lvl20>
+        <lvl21>400</lvl21>
+        <lvl22>400</lvl22>
+        <lvl23>400</lvl23>
+        <lvl24>400</lvl24>
+        <lvl25>400</lvl25>
+        <lvl26>400</lvl26>
+        <lvl27>400</lvl27>
+        <lvl28>400</lvl28>
+        <lvl29>400</lvl29>
+        <lvl30>400</lvl30>
+    </MaxMoveSpeed>
+    <MaxEnergy>
+        <lvl1>200</lvl1>
+        <lvl2>225.8</lvl2>
+        <lvl3>251.6</lvl3>
+        <lvl4>277.4</lvl4>
+        <lvl5>303.2</lvl5>
+        <lvl6>329</lvl6>
+        <lvl7>354.8</lvl7>
+        <lvl8>380.6</lvl8>
+        <lvl9>406.4</lvl9>
+        <lvl10>432.2</lvl10>
+        <lvl11>458</lvl11>
+        <lvl12>483.8</lvl12>
+        <lvl13>509.6</lvl13>
+        <lvl14>535.4</lvl14>
+        <lvl15>561.2</lvl15>
+        <lvl16>587</lvl16>
+        <lvl17>612.8</lvl17>
+        <lvl18>638.6</lvl18>
+        <lvl19>664.4</lvl19>
+        <lvl20>690.2</lvl20>
+        <lvl21>716</lvl21>
+        <lvl22>741.8</lvl22>
+        <lvl23>767.6</lvl23>
+        <lvl24>793.4</lvl24>
+        <lvl25>819.2</lvl25>
+        <lvl26>845</lvl26>
+        <lvl27>870.8</lvl27>
+        <lvl28>896.6</lvl28>
+        <lvl29>922.4</lvl29>
+        <lvl30>948.2</lvl30>
+    </MaxEnergy>
+    <EnergyRegenRate>
+        <lvl1>0.8</lvl1>
+        <lvl2>0.903</lvl2>
+        <lvl3>1.006</lvl3>
+        <lvl4>1.11</lvl4>
+        <lvl5>1.213</lvl5>
+        <lvl6>1.316</lvl6>
+        <lvl7>1.419</lvl7>
+        <lvl8>1.522</lvl8>
+        <lvl9>1.626</lvl9>
+        <lvl10>1.729</lvl10>
+        <lvl11>1.832</lvl11>
+        <lvl12>1.935</lvl12>
+        <lvl13>2.038</lvl13>
+        <lvl14>2.142</lvl14>
+        <lvl15>2.245</lvl15>
+        <lvl16>2.348</lvl16>
+        <lvl17>2.451</lvl17>
+        <lvl18>2.554</lvl18>
+        <lvl19>2.658</lvl19>
+        <lvl20>2.761</lvl20>
+        <lvl21>2.864</lvl21>
+        <lvl22>2.967</lvl22>
+        <lvl23>3.07</lvl23>
+        <lvl24>3.174</lvl24>
+        <lvl25>3.277</lvl25>
+        <lvl26>3.38</lvl26>
+        <lvl27>3.483</lvl27>
+        <lvl28>3.586</lvl28>
+        <lvl29>3.69</lvl29>
+        <lvl30>3.793</lvl30>
+    </EnergyRegenRate>
+    <VisionRadius>
+        <lvl1>5000</lvl1>
+        <lvl2>5000</lvl2>
+        <lvl3>5000</lvl3>
+        <lvl4>5000</lvl4>
+        <lvl5>5000</lvl5>
+        <lvl6>5000</lvl6>
+        <lvl7>5000</lvl7>
+        <lvl8>5000</lvl8>
+        <lvl9>5000</lvl9>
+        <lvl10>5000</lvl10>
+        <lvl11>5000</lvl11>
+        <lvl12>5000</lvl12>
+        <lvl13>5000</lvl13>
+        <lvl14>5000</lvl14>
+        <lvl15>5000</lvl15>
+        <lvl16>5000</lvl16>
+        <lvl17>5000</lvl17>
+        <lvl18>5000</lvl18>
+        <lvl19>5000</lvl19>
+        <lvl20>5000</lvl20>
+        <lvl21>5000</lvl21>
+        <lvl22>5000</lvl22>
+        <lvl23>5000</lvl23>
+        <lvl24>5000</lvl24>
+        <lvl25>5000</lvl25>
+        <lvl26>5000</lvl26>
+        <lvl27>5000</lvl27>
+        <lvl28>5000</lvl28>
+        <lvl29>5000</lvl29>
+        <lvl30>5000</lvl30>
+    </VisionRadius>
+    <Passive>
+        <Name.Passive>Power Share</Name.Passive>
+        <Description.Passive>When Dekker uses an ability, she grants nearby allies a percentage of the mana she expended to cast it.</Description.Passive>
+    </Passive>
+    <BasicAttack>
+        <BasePower.Basic.Primary>
+            <lvl1>49.95</lvl1>
+            <lvl2>56.194</lvl2>
+            <lvl3>62.438</lvl3>
+            <lvl4>68.681</lvl4>
+            <lvl5>74.925</lvl5>
+            <lvl6>81.169</lvl6>
+            <lvl7>87.412</lvl7>
+            <lvl8>93.656</lvl8>
+            <lvl9>99.9</lvl9>
+            <lvl10>106.144</lvl10>
+            <lvl11>112.388</lvl11>
+            <lvl12>118.631</lvl12>
+            <lvl13>124.875</lvl13>
+            <lvl14>131.119</lvl14>
+            <lvl15>137.363</lvl15>
+            <lvl16>143.606</lvl16>
+            <lvl17>149.85</lvl17>
+            <lvl18>156.094</lvl18>
+            <lvl19>162.338</lvl19>
+            <lvl20>168.581</lvl20>
+            <lvl21>174.825</lvl21>
+            <lvl22>181.069</lvl22>
+            <lvl23>187.312</lvl23>
+            <lvl24>193.556</lvl24>
+            <lvl25>199.8</lvl25>
+            <lvl26>206.044</lvl26>
+            <lvl27>212.287</lvl27>
+            <lvl28>218.531</lvl28>
+            <lvl29>224.775</lvl29>
+            <lvl30>231.019</lvl30>
+        </BasePower.Basic.Primary>
+        <ARC.Basic.Primary>
+            <lvl1>0.375</lvl1>
+            <lvl2>0.375</lvl2>
+            <lvl3>0.375</lvl3>
+            <lvl4>0.375</lvl4>
+            <lvl5>0.375</lvl5>
+            <lvl6>0.375</lvl6>
+            <lvl7>0.375</lvl7>
+            <lvl8>0.375</lvl8>
+            <lvl9>0.375</lvl9>
+            <lvl10>0.375</lvl10>
+            <lvl11>0.375</lvl11>
+            <lvl12>0.375</lvl12>
+            <lvl13>0.375</lvl13>
+            <lvl14>0.375</lvl14>
+            <lvl15>0.375</lvl15>
+            <lvl16>0.375</lvl16>
+            <lvl17>0.375</lvl17>
+            <lvl18>0.375</lvl18>
+            <lvl19>0.375</lvl19>
+            <lvl20>0.375</lvl20>
+            <lvl21>0.375</lvl21>
+            <lvl22>0.375</lvl22>
+            <lvl23>0.375</lvl23>
+            <lvl24>0.375</lvl24>
+            <lvl25>0.375</lvl25>
+            <lvl26>0.375</lvl26>
+            <lvl27>0.375</lvl27>
+            <lvl28>0.375</lvl28>
+            <lvl29>0.375</lvl29>
+            <lvl30>0.375</lvl30>
+        </ARC.Basic.Primary>
+        <Cost.Energy.Basic.Primary>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </Cost.Energy.Basic.Primary>
+        <Cooldown.Basic.Primary>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </Cooldown.Basic.Primary>
+        <Range.Basic.Primary>
+            <lvl1/>
+            <lvl2/>
+            <lvl3/>
+            <lvl4/>
+            <lvl5/>
+            <lvl6/>
+            <lvl7/>
+            <lvl8/>
+            <lvl9/>
+            <lvl10/>
+            <lvl11/>
+            <lvl12/>
+            <lvl13/>
+            <lvl14/>
+            <lvl15/>
+            <lvl16/>
+            <lvl17/>
+            <lvl18/>
+            <lvl19/>
+            <lvl20/>
+            <lvl21/>
+            <lvl22/>
+            <lvl23/>
+            <lvl24/>
+            <lvl25/>
+            <lvl26/>
+            <lvl27/>
+            <lvl28/>
+            <lvl29/>
+            <lvl30/>
+        </Range.Basic.Primary>
+    </BasicAttack>
+    <AlternateAbility>
+        <BasePower.Ability.Alternate>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </BasePower.Ability.Alternate>
+        <ARC.Ability.Alternate>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </ARC.Ability.Alternate>
+        <Cost.Energy.Ability.Alternate>
+            <lvl1>-52</lvl1>
+            <lvl2>-56</lvl2>
+            <lvl3>-60</lvl3>
+            <lvl4>-64</lvl4>
+            <lvl5>-68</lvl5>
+            <lvl6>-72</lvl6>
+            <lvl7>-76</lvl7>
+            <lvl8>-80</lvl8>
+            <lvl9>-84</lvl9>
+            <lvl10>-88</lvl10>
+            <lvl11>-92</lvl11>
+            <lvl12>-96</lvl12>
+            <lvl13>-100</lvl13>
+            <lvl14>-104</lvl14>
+            <lvl15>-108</lvl15>
+            <lvl16>-112</lvl16>
+            <lvl17>-116</lvl17>
+            <lvl18>-120</lvl18>
+            <lvl19>-124</lvl19>
+            <lvl20>-128</lvl20>
+            <lvl21>-132</lvl21>
+            <lvl22>-136</lvl22>
+            <lvl23>-140</lvl23>
+            <lvl24>-144</lvl24>
+            <lvl25>-148</lvl25>
+            <lvl26>-152</lvl26>
+            <lvl27>-156</lvl27>
+            <lvl28>-160</lvl28>
+            <lvl29>-164</lvl29>
+            <lvl30>-168</lvl30>
+        </Cost.Energy.Ability.Alternate>
+        <Cooldown.Ability.Alternate>
+            <lvl1>15</lvl1>
+            <lvl2>14</lvl2>
+            <lvl3>13</lvl3>
+            <lvl4>12</lvl4>
+            <lvl5>11</lvl5>
+            <lvl6>10</lvl6>
+            <lvl7>9</lvl7>
+            <lvl8>8</lvl8>
+            <lvl9>7</lvl9>
+            <lvl10>6</lvl10>
+            <lvl11>5</lvl11>
+            <lvl12>4</lvl12>
+            <lvl13>3</lvl13>
+            <lvl14>2</lvl14>
+            <lvl15>1</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>-1</lvl17>
+            <lvl18>-2</lvl18>
+            <lvl19>-3</lvl19>
+            <lvl20>-4</lvl20>
+            <lvl21>-5</lvl21>
+            <lvl22>-6</lvl22>
+            <lvl23>-7</lvl23>
+            <lvl24>-8</lvl24>
+            <lvl25>-9</lvl25>
+            <lvl26>-10</lvl26>
+            <lvl27>-11</lvl27>
+            <lvl28>-12</lvl28>
+            <lvl29>-13</lvl29>
+            <lvl30>-14</lvl30>
+        </Cooldown.Ability.Alternate>
+        <Range.Ability.Alternate>
+            <lvl1/>
+            <lvl2/>
+            <lvl3/>
+            <lvl4/>
+            <lvl5/>
+            <lvl6/>
+            <lvl7/>
+            <lvl8/>
+            <lvl9/>
+            <lvl10/>
+            <lvl11/>
+            <lvl12/>
+            <lvl13/>
+            <lvl14/>
+            <lvl15/>
+            <lvl16/>
+            <lvl17/>
+            <lvl18/>
+            <lvl19/>
+            <lvl20/>
+            <lvl21/>
+            <lvl22/>
+            <lvl23/>
+            <lvl24/>
+            <lvl25/>
+            <lvl26/>
+            <lvl27/>
+            <lvl28/>
+            <lvl29/>
+            <lvl30/>
+        </Range.Ability.Alternate>
+    </AlternateAbility>
+    <PrimaryAbility>
+        <BasePower.Ability.Primary>
+            <lvl1>75</lvl1>
+            <lvl2>105</lvl2>
+            <lvl3>135</lvl3>
+            <lvl4>165</lvl4>
+            <lvl5>195</lvl5>
+            <lvl6>225</lvl6>
+            <lvl7>255</lvl7>
+            <lvl8>285</lvl8>
+            <lvl9>315</lvl9>
+            <lvl10>345</lvl10>
+            <lvl11>375</lvl11>
+            <lvl12>405</lvl12>
+            <lvl13>435</lvl13>
+            <lvl14>465</lvl14>
+            <lvl15>495</lvl15>
+            <lvl16>525</lvl16>
+            <lvl17>555</lvl17>
+            <lvl18>585</lvl18>
+            <lvl19>615</lvl19>
+            <lvl20>645</lvl20>
+            <lvl21>675</lvl21>
+            <lvl22>705</lvl22>
+            <lvl23>735</lvl23>
+            <lvl24>765</lvl24>
+            <lvl25>795</lvl25>
+            <lvl26>825</lvl26>
+            <lvl27>855</lvl27>
+            <lvl28>885</lvl28>
+            <lvl29>915</lvl29>
+            <lvl30>945</lvl30>
+        </BasePower.Ability.Primary>
+        <ARC.Ability.Primary>
+            <lvl1>0.75</lvl1>
+            <lvl2>0.75</lvl2>
+            <lvl3>0.75</lvl3>
+            <lvl4>0.75</lvl4>
+            <lvl5>0.75</lvl5>
+            <lvl6>0.75</lvl6>
+            <lvl7>0.75</lvl7>
+            <lvl8>0.75</lvl8>
+            <lvl9>0.75</lvl9>
+            <lvl10>0.75</lvl10>
+            <lvl11>0.75</lvl11>
+            <lvl12>0.75</lvl12>
+            <lvl13>0.75</lvl13>
+            <lvl14>0.75</lvl14>
+            <lvl15>0.75</lvl15>
+            <lvl16>0.75</lvl16>
+            <lvl17>0.75</lvl17>
+            <lvl18>0.75</lvl18>
+            <lvl19>0.75</lvl19>
+            <lvl20>0.75</lvl20>
+            <lvl21>0.75</lvl21>
+            <lvl22>0.75</lvl22>
+            <lvl23>0.75</lvl23>
+            <lvl24>0.75</lvl24>
+            <lvl25>0.75</lvl25>
+            <lvl26>0.75</lvl26>
+            <lvl27>0.75</lvl27>
+            <lvl28>0.75</lvl28>
+            <lvl29>0.75</lvl29>
+            <lvl30>0.75</lvl30>
+        </ARC.Ability.Primary>
+        <Cost.Energy.Ability.Primary>
+            <lvl1>-52</lvl1>
+            <lvl2>-56</lvl2>
+            <lvl3>-60</lvl3>
+            <lvl4>-64</lvl4>
+            <lvl5>-68</lvl5>
+            <lvl6>-72</lvl6>
+            <lvl7>-76</lvl7>
+            <lvl8>-80</lvl8>
+            <lvl9>-84</lvl9>
+            <lvl10>-88</lvl10>
+            <lvl11>-92</lvl11>
+            <lvl12>-96</lvl12>
+            <lvl13>-100</lvl13>
+            <lvl14>-104</lvl14>
+            <lvl15>-108</lvl15>
+            <lvl16>-112</lvl16>
+            <lvl17>-116</lvl17>
+            <lvl18>-120</lvl18>
+            <lvl19>-124</lvl19>
+            <lvl20>-128</lvl20>
+            <lvl21>-132</lvl21>
+            <lvl22>-136</lvl22>
+            <lvl23>-140</lvl23>
+            <lvl24>-144</lvl24>
+            <lvl25>-148</lvl25>
+            <lvl26>-152</lvl26>
+            <lvl27>-156</lvl27>
+            <lvl28>-160</lvl28>
+            <lvl29>-164</lvl29>
+            <lvl30>-168</lvl30>
+        </Cost.Energy.Ability.Primary>
+        <Cooldown.Ability.Primary>
+            <lvl1>20</lvl1>
+            <lvl2>20</lvl2>
+            <lvl3>20</lvl3>
+            <lvl4>20</lvl4>
+            <lvl5>20</lvl5>
+            <lvl6>20</lvl6>
+            <lvl7>20</lvl7>
+            <lvl8>20</lvl8>
+            <lvl9>20</lvl9>
+            <lvl10>20</lvl10>
+            <lvl11>20</lvl11>
+            <lvl12>20</lvl12>
+            <lvl13>20</lvl13>
+            <lvl14>20</lvl14>
+            <lvl15>20</lvl15>
+            <lvl16>20</lvl16>
+            <lvl17>20</lvl17>
+            <lvl18>20</lvl18>
+            <lvl19>20</lvl19>
+            <lvl20>20</lvl20>
+            <lvl21>20</lvl21>
+            <lvl22>20</lvl22>
+            <lvl23>20</lvl23>
+            <lvl24>20</lvl24>
+            <lvl25>20</lvl25>
+            <lvl26>20</lvl26>
+            <lvl27>20</lvl27>
+            <lvl28>20</lvl28>
+            <lvl29>20</lvl29>
+            <lvl30>20</lvl30>
+        </Cooldown.Ability.Primary>
+    </PrimaryAbility>
+    <SecondaryAbility>
+        <BasePower.Ability.Secondary>
+            <lvl1>60</lvl1>
+            <lvl2>90</lvl2>
+            <lvl3>120</lvl3>
+            <lvl4>150</lvl4>
+            <lvl5>180</lvl5>
+            <lvl6>210</lvl6>
+            <lvl7>240</lvl7>
+            <lvl8>270</lvl8>
+            <lvl9>300</lvl9>
+            <lvl10>330</lvl10>
+            <lvl11>360</lvl11>
+            <lvl12>390</lvl12>
+            <lvl13>420</lvl13>
+            <lvl14>450</lvl14>
+            <lvl15>480</lvl15>
+            <lvl16>510</lvl16>
+            <lvl17>540</lvl17>
+            <lvl18>570</lvl18>
+            <lvl19>600</lvl19>
+            <lvl20>630</lvl20>
+            <lvl21>660</lvl21>
+            <lvl22>690</lvl22>
+            <lvl23>720</lvl23>
+            <lvl24>750</lvl24>
+            <lvl25>780</lvl25>
+            <lvl26>810</lvl26>
+            <lvl27>840</lvl27>
+            <lvl28>870</lvl28>
+            <lvl29>900</lvl29>
+            <lvl30>930</lvl30>
+        </BasePower.Ability.Secondary>
+        <ARC.Ability.Secondary>
+            <lvl1>0.25</lvl1>
+            <lvl2>0.25</lvl2>
+            <lvl3>0.25</lvl3>
+            <lvl4>0.25</lvl4>
+            <lvl5>0.25</lvl5>
+            <lvl6>0.25</lvl6>
+            <lvl7>0.25</lvl7>
+            <lvl8>0.25</lvl8>
+            <lvl9>0.25</lvl9>
+            <lvl10>0.25</lvl10>
+            <lvl11>0.25</lvl11>
+            <lvl12>0.25</lvl12>
+            <lvl13>0.25</lvl13>
+            <lvl14>0.25</lvl14>
+            <lvl15>0.25</lvl15>
+            <lvl16>0.25</lvl16>
+            <lvl17>0.25</lvl17>
+            <lvl18>0.25</lvl18>
+            <lvl19>0.25</lvl19>
+            <lvl20>0.25</lvl20>
+            <lvl21>0.25</lvl21>
+            <lvl22>0.25</lvl22>
+            <lvl23>0.25</lvl23>
+            <lvl24>0.25</lvl24>
+            <lvl25>0.25</lvl25>
+            <lvl26>0.25</lvl26>
+            <lvl27>0.25</lvl27>
+            <lvl28>0.25</lvl28>
+            <lvl29>0.25</lvl29>
+            <lvl30>0.25</lvl30>
+        </ARC.Ability.Secondary>
+        <Cost.Energy.Ability.Secondary>
+            <lvl1>-56</lvl1>
+            <lvl2>-60.5</lvl2>
+            <lvl3>-65</lvl3>
+            <lvl4>-69.5</lvl4>
+            <lvl5>-74</lvl5>
+            <lvl6>-78.5</lvl6>
+            <lvl7>-83</lvl7>
+            <lvl8>-87.5</lvl8>
+            <lvl9>-92</lvl9>
+            <lvl10>-96.5</lvl10>
+            <lvl11>-101</lvl11>
+            <lvl12>-105.5</lvl12>
+            <lvl13>-110</lvl13>
+            <lvl14>-114.5</lvl14>
+            <lvl15>-119</lvl15>
+            <lvl16>-123.5</lvl16>
+            <lvl17>-128</lvl17>
+            <lvl18>-132.5</lvl18>
+            <lvl19>-137</lvl19>
+            <lvl20>-141.5</lvl20>
+            <lvl21>-146</lvl21>
+            <lvl22>-150.5</lvl22>
+            <lvl23>-155</lvl23>
+            <lvl24>-159.5</lvl24>
+            <lvl25>-164</lvl25>
+            <lvl26>-168.5</lvl26>
+            <lvl27>-173</lvl27>
+            <lvl28>-177.5</lvl28>
+            <lvl29>-182</lvl29>
+            <lvl30>-186.5</lvl30>
+        </Cost.Energy.Ability.Secondary>
+        <Cooldown.Ability.Secondary>
+            <lvl1>17</lvl1>
+            <lvl2>16</lvl2>
+            <lvl3>15</lvl3>
+            <lvl4>14</lvl4>
+            <lvl5>13</lvl5>
+            <lvl6>12</lvl6>
+            <lvl7>11</lvl7>
+            <lvl8>10</lvl8>
+            <lvl9>9</lvl9>
+            <lvl10>8</lvl10>
+            <lvl11>7</lvl11>
+            <lvl12>6</lvl12>
+            <lvl13>5</lvl13>
+            <lvl14>4</lvl14>
+            <lvl15>3</lvl15>
+            <lvl16>2</lvl16>
+            <lvl17>1</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>-1</lvl19>
+            <lvl20>-2</lvl20>
+            <lvl21>-3</lvl21>
+            <lvl22>-4</lvl22>
+            <lvl23>-5</lvl23>
+            <lvl24>-6</lvl24>
+            <lvl25>-7</lvl25>
+            <lvl26>-8</lvl26>
+            <lvl27>-9</lvl27>
+            <lvl28>-10</lvl28>
+            <lvl29>-11</lvl29>
+            <lvl30>-12</lvl30>
+        </Cooldown.Ability.Secondary>
+    </SecondaryAbility>
+    <UltimateAbility>
+        <BasePower.Ability.Ultimate>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </BasePower.Ability.Ultimate>
+        <ARC.Ability.Ultimate>
+            <lvl1>0</lvl1>
+            <lvl2>0</lvl2>
+            <lvl3>0</lvl3>
+            <lvl4>0</lvl4>
+            <lvl5>0</lvl5>
+            <lvl6>0</lvl6>
+            <lvl7>0</lvl7>
+            <lvl8>0</lvl8>
+            <lvl9>0</lvl9>
+            <lvl10>0</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>0</lvl12>
+            <lvl13>0</lvl13>
+            <lvl14>0</lvl14>
+            <lvl15>0</lvl15>
+            <lvl16>0</lvl16>
+            <lvl17>0</lvl17>
+            <lvl18>0</lvl18>
+            <lvl19>0</lvl19>
+            <lvl20>0</lvl20>
+            <lvl21>0</lvl21>
+            <lvl22>0</lvl22>
+            <lvl23>0</lvl23>
+            <lvl24>0</lvl24>
+            <lvl25>0</lvl25>
+            <lvl26>0</lvl26>
+            <lvl27>0</lvl27>
+            <lvl28>0</lvl28>
+            <lvl29>0</lvl29>
+            <lvl30>0</lvl30>
+        </ARC.Ability.Ultimate>
+        <Cost.Energy.Ability.Ultimate>
+            <lvl1>-100</lvl1>
+            <lvl2>-100</lvl2>
+            <lvl3>-100</lvl3>
+            <lvl4>-100</lvl4>
+            <lvl5>-100</lvl5>
+            <lvl6>-100</lvl6>
+            <lvl7>-100</lvl7>
+            <lvl8>-100</lvl8>
+            <lvl9>-100</lvl9>
+            <lvl10>-100</lvl10>
+            <lvl11>-100</lvl11>
+            <lvl12>-100</lvl12>
+            <lvl13>-100</lvl13>
+            <lvl14>-100</lvl14>
+            <lvl15>-100</lvl15>
+            <lvl16>-100</lvl16>
+            <lvl17>-100</lvl17>
+            <lvl18>-100</lvl18>
+            <lvl19>-100</lvl19>
+            <lvl20>-100</lvl20>
+            <lvl21>-100</lvl21>
+            <lvl22>-100</lvl22>
+            <lvl23>-100</lvl23>
+            <lvl24>-100</lvl24>
+            <lvl25>-100</lvl25>
+            <lvl26>-100</lvl26>
+            <lvl27>-100</lvl27>
+            <lvl28>-100</lvl28>
+            <lvl29>-100</lvl29>
+            <lvl30>-100</lvl30>
+        </Cost.Energy.Ability.Ultimate>
+        <Cooldown.Ability.Ultimate>
+            <lvl1>100</lvl1>
+            <lvl2>90</lvl2>
+            <lvl3>80</lvl3>
+            <lvl4>70</lvl4>
+            <lvl5>60</lvl5>
+            <lvl6>50</lvl6>
+            <lvl7>40</lvl7>
+            <lvl8>30</lvl8>
+            <lvl9>20</lvl9>
+            <lvl10>10</lvl10>
+            <lvl11>0</lvl11>
+            <lvl12>-10</lvl12>
+            <lvl13>-20</lvl13>
+            <lvl14>-30</lvl14>
+            <lvl15>-40</lvl15>
+            <lvl16>-50</lvl16>
+            <lvl17>-60</lvl17>
+            <lvl18>-70</lvl18>
+            <lvl19>-80</lvl19>
+            <lvl20>-90</lvl20>
+            <lvl21>-100</lvl21>
+            <lvl22>-110</lvl22>
+            <lvl23>-120</lvl23>
+            <lvl24>-130</lvl24>
+            <lvl25>-140</lvl25>
+            <lvl26>-150</lvl26>
+            <lvl27>-160</lvl27>
+            <lvl28>-170</lvl28>
+            <lvl29>-180</lvl29>
+            <lvl30>-190</lvl30>
+        </Cooldown.Ability.Ultimate>
+    </UltimateAbility>
 </Dekker>

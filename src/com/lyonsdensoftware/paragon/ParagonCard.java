@@ -9,7 +9,7 @@ public class ParagonCard {
     
     // Variables
     private String cardName;
-    private int cost;
+    private int cost, id;
     private String type;
     private String affinity;
     private String rarity;
@@ -63,13 +63,15 @@ public class ParagonCard {
      * @param type is the type of the card
      * @param affinity is the name of the card
      * @param rarity is the rarity of the card
+     * @param id
      */
-    public ParagonCard(String cardName, int cost, String type, String affinity, String rarity){
+    public ParagonCard(String cardName, int cost, String type, String affinity, String rarity, int id){
         this.cardName = cardName;
         this.cost = cost;
         this.type = type;
         this.affinity = affinity;
         this.rarity = rarity;
+        this.id = id;
     }
     
     /**
@@ -118,7 +120,7 @@ public class ParagonCard {
      * @return the affinity
      */
     public String getAffinity() {
-        return affinity;
+        return this.affinity;
     }
 
     /**
@@ -132,7 +134,7 @@ public class ParagonCard {
      * @return the rarity
      */
     public String getRarity() {
-        return rarity;
+        return this.rarity;
     }
 
     /**
@@ -434,6 +436,20 @@ public class ParagonCard {
      */
     public String getMaxedSpecial2() {
         return XmlParser.getSpecificCardDataFromXml(this.cardName, "MaxedSpecial2");
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
     
 }

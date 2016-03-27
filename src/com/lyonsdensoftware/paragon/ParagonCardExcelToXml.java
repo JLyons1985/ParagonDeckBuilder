@@ -51,15 +51,17 @@ public class ParagonCardExcelToXml {
                        
             // Now loop through the workbood creating the xml nodes
             // O(n^2) refactor as needed
+            String tmpAffinity = "Affinity.Corruption";
+            String tmpRarity = "Common";
+            int cardCountForAR = 0;
+            
             for (int row = 1; row < sheet.getRows(); row++) {  // Rows
                 
                 // Create card element
                 Element card = doc.createElement("Card");
                 rootElement.appendChild(card);
-                    
-                // Set name attr to card
-                card.setAttribute("cardId", sheet.getCell(0, row).getContents());
                 
+                              
                 for (int col = 0; col < sheet.getColumns() - 1; col++){
                 
                     String test = new String(sheet.getCell(col, 0).getContents().replaceAll("\\s", ""));

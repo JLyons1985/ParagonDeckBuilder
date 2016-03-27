@@ -18,11 +18,27 @@ public class ParagonHero {
     }
     
     /**
+     * Sets the heros name
+     * @param heroName string of the name
+     */
+    public void setName(String heroName) {
+        this.heroName = heroName;
+    }
+    
+    /**
      * Returns the hero name
      * @return string
      */
     public String getName() {
         return this.heroName;
+    }
+    
+    /**
+     * Grabs the max level
+     * @return int
+     */
+    public int getMaxLevel() {
+        return XmlParser.getSingleStatAsInt(this.heroName, "MaxLevel");
     }
     
     /**

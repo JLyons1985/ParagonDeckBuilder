@@ -99,7 +99,7 @@ public class ParagonHeroeExcelToXml {
             
             // Max Level
             elem = doc.createElement("MaxLevel");
-            elem.appendChild(doc.createTextNode(sheet.getCell(0, 19).getContents()));
+            elem.appendChild(doc.createTextNode(sheet.getCell(1, 19).getContents()));
             rootElement.appendChild(elem);
             
             // Holds the column for level 1

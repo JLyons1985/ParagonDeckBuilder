@@ -7,7 +7,7 @@
 <Stats.Durability>8</Stats.Durability>
 <Stats.Mobility>7</Stats.Mobility>
 <Stats.Difficulty>3</Stats.Difficulty>
-<MaxLevel>MaxLevel</MaxLevel>
+<MaxLevel>15</MaxLevel>
 <XPToLevel>
 <lvl1>100</lvl1>
 <lvl2>118.182</lvl2>
@@ -45,7 +45,7 @@
 <lvl2>65</lvl2>
 <lvl3>76.818</lvl3>
 <lvl4>90.785</lvl4>
-<lvl5>107.292</lvl5>
+<lvl5>107.291</lvl5>
 <lvl6>126.799</lvl6>
 <lvl7>149.853</lvl7>
 <lvl8>177.1</lvl8>
@@ -694,7 +694,7 @@
 <lvl6>82.043</lvl6>
 <lvl7>91.159</lvl7>
 <lvl8>100.275</lvl8>
-<lvl9>109.39</lvl9>
+<lvl9>109.391</lvl9>
 <lvl10>118.506</lvl10>
 <lvl11>127.622</lvl11>
 <lvl12>136.738</lvl12>
@@ -702,7 +702,7 @@
 <lvl14>154.97</lvl14>
 <lvl15>164.086</lvl15>
 <lvl16>173.202</lvl16>
-<lvl17>182.318</lvl17>
+<lvl17>182.317</lvl17>
 <lvl18>191.433</lvl18>
 <lvl19>200.549</lvl19>
 <lvl20>209.665</lvl20>

@@ -61,8 +61,9 @@ public class XmlParser {
                 String type = elem.getElementsByTagName("Type").item(0).getTextContent();
                 String affinity = elem.getElementsByTagName("Affinity").item(0).getTextContent();
                 String rarity = elem.getElementsByTagName("Rarity").item(0).getTextContent();
+                int id = Integer.parseInt(elem.getElementsByTagName("Id").item(0).getTextContent());
                 
-                ParagonCard tmpCard = new ParagonCard(cardName, cost, type, affinity, rarity);
+                ParagonCard tmpCard = new ParagonCard(cardName, cost, type, affinity, rarity, id);
                 
                 // Add that card to the array
                 allCards[i] = tmpCard;
@@ -138,6 +139,9 @@ public class XmlParser {
         
         String[] returnArray;
         
+        if (heroName.equals("Default"))
+            return new String[0];
+        
          try {
             
             // Open xml file
@@ -162,7 +166,10 @@ public class XmlParser {
                 Element elem = (Element) nNode;
                 
                 // Add the affinity
-                returnArray[i] = elem.getTextContent();
+                String tmpStr = elem.getTextContent();
+                String[] tmpArray = tmpStr.split("\\.");
+                
+                returnArray[i] = tmpArray[1];
                                 
             }
             
@@ -256,6 +263,40 @@ public class XmlParser {
         }
     }
     
+    /**
+     * Returns an the int value of the requested hero data
+     * @return int data of requested value
+     * @param heroName is the name of the card to get the data for
+     * @param stat is the name of the stat to get the data for
+     */
+    public static int getSingleStatAsInt(String heroName, String stat) {
+        
+        if (heroName.equals("Default"))
+            return 0;
+        
+        try {
+            
+            // Open xml file
+            File xmlFile = Paths.get("./Data/" + heroName + ".xml").toFile();
+            DocumentBuilder dBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+            
+            doc.getDocumentElement().normalize();
+            
+                        
+            // Create a list of all the elements with Card
+            Element elem = (Element) doc.getElementsByTagName(stat).item(0);
+            
+            return Integer.parseInt(elem.getTextContent());
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            
+            return 0;
+        }
+    }
+    
      /**
      * Returns an the string value of the requested hero data
      * @return string data of requested value
@@ -296,6 +337,9 @@ public class XmlParser {
      */
     public static double getHeroStatAtLevel(String heroName, String stat, int level) {
         
+        if (heroName.equals("Default"))
+            return 0;
+        
         try {
             
             // Open xml file
@@ -307,15 +351,99 @@ public class XmlParser {
             
             // Create a list of all the elements with Card
             Element elem = (Element) doc.getElementsByTagName(stat).item(0);
+                         
+            Element elemChild = (Element) elem.getElementsByTagName("lvl" + level).item(0);
+            
+            return Double.parseDouble(elemChild.getTextContent());
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            
+            return 0;
+        }
+    }
+    
+    /**
+     * Returns an the double value of the requested hero data
+     * @return double data of requested value
+     * @param heroName is the name of the card to get the data for
+     * @param stat is the name of the stat to get the data for
+     * @param level is the level to look at
+     */
+    public static int getHeroStatAtLevelInt(String heroName, String stat, int level) {
+        
+        if (heroName.equals("Default"))
+            return 0;
+        
+        try {
+            
+            // Open xml file
+            File xmlFile = Paths.get("./Data/" + heroName + ".xml").toFile();
+            DocumentBuilder dBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+            
+            doc.getDocumentElement().normalize();
+            
+            System.out.println(stat);
+            
+            // Create a list of all the elements with Card
+            Element elem = (Element) doc.getElementsByTagName(stat).item(0);
             
             NodeList nList = elem.getChildNodes();
                          
             Element elemChild = (Element) nList.item(level - 1);
                 
-            return Double.parseDouble(elemChild.getTextContent());
+            return Integer.parseInt(elemChild.getTextContent());
                                 
             
             
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            
+            return 0;
+        }
+    }
+    
+    /**
+     * Returns an the double value of the requested hero data
+     * @return double data of requested value
+     * @param heroName is the name of the hero to get the data for
+     * @param ability is the name of the ability
+     * @param stat is the stat to look at
+     */
+    public static double getHeroAbilityStat(String heroName, String ability, String stat, int level) {
+        
+        if (heroName.equals("Default"))
+            return 0;
+        
+        try {
+            
+            // Open xml file
+            File xmlFile = Paths.get("./Data/" + heroName + ".xml").toFile();
+            DocumentBuilder dBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+            
+            doc.getDocumentElement().normalize();
+            
+            // Create a list of all the elements with Card
+            Element elem = (Element) doc.getElementsByTagName(ability).item(0);
+            
+            NodeList nList = elem.getChildNodes();
+                         
+            Element elemChild = (Element) elem.getElementsByTagName(stat).item(0);
+            
+            Element elemChildAgain = (Element) elemChild.getElementsByTagName("lvl" + level).item(0);
+            
+            double tmpDouble;
+            if (elemChildAgain.getTextContent().equals("0"))
+                tmpDouble = 0;
+            else
+                tmpDouble = Double.parseDouble(elemChildAgain.getTextContent());
+                
+            return tmpDouble;
+                            
         }
         catch (Exception e) {
             e.printStackTrace();
