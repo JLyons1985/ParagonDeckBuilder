@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
+
 /**
  * This extends jlayered pane to add customized layered pane look for the deck builder
  * @author Joshua Lyons
@@ -13,18 +14,20 @@ import javax.swing.SwingConstants;
 public class ParagonLayeredPane extends javax.swing.JLayeredPane{
     
     private ParagonCard myCard;             // Holds a reference to the card associated with this pane
-    JButton btn_myButton;           // Reference to the button
-    JLabel cardCostNameLbl;         // Cost and Name lbl of the card
-    JLabel cardCountLbl;            // Card count label
+    JButton btn_myButton;                   // Reference to the button
+    JLabel cardCostNameLbl;                 // Cost and Name lbl of the card
+    JLabel cardCountLbl;                    // Card count label
     private int cardCount;                  // How many cards are associated with this pane
-    int width = 293, height = 29;   // Width height of components
+    int width = 293, height = 29;           // Width height of components
+    ParagonDeckBuilderMain myMain;          // Ref to main screen
     
-    public ParagonLayeredPane(ParagonCard card) {
+    public ParagonLayeredPane(ParagonCard card, ParagonDeckBuilderMain main) {
         this.myCard = card;
         this.cardCount = 1;
         this.btn_myButton = new JButton();
         this.cardCostNameLbl = new JLabel();
         this.cardCountLbl = new JLabel();
+        this.myMain = main;
         
         // Setup dimensions
         Dimension tmpDimension = new Dimension(this.width, this.height);
@@ -60,9 +63,19 @@ public class ParagonLayeredPane extends javax.swing.JLayeredPane{
         this.btn_myButton.setBounds(0, 0, this.width, this.height);
         this.cardCostNameLbl.setBounds(10, 0, this.width, this.height);
         this.cardCountLbl.setBounds((this.width - 40), 0, this.width, this.height);
-                
+        
+        this.btn_myButton.addActionListener(new java.awt.event.ActionListener() { 
+            public void actionPerformed(java.awt.event.ActionEvent evt) { 
+                 btnClicked(evt); 
+             } 
+         }); 
     }
-
+       
+    private void btnClicked(java.awt.event.ActionEvent evt) {
+        if (!this.myCard.getType().equals("Prime"))
+            this.myMain.showRemoveCardFromDeckBuilderPaneDialog(this);
+    }
+    
     /**
      * @return the myCard
      */
@@ -92,5 +105,5 @@ public class ParagonLayeredPane extends javax.swing.JLayeredPane{
         // Update text
         this.cardCountLbl.setText("x" + this.cardCount);
     }
-    
+        
 }

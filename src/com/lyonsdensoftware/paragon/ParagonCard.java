@@ -13,48 +13,6 @@ public class ParagonCard {
     private String type;
     private String affinity;
     private String rarity;
-//    private double energyDamage;
-//    private double manaRegen;
-//    private double maxHealth;
-//    private double physicalDamage;
-//    private double healthRegen;
-//    private double maxMana;
-//    private double energyPen;
-//    private double physicalArmor;
-//    private double cooldownReduction;
-//    private double physicalPen;
-//    private double energyArmor;
-//    private double critChance;
-//    private double lifesteal;
-//    private double critBonus;
-//    private double attackSpeed;
-//    private double harvesterPlacementTime;
-//    private double maxMovementSpeed;
-//    private double damageBonus;
-//    private double maxedEnergyDamage;
-//    private double maxedManaRegen;
-//    private double maxedMaxHealth;
-//    private double maxedPhysicalDamage;
-//    private double maxedHealthRegen;
-//    private double maxedMaxMana;
-//    private double maxedEnergyPen;
-//    private double maxedPhysicalArmor;
-//    private double maxedCooldownReduction;
-//    private double maxedPhysicalPen;
-//    private double maxedEnergyArmor;
-//    private double maxedCritChance;
-//    private double maxedLifesteal;
-//    private double maxedCritBonus;
-//    private double maxedAttackSpeed;
-//    private double maxedHarvesterPlacementTime;
-//    private double maxedMaxMovementSpeed;
-//    private double maxedDamageBonus;
-//    private String special0;
-//    private String special1;
-//    private String special2;
-//    private String maxedSpecial0;
-//    private String maxedSpecial1;
-//    private String maxedSpecial2;
 
     /**
      * Constructor

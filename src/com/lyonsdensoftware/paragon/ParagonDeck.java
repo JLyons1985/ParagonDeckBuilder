@@ -8,7 +8,7 @@ import java.util.LinkedList;
  *
  * @author Joshua Lyons
  */
-public class ParagonDeck {
+public class ParagonDeck implements Iterable<ParagonCard>{
     
     private LinkedList<ParagonCard> cards;        // Holds all the cards in this deck
     private boolean isMasterDeck;       // Is this the master deck of all the cards
@@ -51,11 +51,8 @@ public class ParagonDeck {
     public static ParagonDeck buildStarterDeck(ParagonDeck masterDeck) {
         ParagonDeck tmpDeck = new ParagonDeck();
         
-        Iterator<ParagonCard> myIter = masterDeck.cards.listIterator();
-        
         // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
-            ParagonCard testCard = myIter.next();
+        for (ParagonCard testCard : masterDeck.getCards()) {
             if (testCard.getRarity().equals("Starter")) {
                 if (testCard.getType().equals("Prime")) {
                     if (testCard.getCardName().equals("The Centurion")) {
@@ -94,11 +91,8 @@ public class ParagonDeck {
      * Removes the prime card to add a new one
      */
     public void removePrimeCard() {
-        Iterator<ParagonCard> myIter = this.cards.listIterator();
-        
         // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
-            ParagonCard tmpCard = myIter.next();
+        for (ParagonCard tmpCard : this.cards) {
             if (tmpCard.getType().equals("Prime"))
                 this.removeCard(tmpCard);
         }
@@ -168,15 +162,13 @@ public class ParagonDeck {
             String searchText) {
         
         LinkedList<ParagonCard> tmpDeck = new LinkedList<ParagonCard>();
-        Iterator<ParagonCard> myIter = deckToFilter.getCards().listIterator();
         
         // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
+        for (ParagonCard testCard : deckToFilter.getCards()) {
             
             boolean addCard = false;
             
             String testString;
-            ParagonCard testCard = myIter.next();
             
             testString = testCard.getType();
             if (showUpgrades){
@@ -270,8 +262,7 @@ public class ParagonDeck {
             else {
                 addCard = true;
             }
-                
-            
+                            
             if (!searchText.isEmpty()) {
                 if (!testCard.getCardName().contains(searchText))
                     continue;
@@ -298,16 +289,17 @@ public class ParagonDeck {
     @Override
     public String toString() {
         String tmpString = "";
-        
-        Iterator<ParagonCard> myIter = this.cards.listIterator();
-        
-        // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
-            ParagonCard testCard = myIter.next();
-            tmpString += testCard.getCardName() + "\n";
+                
+        for (ParagonCard card: this.cards) {
+            tmpString += card.getCardName() + "\n";
         }
         
         return tmpString;
+    }
+
+    @Override
+    public Iterator<ParagonCard> iterator() {
+        return this.cards.iterator();
     }
     
 }

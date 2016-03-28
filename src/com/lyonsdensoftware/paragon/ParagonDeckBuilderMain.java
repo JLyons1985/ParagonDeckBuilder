@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
+import javax.swing.JButton;
 
 /**
  *
@@ -15,10 +16,10 @@ import javax.swing.SwingUtilities;
 public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     
     private ParagonDeck masterDeck;                 // Holds a reference to the master deck
-    private ParagonDeck displayedDeck;              // Holds a reference to the displayed deck
     private ParagonDeck deckBeingCreated;           // Holds a reference to the deck being created
     private ParagonHero myHero;                     // Holds a reference to the selected hero
-    private ParagonCardSlot[] cardSlots;            // Holds a reference to each of the available slots
+    private ParagonCardButton[] cardSlots;          // Holds a reference to each of the available slots
+    private ParagonCardButton slotSelected;         // Reference to the slot selected.
     private final int CARDHEIGHT = 250, CARDWIDTH = 188, 
             PADDINGBETWEENCARDS = 5, CARDSPERROW = 5;
     private boolean showActive = true, showPassive = true, showUpgrade = true, showPrime = true;
@@ -31,6 +32,10 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         centreWindow(this);
         
+        this.myInit();
+    }
+    
+    private void myInit() {
         // Create the default Hero
         this.myHero = new ParagonHero("Default");
         // Set levles combo box
@@ -41,14 +46,12 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         // New deck
         this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck);
-        // Now iter through starter deck to add to slots
-        Iterator<ParagonCard> myIter = this.deckBeingCreated.getCards().listIterator();
+        this.tb_DeckName.setText("New Deck");
         
         // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
-            ParagonCard testCard = myIter.next();
+        for (ParagonCard testCard : this.deckBeingCreated.getCards()) {
             
-            ParagonLayeredPane tmpPane = new ParagonLayeredPane(testCard);
+            ParagonLayeredPane tmpPane = new ParagonLayeredPane(testCard, this);
             java.awt.Component[] tmpComp;
             boolean cardDuplicated = false;
             
@@ -110,13 +113,40 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         }
         
         // Create the card slots
-        cardSlots = new ParagonCardSlot[6];
+        this.cardSlots = new ParagonCardButton[6];
         for (int i = 0; i < 6; i ++) {
-            if (i < 5)
-                cardSlots[i] = new ParagonCardSlot(true);
-            else
-                cardSlots[i] = new ParagonCardSlot(false);
+            if (i < 4) {
+                this.cardSlots[i] = new ParagonCardButton(null, true, i);
+                this.cardSlots[i].setText("Active Slot Empty");
+            }
+            else {
+                this.cardSlots[i] = new ParagonCardButton(null, false, i);
+                this.cardSlots[i].setText("Passive Slot Empty");
+            }
+            
+            this.cardSlots[i].addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btn_DeckBuilderSlotsClicked(evt);
+                }
+            });
+            this.cardSlots[i].setOpaque(false);
+            this.cardSlots[i].setContentAreaFilled(false);
+            this.cardSlots[i].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         }
+        // Add buttons to slots
+        this.panel_cardSlots.removeAll();
+        this.panel_cardSlots.add(this.cardSlots[0]);
+        this.cardSlots[0].setBounds(8, 47, 140, 187);
+        this.panel_cardSlots.add(this.cardSlots[1]);
+        this.cardSlots[1].setBounds(154, 47, 140, 187);
+        this.panel_cardSlots.add(this.cardSlots[2]);
+        this.cardSlots[2].setBounds(8, 240, 140, 187);
+        this.panel_cardSlots.add(this.cardSlots[3]);
+        this.cardSlots[3].setBounds(154, 240, 140, 187);
+        this.panel_cardSlots.add(this.cardSlots[4]);
+        this.cardSlots[4].setBounds(8, 433, 140, 187);
+        this.panel_cardSlots.add(this.cardSlots[5]);
+        this.cardSlots[5].setBounds(154, 433, 140, 187);
         
         // Refresh the gui
         this.refreshGui();
@@ -176,6 +206,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         // Refresh Deck builder displayed card
         this.refreshDeckBuilderCards();
         
+        // Refresh Deck builder displayed card
+        this.refreshSlotBuilderCards();
+        
         // Refresh deck builder numbers
         this.refreshDeckBuilderNumbers();
     }
@@ -219,6 +252,60 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             this.Affinity1.setVisible(false);
             this.Affinity2.setVisible(false);
         }
+        
+        this.Affinity1.setOpaque(false);
+        this.Affinity2.setOpaque(false);
+    }
+    
+    /**
+     * refreshes the cards in the slot builder
+     */
+    public void refreshSlotBuilderCards () {
+        // clear the panel
+        this.panel_DeckSlotBuilderPanel.removeAll();
+        
+        ParagonDeck tmpDeck = ParagonDeck.getDeckFromFilters(this.deckBeingCreated, this.showUpgrade, this.showPassive, 
+                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "");
+        
+        // Now that the deck is built need to display it     
+        int cardPosX = this.PADDINGBETWEENCARDS, cardPosY = this.PADDINGBETWEENCARDS;
+        int cardCount = 0;
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        for (ParagonCard testCard : tmpDeck.getCards()) {
+            
+            // Create a button
+            ParagonCardButton tmpButton = new ParagonCardButton(testCard);
+            tmpButton.setSize(this.CARDWIDTH, this.CARDHEIGHT);
+            tmpButton.setOpaque(false);
+            tmpButton.setContentAreaFilled(false);
+            
+            // Add event listener
+            tmpButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+                btn_DeckSlotBuilderCardActionPerformed(evt);
+            });
+            
+            // Add button to panel
+            this.panel_DeckSlotBuilderPanel.add(tmpButton);
+            tmpButton.setBounds(cardPosX, cardPosY, this.CARDWIDTH, this.CARDHEIGHT);
+            tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
+            tmpButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            
+            //this.panel_DeckBuilderPanel.revalidate();
+            
+            // set pos for next card
+            // Set x
+            cardPosX = ((cardCount + 1) % this.CARDSPERROW) * (this.CARDWIDTH) + this.PADDINGBETWEENCARDS;
+            cardPosY = ((cardCount + 1) / this.CARDSPERROW) * (this.CARDHEIGHT) + this.PADDINGBETWEENCARDS;  
+            
+            cardCount++;
+            
+        }
+        
+        this.panel_DeckSlotBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckSlotBuilderPanel.getWidth(), cardPosY));
+        this.panel_DeckSlotBuilderPanel.revalidate();
+        this.panel_DeckSlotBuilderPanel.repaint();
+        //this.scrollPane_DeckBuilder.revalidate();
     }
     
     /**
@@ -229,34 +316,33 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         // clear the panel
         this.panel_DeckBuilderPanel.removeAll();
         
-        this.buildDisplayedCardsDeck();
+        ParagonDeck tmpDeck = ParagonDeck.getDeckFromFilters(this.masterDeck, this.showUpgrade, this.showPassive, 
+                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "");
         
-        // Now that the deck is built need to display it        
-        Iterator<ParagonCard> myIter = displayedDeck.getCards().listIterator();
-        
+        // Now that the deck is built need to display it     
         int cardPosX = this.PADDINGBETWEENCARDS, cardPosY = this.PADDINGBETWEENCARDS;
         int cardCount = 0;
         
         // Now loop through the deck and add the card to the stack if it fits the filter
-        while (myIter.hasNext()) {
-            ParagonCard testCard = myIter.next();
+        for (ParagonCard testCard : tmpDeck.getCards()) {
             
             // Create a button
             ParagonCardButton tmpButton = new ParagonCardButton(testCard);
             tmpButton.setSize(this.CARDWIDTH, this.CARDHEIGHT);
+            tmpButton.setOpaque(false);
+            tmpButton.setContentAreaFilled(false);
+            //tmpButton.setBorderPainted(false);
             
             // Add event listener
-            tmpButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    btn_DeckBuilderCardActionPerformed(evt);
-                }
+            tmpButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+                btn_DeckBuilderCardActionPerformed(evt);
             });
             
             // Add button to panel
             this.panel_DeckBuilderPanel.add(tmpButton);
             tmpButton.setBounds(cardPosX, cardPosY, this.CARDWIDTH, this.CARDHEIGHT);
             tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
-            tmpButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));;
+            tmpButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
             
             //this.panel_DeckBuilderPanel.revalidate();
             
@@ -281,7 +367,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private void btn_DeckBuilderCardActionPerformed(java.awt.event.ActionEvent evt) {                                               
         
         ParagonCard tmpCard = ((ParagonCardButton)evt.getSource()).getMyCard();
-        ParagonLayeredPane tmpPane = new ParagonLayeredPane(tmpCard);
+        ParagonLayeredPane tmpPane = new ParagonLayeredPane(tmpCard, this);
         java.awt.Component[] tmpComp;
         boolean cardDuplicated = false;
         
@@ -357,7 +443,195 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         // Update deck numbers
         this.refreshDeckBuilderNumbers();
         
-    }              
+    }    
+    
+    /**
+     * Action when the slots is clicked;
+     * @param evt 
+     */
+    private void btn_DeckBuilderSlotsClicked(java.awt.event.ActionEvent evt) {
+                
+        this.slotSelected = (ParagonCardButton) evt.getSource();
+        
+        // If slot card is null no card in that slot
+        if (!(this.slotSelected.getMyCard() == null)) {
+            this.slotSelected = null;
+            ParagonCardSlotDialog tmpDialog = new ParagonCardSlotDialog(this, true, (ParagonCardButton) evt.getSource());
+            tmpDialog.setVisible(true);
+        }
+        else {
+            // Update filters based on slot clicked
+            if (this.slotSelected.getSlotIsActiveSlot()) { 
+                this.showActive = true;
+                this.radio_showActive.setSelected(true);
+                this.showPassive = true;
+                this.radio_showPassive.setSelected(true);
+                this.showUpgrade = false;
+                this.radio_showUpgrade.setSelected(false);
+                this.showPrime = false;
+                this.radio_showPrime.setSelected(false);
+                this.refreshSlotBuilderCards();
+            }
+            else {
+                this.showActive = false;
+                this.radio_showActive.setSelected(false);
+                this.showPassive = true;
+                this.radio_showPassive.setSelected(true);
+                this.showUpgrade = false;
+                this.radio_showUpgrade.setSelected(false);
+                this.showPrime = false;
+                this.radio_showPrime.setSelected(false);
+                this.refreshSlotBuilderCards();
+            }
+        }
+    }
+    
+    /**
+     * Removes the card from the slot provided
+     * @param slot 
+     */
+    public void removeCardFromCardSlot(ParagonCardButton slot) {
+        slot.setMyCard(null);
+        slot.setIcon(null);
+        if (slot.getSlotIsActiveSlot())
+            slot.setText("Active Slot Empty");
+        else
+            slot.setText("Passive Slot Empty");
+        this.showActive = true;
+        this.radio_showActive.setSelected(true);
+        this.showPassive = true;
+        this.radio_showPassive.setSelected(true);
+        this.showUpgrade = true;
+        this.radio_showUpgrade.setSelected(true);
+        this.showPrime = true;
+        this.radio_showPrime.setSelected(true);
+        this.refreshSlotBuilderCards();
+    }
+    
+    /**
+     * Sets the selected slot to slot and then shows only the upgrades
+     * @param slot 
+     */
+    public void upgradeCardInCardSlot(ParagonCardButton slot) {
+        this.slotSelected = slot;
+        
+        // Show only upgrades
+        this.showActive = false;
+        this.radio_showActive.setSelected(false);
+        this.showPassive = false;
+        this.radio_showPassive.setSelected(false);
+        this.showUpgrade = true;
+        this.radio_showUpgrade.setSelected(true);
+        this.showPrime = false;
+        this.radio_showPrime.setSelected(false);
+        this.refreshSlotBuilderCards();
+    }
+    
+    /**
+     * Deck slot builder cards clicked
+     * @param evt 
+     */
+    private void btn_DeckSlotBuilderCardActionPerformed(java.awt.event.ActionEvent evt) {
+        
+        ParagonCard tmpCard = ((ParagonCardButton) evt.getSource()).getMyCard();
+        
+        if (this.slotSelected == null) { // No slot selected so any card other than upgrade can be slotted
+            
+            if (tmpCard.getType().equals("Upgrade") || tmpCard.getType().equals("Prime")) {
+                //Do Nothing
+            }
+            else {
+                // Add the card. If active must go in active slot passive in any
+                if (tmpCard.getType().equals("Active")) {
+                    // Active card can only got in active slot find next active slot
+                    for (ParagonCardButton tmpButton : this.cardSlots) {
+                        if (tmpButton.getSlotIsActiveSlot() && tmpButton.getMyCard() == null) {
+                            // Add that card to the slot
+                            tmpButton.setMyCard(tmpCard);
+                            tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
+                            tmpButton.setText("");
+                            break;
+                        }
+                    }
+                }
+                else {
+                    // Passive card first check slot 4 or 5 then move onto the rest
+                    if (this.cardSlots[4].getMyCard() == null) {
+                        // Add that card to the slot
+                        this.cardSlots[4].setMyCard(tmpCard);
+                        this.cardSlots[4].setIcon(new StretchIcon(this.cardSlots[4].getIconPath()));
+                        this.cardSlots[4].setText("");
+                    }
+                    else if (this.cardSlots[5].getMyCard() == null) {
+                        // Add that card to the slot
+                        this.cardSlots[5].setMyCard(tmpCard);
+                        this.cardSlots[5].setIcon(new StretchIcon(this.cardSlots[5].getIconPath()));
+                        this.cardSlots[5].setText("");
+                    }
+                    else { // search for next empty slot
+                        for (ParagonCardButton tmpButton : this.cardSlots) {
+                            if (tmpButton.getMyCard() == null) {
+                                // Add that card to the slot
+                                tmpButton.setMyCard(tmpCard);
+                                tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
+                                tmpButton.setText("");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else { // Slot is selected so run checks against selected slot
+            if (this.slotSelected.getSlotIsActiveSlot() && tmpCard.getType().equals("Active")) {
+                this.slotSelected.setMyCard(tmpCard);
+                this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
+                this.slotSelected.setText("");
+            }
+            else if (tmpCard.getType().equals("Passive")) {
+                this.slotSelected.setMyCard(tmpCard);
+                this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
+                this.slotSelected.setText("");
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @param pane to show the popop over
+     */
+    public void showRemoveCardFromDeckBuilderPaneDialog(ParagonLayeredPane pane) {
+        ParagonRemoveCardDialog tmpDialog = new ParagonRemoveCardDialog(this, true, pane);
+        tmpDialog.setVisible(true);
+    }
+    
+    /**
+     * 
+     * @param pane 
+     */
+    public void removeCardFromDeckBuilderPanel(ParagonLayeredPane pane) {
+        
+        // Check if the pane has multiple cards
+        if (!(pane.getCardCount() > 1)) {
+            if (pane.getMyCard().getType().equals("Upgrade")) {
+                this.panel_UpgradeCards.remove(pane);
+                this.panel_UpgradeCards.revalidate();
+                this.panel_UpgradeCards.repaint();
+            }
+            else {
+                this.panel_EquipmentCards.remove(pane);
+                this.panel_EquipmentCards.revalidate();
+                this.panel_EquipmentCards.repaint();
+            }
+        }
+        
+        // Remove card from deck
+        pane.setCardCount(pane.getCardCount() - 1);
+        this.deckBeingCreated.removeCard(pane.getMyCard());       
+        
+        this.refreshDeckBuilderNumbers();
+        
+    }
     
     /**
      * Refresh deck builder numbers
@@ -376,18 +650,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.progress_CardCount.setValue(this.deckBeingCreated.getCardCount());
                 
     }
-    
-    /**
-     * Build the displayed cards array based off of filters
-     */
-    public void buildDisplayedCardsDeck() {
-        // Filter the deck
-        displayedDeck = ParagonDeck.getDeckFromFilters(masterDeck, this.showUpgrade, this.showPassive, 
-                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "");
-        
-        //System.out.println(displayedDeck);        
-    }
-    
+       
     /**
      * Loads the stat images and stat numbers
      */
@@ -519,7 +782,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
         btn_HeroSelect = new javax.swing.JButton();
         panel_HeroStats = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -573,10 +835,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         UltimateAbility_DPS = new javax.swing.JLabel();
-        panel_Affinities = new javax.swing.JPanel();
-        Affinity1 = new javax.swing.JLabel();
-        Affinity2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         cb_Levels = new javax.swing.JComboBox<>();
         tabbedPane_MainTabbed = new javax.swing.JTabbedPane();
         panel_DeckBuilder = new javax.swing.JPanel();
@@ -595,23 +853,25 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         scrollpanel_UpgradeCards = new javax.swing.JScrollPane();
         panel_UpgradeCards = new javax.swing.JPanel();
         panel_SlotDeck = new javax.swing.JPanel();
-        panel_Slots = new javax.swing.JPanel();
-        btn_Slot1 = new javax.swing.JButton();
-        btn_Slot2 = new javax.swing.JButton();
-        btn_Slot3 = new javax.swing.JButton();
-        btn_Slot4 = new javax.swing.JButton();
-        btn_Slot5 = new javax.swing.JButton();
-        btn_Slot6 = new javax.swing.JButton();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
+        scrollPane_DeckSlotBuilder = new javax.swing.JScrollPane();
+        panel_DeckSlotBuilderPanel = new javax.swing.JPanel();
+        panel_cardSlots = new javax.swing.JPanel();
+        cardSlot2 = new javax.swing.JButton();
+        cardSlot1 = new javax.swing.JButton();
+        cardSlot3 = new javax.swing.JButton();
+        cardSlot4 = new javax.swing.JButton();
+        cardSlot6 = new javax.swing.JButton();
+        cardSlot5 = new javax.swing.JButton();
         panel_radios = new javax.swing.JPanel();
         radio_showActive = new javax.swing.JRadioButton();
         radio_showPassive = new javax.swing.JRadioButton();
         radio_showUpgrade = new javax.swing.JRadioButton();
         radio_showPrime = new javax.swing.JRadioButton();
+        tb_DeckName = new javax.swing.JTextField();
+        btn_SaveDeck = new javax.swing.JButton();
+        btn_LoadDeck = new javax.swing.JButton();
+        Affinity1 = new javax.swing.JLabel();
+        Affinity2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1078,38 +1338,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panel_Affinities.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panel_Affinities.setOpaque(false);
-
-        Affinity1.setToolTipText("");
-
-        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Affinities");
-
-        javax.swing.GroupLayout panel_AffinitiesLayout = new javax.swing.GroupLayout(panel_Affinities);
-        panel_Affinities.setLayout(panel_AffinitiesLayout);
-        panel_AffinitiesLayout.setHorizontalGroup(
-            panel_AffinitiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_AffinitiesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Affinity1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        panel_AffinitiesLayout.setVerticalGroup(
-            panel_AffinitiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_AffinitiesLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_AffinitiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Affinity1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         cb_Levels.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         cb_Levels.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cb_Levels.addActionListener(new java.awt.event.ActionListener() {
@@ -1119,6 +1347,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         });
 
         tabbedPane_MainTabbed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tabbedPane_MainTabbed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPane_MainTabbedStateChanged(evt);
+            }
+        });
 
         scrollPane_DeckBuilder.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         scrollPane_DeckBuilder.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1226,7 +1459,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             panel_DeckListMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_CardCountMain)
             .addComponent(z_PrimeTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
             .addComponent(z_EquipmentCardsTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(z_EquipmentCardsTitle1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(scrollpanel_EquipmentCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1271,124 +1504,82 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         tabbedPane_MainTabbed.addTab("Build Deck", panel_DeckBuilder);
 
-        panel_Slots.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        scrollPane_DeckSlotBuilder.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        scrollPane_DeckSlotBuilder.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane_DeckSlotBuilder.setHorizontalScrollBar(null);
+        scrollPane_DeckSlotBuilder.setPreferredSize(new java.awt.Dimension(990, 514));
 
-        btn_Slot1.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot1.setText("Empty");
+        panel_DeckSlotBuilderPanel.setAutoscrolls(true);
+        panel_DeckSlotBuilderPanel.setPreferredSize(new java.awt.Dimension(986, 500));
 
-        btn_Slot2.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot2.setText("Empty");
+        javax.swing.GroupLayout panel_DeckSlotBuilderPanelLayout = new javax.swing.GroupLayout(panel_DeckSlotBuilderPanel);
+        panel_DeckSlotBuilderPanel.setLayout(panel_DeckSlotBuilderPanelLayout);
+        panel_DeckSlotBuilderPanelLayout.setHorizontalGroup(
+            panel_DeckSlotBuilderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 986, Short.MAX_VALUE)
+        );
+        panel_DeckSlotBuilderPanelLayout.setVerticalGroup(
+            panel_DeckSlotBuilderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 655, Short.MAX_VALUE)
+        );
 
-        btn_Slot3.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot3.setText("Empty");
+        scrollPane_DeckSlotBuilder.setViewportView(panel_DeckSlotBuilderPanel);
 
-        btn_Slot4.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot4.setText("Empty");
+        panel_cardSlots.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btn_Slot5.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot5.setText("Empty");
+        cardSlot2.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot2.setText("Empty");
 
-        btn_Slot6.setBackground(new java.awt.Color(102, 102, 102));
-        btn_Slot6.setText("Empty");
+        cardSlot1.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot1.setText("Empty");
 
-        javax.swing.GroupLayout panel_SlotsLayout = new javax.swing.GroupLayout(panel_Slots);
-        panel_Slots.setLayout(panel_SlotsLayout);
-        panel_SlotsLayout.setHorizontalGroup(
-            panel_SlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_SlotsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btn_Slot1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Slot2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Slot3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Slot4, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Slot5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Slot6, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+        cardSlot3.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot3.setText("Empty");
+
+        cardSlot4.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot4.setText("Empty");
+
+        cardSlot6.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot6.setText("Empty");
+
+        cardSlot5.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        cardSlot5.setText("Empty");
+
+        javax.swing.GroupLayout panel_cardSlotsLayout = new javax.swing.GroupLayout(panel_cardSlots);
+        panel_cardSlots.setLayout(panel_cardSlotsLayout);
+        panel_cardSlotsLayout.setHorizontalGroup(
+            panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_cardSlotsLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cardSlot1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardSlot3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardSlot5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cardSlot2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardSlot4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardSlot6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        panel_SlotsLayout.setVerticalGroup(
-            panel_SlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_SlotsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_SlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_SlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Slot2, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addComponent(btn_Slot3, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addComponent(btn_Slot4, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addComponent(btn_Slot5, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addComponent(btn_Slot6, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
-                    .addComponent(btn_Slot1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        jLayeredPane1.setPreferredSize(new java.awt.Dimension(293, 29));
-
-        jPanel1.setPreferredSize(new java.awt.Dimension(293, 29));
-
-        jButton1.setPreferredSize(new java.awt.Dimension(293, 29));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jLabel29.setText("jLabel29");
-
-        jLabel28.setText("jLabel28");
-        jLabel28.setPreferredSize(new java.awt.Dimension(40, 29));
-
-        jLayeredPane1.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel29, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel28, javax.swing.JLayeredPane.PALETTE_LAYER);
-
-        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
-        jLayeredPane1.setLayout(jLayeredPane1Layout);
-        jLayeredPane1Layout.setHorizontalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                    .addGap(131, 131, 131)
-                    .addComponent(jLabel29)
-                    .addContainerGap(132, Short.MAX_VALUE)))
-            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                    .addGap(138, 138, 138)
-                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(138, Short.MAX_VALUE)))
-        );
-        jLayeredPane1Layout.setVerticalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5))
-            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                    .addGap(10, 10, 10)
-                    .addComponent(jLabel29)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                    .addGap(5, 5, 5)
-                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        panel_cardSlotsLayout.setVerticalGroup(
+            panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cardSlotsLayout.createSequentialGroup()
+                .addContainerGap(42, Short.MAX_VALUE)
+                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_cardSlotsLayout.createSequentialGroup()
+                        .addComponent(cardSlot1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cardSlot3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cardSlot5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_cardSlotsLayout.createSequentialGroup()
+                        .addComponent(cardSlot2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cardSlot4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cardSlot6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(40, 40, 40))
         );
 
         javax.swing.GroupLayout panel_SlotDeckLayout = new javax.swing.GroupLayout(panel_SlotDeck);
@@ -1396,22 +1587,16 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_SlotDeckLayout.setHorizontalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                .addGroup(panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panel_Slots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                        .addGap(256, 256, 256)
-                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(461, Short.MAX_VALUE))
+                .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 968, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_SlotDeckLayout.setVerticalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_SlotDeckLayout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 391, Short.MAX_VALUE)
-                .addComponent(panel_Slots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(panel_SlotDeckLayout.createSequentialGroup()
+                .addGroup(panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1480,6 +1665,20 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        tb_DeckName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tb_DeckName.setText("Deck Name");
+
+        btn_SaveDeck.setText("Save");
+
+        btn_LoadDeck.setText("Load");
+        btn_LoadDeck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_LoadDeckActionPerformed(evt);
+            }
+        });
+
+        Affinity1.setToolTipText("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1490,10 +1689,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel_Affinities, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(Affinity1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cb_Levels, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cb_Levels, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(1, 1, 1))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(4, 4, 4)
@@ -1503,23 +1706,44 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                     .addComponent(tabbedPane_MainTabbed)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panel_radios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_SaveDeck, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_LoadDeck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(panel_Affinities, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cb_Levels, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(panel_radios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(11, 11, 11)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(panel_radios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(Affinity1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(Affinity2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cb_Levels, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(11, 11, 11))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_SaveDeck)
+                            .addComponent(btn_LoadDeck))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel_HeroStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tabbedPane_MainTabbed, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1546,22 +1770,39 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private void radio_showActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio_showActiveActionPerformed
         this.showActive = this.radio_showActive.isSelected();
         this.refreshDeckBuilderCards();
+        this.refreshSlotBuilderCards();
     }//GEN-LAST:event_radio_showActiveActionPerformed
 
     private void radio_showPassiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio_showPassiveActionPerformed
         this.showPassive = this.radio_showPassive.isSelected();
         this.refreshDeckBuilderCards();
+        this.refreshSlotBuilderCards();
     }//GEN-LAST:event_radio_showPassiveActionPerformed
 
     private void radio_showUpgradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio_showUpgradeActionPerformed
         this.showUpgrade = this.radio_showUpgrade.isSelected();
         this.refreshDeckBuilderCards();
+        this.refreshSlotBuilderCards();
     }//GEN-LAST:event_radio_showUpgradeActionPerformed
 
     private void radio_showPrimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio_showPrimeActionPerformed
         this.showPrime = this.radio_showPrime.isSelected();
         this.refreshDeckBuilderCards();
+        this.refreshSlotBuilderCards();
     }//GEN-LAST:event_radio_showPrimeActionPerformed
+
+    private void btn_LoadDeckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LoadDeckActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_LoadDeckActionPerformed
+
+    private void tabbedPane_MainTabbedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPane_MainTabbedStateChanged
+       if (this.tabbedPane_MainTabbed.getSelectedIndex() == 0 && !(this.masterDeck == null)) {
+           this.refreshDeckBuilderCards();
+       }
+       else if (this.tabbedPane_MainTabbed.getSelectedIndex() == 1 && !(this.deckBeingCreated == null)) {
+           this.refreshSlotBuilderCards();
+       }
+    }//GEN-LAST:event_tabbedPane_MainTabbedStateChanged
 
     /**
      * Returns the point of the hero selector button
@@ -1632,15 +1873,15 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel UltimateAbility_DPS;
     private javax.swing.JLabel UltimateAbility_Icon;
     private javax.swing.JButton btn_HeroSelect;
-    private javax.swing.JButton btn_Slot1;
-    private javax.swing.JButton btn_Slot2;
-    private javax.swing.JButton btn_Slot3;
-    private javax.swing.JButton btn_Slot4;
-    private javax.swing.JButton btn_Slot5;
-    private javax.swing.JButton btn_Slot6;
+    private javax.swing.JButton btn_LoadDeck;
+    private javax.swing.JButton btn_SaveDeck;
+    private javax.swing.JButton cardSlot1;
+    private javax.swing.JButton cardSlot2;
+    private javax.swing.JButton cardSlot3;
+    private javax.swing.JButton cardSlot4;
+    private javax.swing.JButton cardSlot5;
+    private javax.swing.JButton cardSlot6;
     private javax.swing.JComboBox<String> cb_Levels;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1660,8 +1901,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1669,25 +1908,22 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JPanel panel_Affinities;
     private javax.swing.JPanel panel_AlternateAbility;
     private javax.swing.JPanel panel_BasicAttack;
     private javax.swing.JLayeredPane panel_CardCountMain;
     private javax.swing.JPanel panel_DeckBuilder;
     private javax.swing.JPanel panel_DeckBuilderPanel;
     private javax.swing.JPanel panel_DeckListMain;
+    private javax.swing.JPanel panel_DeckSlotBuilderPanel;
     private javax.swing.JPanel panel_EquipmentCards;
     private javax.swing.JPanel panel_HeroStats;
     private javax.swing.JPanel panel_PrimaryAbility;
     private javax.swing.JPanel panel_PrimeSlot;
     private javax.swing.JPanel panel_SecondaryAbility;
     private javax.swing.JPanel panel_SlotDeck;
-    private javax.swing.JPanel panel_Slots;
     private javax.swing.JPanel panel_UltimateAbility;
     private javax.swing.JPanel panel_UpgradeCards;
+    private javax.swing.JPanel panel_cardSlots;
     private javax.swing.JPanel panel_radios;
     private javax.swing.JProgressBar progress_CardCount;
     private javax.swing.JRadioButton radio_showActive;
@@ -1695,10 +1931,12 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JRadioButton radio_showPrime;
     private javax.swing.JRadioButton radio_showUpgrade;
     private javax.swing.JScrollPane scrollPane_DeckBuilder;
+    private javax.swing.JScrollPane scrollPane_DeckSlotBuilder;
     private javax.swing.JScrollPane scrollpanel_EquipmentCards;
     private javax.swing.JScrollPane scrollpanel_UpgradeCards;
     private javax.swing.JTabbedPane tabbedPane_MainTabbed;
     private javax.swing.JLabel tb_CardCount;
+    private javax.swing.JTextField tb_DeckName;
     private javax.swing.JLabel z_EquipmentCardsTitle;
     private javax.swing.JLabel z_EquipmentCardsTitle1;
     private javax.swing.JLabel z_PrimeTitle;

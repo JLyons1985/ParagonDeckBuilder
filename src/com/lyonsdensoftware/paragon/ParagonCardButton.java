@@ -3,15 +3,18 @@ package com.lyonsdensoftware.paragon;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import javax.swing.JButton;
 
 /**
  *
  * @author Joshua Lyons
  */
-public class ParagonCardButton extends JButton{
+public class ParagonCardButton extends JButton {
     
-    private ParagonCard myCard;         // Holds a reference to the card in this button    
+    private ParagonCard myCard;         // Holds a reference to the card in this button
+    private boolean slotIsActiveSlot;   // Is this an active slot
+    private int slotIndex;              // Ref to slot index
     
     /**
      * 
@@ -19,6 +22,20 @@ public class ParagonCardButton extends JButton{
      */
     public ParagonCardButton (ParagonCard card) {
         this.myCard = card;
+        
+    }
+    
+    /**
+     * 
+     * @param card
+     * @param isActiveSlot
+     * @param slotIndex 
+     */
+    public ParagonCardButton (ParagonCard card, boolean isActiveSlot, int slotIndex) {
+        this.myCard = card;
+        this.slotIsActiveSlot = isActiveSlot;
+        this.slotIndex = slotIndex;
+        
     }
     
     /**
@@ -85,5 +102,42 @@ public class ParagonCardButton extends JButton{
         
         return imgPath;
     }
+
+    /**
+     * @return the slotIsActiveSlot
+     */
+    public boolean getSlotIsActiveSlot() {
+        return slotIsActiveSlot;
+    }
+
+    /**
+     * @param slotIsActiveSlot the slotIsActiveSlot to set
+     */
+    public void setSlotIsActiveSlot(boolean slotIsActiveSlot) {
+        this.slotIsActiveSlot = slotIsActiveSlot;
+    }
+
+    /**
+     * @return the slotIndex
+     */
+    public int getSlotIndex() {
+        return slotIndex;
+    }
+
+    /**
+     * @param slotIndex the slotIndex to set
+     */
+    public void setSlotIndex(int slotIndex) {
+        this.slotIndex = slotIndex;
+    }
+
+    /**
+     * @param myCard the myCard to set
+     */
+    public void setMyCard(ParagonCard myCard) {
+        this.myCard = myCard;
+    }
+
+    
     
 }
