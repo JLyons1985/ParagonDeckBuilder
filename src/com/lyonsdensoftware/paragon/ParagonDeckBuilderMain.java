@@ -5,9 +5,8 @@ import java.nio.file.Paths;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
+import java.util.Iterator;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EtchedBorder;
 
 /**
  *
@@ -17,10 +16,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     
     private ParagonDeck masterDeck;                 // Holds a reference to the master deck
     private ParagonDeck displayedDeck;              // Holds a reference to the displayed deck
+    private ParagonDeck deckBeingCreated;           // Holds a reference to the deck being created
     private ParagonHero myHero;                     // Holds a reference to the selected hero
     private ParagonCardSlot[] cardSlots;            // Holds a reference to each of the available slots
     private final int CARDHEIGHT = 250, CARDWIDTH = 188, 
-            PADDINGBETWEENCARDS = 12, CARDSPERROW = 5;
+            PADDINGBETWEENCARDS = 5, CARDSPERROW = 5;
     private boolean showActive = true, showPassive = true, showUpgrade = true, showPrime = true;
 
     /**
@@ -38,6 +38,76 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         // Create the master deck
         this.masterDeck = new ParagonDeck(true);
+        
+        // New deck
+        this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck);
+        // Now iter through starter deck to add to slots
+        Iterator<ParagonCard> myIter = this.deckBeingCreated.getCards().listIterator();
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        while (myIter.hasNext()) {
+            ParagonCard testCard = myIter.next();
+            
+            ParagonLayeredPane tmpPane = new ParagonLayeredPane(testCard);
+            java.awt.Component[] tmpComp;
+            boolean cardDuplicated = false;
+            
+            switch (testCard.getType()) {
+                case "Prime":
+                    // Clear the prime panel and add new one
+                    this.panel_PrimeSlot.removeAll();
+                    this.panel_PrimeSlot.add(tmpPane);
+                    tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                    break;
+                case "Upgrade":
+                    tmpComp = this.panel_UpgradeCards.getComponents();
+                
+                    if (tmpComp.length > 0) {
+                        for (java.awt.Component comp : tmpComp) {
+                            ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                            if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                                testPane.setCardCount(testPane.getCardCount() + 1);
+                                cardDuplicated = true;
+                            }
+                        }      
+                    }
+                    else {
+                        // Add to upgrade pane
+                        this.panel_UpgradeCards.add(tmpPane);
+                    }
+
+                    if (!cardDuplicated) {
+                        // Add to upgrade pane
+                        this.panel_UpgradeCards.add(tmpPane);
+                    }
+                    break;
+                case "Passive":
+                case "Active":
+                    tmpComp = this.panel_EquipmentCards.getComponents();
+                
+                    if (tmpComp.length > 0) {
+                        for (java.awt.Component comp : tmpComp) {
+                            ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                            if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                                testPane.setCardCount(testPane.getCardCount() + 1);
+                                cardDuplicated = true;
+                            }
+                        }      
+                    }
+                    else {
+                        // Add to upgrade pane
+                        this.panel_EquipmentCards.add(tmpPane);
+                    }
+
+                    if (!cardDuplicated) {
+                        // Add to equipment pane
+                        this.panel_EquipmentCards.add(tmpPane);
+                    }
+                    break;                    
+            }
+        }
         
         // Create the card slots
         cardSlots = new ParagonCardSlot[6];
@@ -94,14 +164,40 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
      */
     public void refreshGui() {
         
+        // Refresh hero icon
+        this.refreshHeroIcon();        
+        
+        // Refresh affinities
+        this.refreshAffinities();
+        
+        // Refresh stats
+        this.refreshStats();
+        
+        // Refresh Deck builder displayed card
+        this.refreshDeckBuilderCards();
+        
+        // Refresh deck builder numbers
+        this.refreshDeckBuilderNumbers();
+    }
+    
+    /**
+     * Refresh hero icon
+     */
+    public void refreshHeroIcon() {
         // Set the hero button image to the correct image
         String imgPath = Paths.get("./Art/Heroes/" + 
                 this.myHero.getName() + ".png").toString();
         
         this.btn_HeroSelect.setIcon(new StretchIcon(imgPath));
-        
+    }
+    
+    /**
+     * Refreshes the affinities icons
+     */
+    public void refreshAffinities() {
         // Set the affinities images
         String[] affinities = this.myHero.getAffinities();
+        String imgPath;
         
         if (affinities.length > 0){
             this.Affinity1.setVisible(true);
@@ -123,12 +219,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             this.Affinity1.setVisible(false);
             this.Affinity2.setVisible(false);
         }
-        
-        // Refresh stats
-        this.refreshStats();
-        
-        // Refresh Deck builder displayed card
-        this.refreshDeckBuilderCards();
     }
     
     /**
@@ -141,16 +231,26 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         this.buildDisplayedCardsDeck();
         
-        // Now that the deck is built need to display it
-        ParagonCard[] tmpCards = displayedDeck.getCards();
+        // Now that the deck is built need to display it        
+        Iterator<ParagonCard> myIter = displayedDeck.getCards().listIterator();
         
         int cardPosX = this.PADDINGBETWEENCARDS, cardPosY = this.PADDINGBETWEENCARDS;
+        int cardCount = 0;
         
-        for (int i = 0; i < tmpCards.length; i++) {
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        while (myIter.hasNext()) {
+            ParagonCard testCard = myIter.next();
             
             // Create a button
-            ParagonCardButton tmpButton = new ParagonCardButton(tmpCards[i]);
+            ParagonCardButton tmpButton = new ParagonCardButton(testCard);
             tmpButton.setSize(this.CARDWIDTH, this.CARDHEIGHT);
+            
+            // Add event listener
+            tmpButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btn_DeckBuilderCardActionPerformed(evt);
+                }
+            });
             
             // Add button to panel
             this.panel_DeckBuilderPanel.add(tmpButton);
@@ -162,14 +262,119 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             
             // set pos for next card
             // Set x
-            cardPosX = ((i + 1) % this.CARDSPERROW) * (this.CARDWIDTH) + this.PADDINGBETWEENCARDS;
-            cardPosY = ((i + 1) / this.CARDSPERROW) * (this.CARDHEIGHT) + this.PADDINGBETWEENCARDS;            
+            cardPosX = ((cardCount + 1) % this.CARDSPERROW) * (this.CARDWIDTH) + this.PADDINGBETWEENCARDS;
+            cardPosY = ((cardCount + 1) / this.CARDSPERROW) * (this.CARDHEIGHT) + this.PADDINGBETWEENCARDS;  
+            
+            cardCount++;
             
         }
         
         this.panel_DeckBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckBuilderPanel.getWidth(), cardPosY));
         this.panel_DeckBuilderPanel.revalidate();
         //this.scrollPane_DeckBuilder.revalidate();
+    }
+    
+    /**
+     * Deck builder card clicked, add card to deck.
+     * @param evt 
+     */
+    private void btn_DeckBuilderCardActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        
+        ParagonCard tmpCard = ((ParagonCardButton)evt.getSource()).getMyCard();
+        ParagonLayeredPane tmpPane = new ParagonLayeredPane(tmpCard);
+        java.awt.Component[] tmpComp;
+        boolean cardDuplicated = false;
+        
+        // Switch on card type
+        switch (tmpCard.getType()) {
+            case "Prime":
+                // Clear the prime panel and add new one
+                this.panel_PrimeSlot.removeAll();
+                this.deckBeingCreated.removePrimeCard();
+                
+                this.panel_PrimeSlot.add(tmpPane);
+                tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                
+                //Add card to deck being created
+                this.deckBeingCreated.addCard(tmpCard);
+                break;
+            case "Upgrade":
+                tmpComp = this.panel_UpgradeCards.getComponents();
+                
+                if (tmpComp.length > 0) {
+                    for (java.awt.Component comp : tmpComp) {
+                        ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                        if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                            testPane.setCardCount(testPane.getCardCount() + 1);
+                            cardDuplicated = true;
+                        }
+                    }      
+                }
+                else {
+                    // Add to upgrade pane
+                    this.panel_UpgradeCards.add(tmpPane);
+                }
+                
+                if (!cardDuplicated) {
+                    // Add to upgrade pane
+                    this.panel_UpgradeCards.add(tmpPane);
+                }
+                
+                //Add card to deck being created
+                this.deckBeingCreated.addCard(tmpCard);
+                break;
+            case "Passive":
+            case "Active":
+                tmpComp = this.panel_EquipmentCards.getComponents();
+                
+                if (tmpComp.length > 0) {
+                    for (java.awt.Component comp : tmpComp) {
+                        ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                        if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                            testPane.setCardCount(testPane.getCardCount() + 1);
+                            cardDuplicated = true;
+                        }
+                    }      
+                }
+                else {
+                    // Add to upgrade pane
+                    this.panel_EquipmentCards.add(tmpPane);
+                }
+                
+                if (!cardDuplicated) {
+                    // Add to equipment pane
+                    this.panel_EquipmentCards.add(tmpPane);
+                }
+                
+                //Add card to deck being created
+                this.deckBeingCreated.addCard(tmpCard);
+                break;
+        }
+               
+        
+        // Update deck numbers
+        this.refreshDeckBuilderNumbers();
+        
+    }              
+    
+    /**
+     * Refresh deck builder numbers
+     */
+    public void refreshDeckBuilderNumbers() {
+        
+        String tmpString;
+        
+        // Card count
+        tmpString = this.deckBeingCreated.getCardCount() + "/" + this.deckBeingCreated.getMaxCards();
+        this.tb_CardCount.setText(tmpString);
+        
+        // Card count slider
+        this.progress_CardCount.setMinimum(0);
+        this.progress_CardCount.setMaximum(this.deckBeingCreated.getMaxCards());
+        this.progress_CardCount.setValue(this.deckBeingCreated.getCardCount());
+                
     }
     
     /**
@@ -377,6 +582,18 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_DeckBuilder = new javax.swing.JPanel();
         scrollPane_DeckBuilder = new javax.swing.JScrollPane();
         panel_DeckBuilderPanel = new javax.swing.JPanel();
+        panel_DeckListMain = new javax.swing.JPanel();
+        panel_CardCountMain = new javax.swing.JLayeredPane();
+        tb_CardCount = new javax.swing.JLabel();
+        progress_CardCount = new javax.swing.JProgressBar();
+        z_PrimeTitle = new javax.swing.JLabel();
+        panel_PrimeSlot = new javax.swing.JPanel();
+        z_EquipmentCardsTitle = new javax.swing.JLabel();
+        z_EquipmentCardsTitle1 = new javax.swing.JLabel();
+        scrollpanel_EquipmentCards = new javax.swing.JScrollPane();
+        panel_EquipmentCards = new javax.swing.JPanel();
+        scrollpanel_UpgradeCards = new javax.swing.JScrollPane();
+        panel_UpgradeCards = new javax.swing.JPanel();
         panel_SlotDeck = new javax.swing.JPanel();
         panel_Slots = new javax.swing.JPanel();
         btn_Slot1 = new javax.swing.JButton();
@@ -385,6 +602,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         btn_Slot4 = new javax.swing.JButton();
         btn_Slot5 = new javax.swing.JButton();
         btn_Slot6 = new javax.swing.JButton();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
         panel_radios = new javax.swing.JPanel();
         radio_showActive = new javax.swing.JRadioButton();
         radio_showPassive = new javax.swing.JRadioButton();
@@ -436,30 +658,29 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_BasicAttack.setLayout(panel_BasicAttackLayout);
         panel_BasicAttackLayout.setHorizontalGroup(
             panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BasicAttackLayout.createSequentialGroup()
+                .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panel_BasicAttackLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_BasicAttackLayout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addComponent(BasicAttack_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(panel_BasicAttackLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_BasicAttackLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_BasicAttackLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(BasicAttack_AD, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(BasicAttack_AS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(BasicAttack_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panel_BasicAttackLayout.createSequentialGroup()
-                                .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_BasicAttackLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel5))
-                                    .addGroup(panel_BasicAttackLayout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(BasicAttack_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
+                            .addComponent(BasicAttack_AD, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BasicAttack_AS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BasicAttack_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panel_BasicAttackLayout.createSequentialGroup()
                         .addGroup(panel_BasicAttackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
@@ -526,6 +747,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addGroup(panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
                         .addGroup(panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel12))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
+                        .addGroup(panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -537,19 +763,15 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                             .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
                                 .addGroup(panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel8))
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel8)
+                                        .addGap(18, 18, 18))
                                     .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(39, 39, 39)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(AlternateAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(panel_AlternateAbilityLayout.createSequentialGroup()
-                        .addGroup(panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel12))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
         panel_AlternateAbilityLayout.setVerticalGroup(
             panel_AlternateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -611,6 +833,20 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
                         .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel17))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
+                        .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_PrimaryAbilityLayout.createSequentialGroup()
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(22, 22, 22)))
+                                .addGap(18, 18, 18)
+                                .addComponent(PrimaryAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -618,23 +854,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                                     .addComponent(PrimaryAbility_AD, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(PrimaryAbility_AS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(PrimaryAbility_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
-                                .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel13))
-                                    .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
-                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(PrimaryAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(panel_PrimaryAbilityLayout.createSequentialGroup()
-                        .addGroup(panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel17))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         panel_PrimaryAbilityLayout.setVerticalGroup(
             panel_PrimaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -696,29 +917,29 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
                         .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel22))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
+                        .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_SecondaryAbilityLayout.createSequentialGroup()
+                                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(30, 30, 30)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(SecondaryAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
                                 .addComponent(jLabel19)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(SecondaryAbility_AD, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(SecondaryAbility_AS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(SecondaryAbility_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
-                                .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel18))
-                                    .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
-                                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addComponent(SecondaryAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel_SecondaryAbilityLayout.createSequentialGroup()
-                        .addGroup(panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20)
-                            .addComponent(jLabel22))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(SecondaryAbility_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         panel_SecondaryAbilityLayout.setVerticalGroup(
             panel_SecondaryAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -780,6 +1001,21 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
                         .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel25)
+                            .addComponent(jLabel27))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
+                        .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_UltimateAbilityLayout.createSequentialGroup()
+                                        .addComponent(jLabel23)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_UltimateAbilityLayout.createSequentialGroup()
+                                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(36, 36, 36)))
+                                .addComponent(UltimateAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
                                 .addComponent(jLabel24)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -787,23 +1023,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                                     .addComponent(UltimateAbility_AD, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(UltimateAbility_AS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(UltimateAbility_DPS, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
-                                .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel23))
-                                    .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
-                                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(UltimateAbility_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(panel_UltimateAbilityLayout.createSequentialGroup()
-                        .addGroup(panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel25)
-                            .addComponent(jLabel27))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         panel_UltimateAbilityLayout.setVerticalGroup(
             panel_UltimateAbilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -899,6 +1120,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         tabbedPane_MainTabbed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        scrollPane_DeckBuilder.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         scrollPane_DeckBuilder.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane_DeckBuilder.setHorizontalScrollBar(null);
 
@@ -912,26 +1134,139 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
         panel_DeckBuilderPanelLayout.setVerticalGroup(
             panel_DeckBuilderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 635, Short.MAX_VALUE)
+            .addGap(0, 655, Short.MAX_VALUE)
         );
 
         scrollPane_DeckBuilder.setViewportView(panel_DeckBuilderPanel);
+
+        panel_DeckListMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        panel_CardCountMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_CardCount.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        tb_CardCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_CardCount.setText("0 / 0");
+        tb_CardCount.setToolTipText("");
+
+        progress_CardCount.setBorderPainted(false);
+        progress_CardCount.setOpaque(true);
+
+        panel_CardCountMain.setLayer(tb_CardCount, javax.swing.JLayeredPane.PALETTE_LAYER);
+        panel_CardCountMain.setLayer(progress_CardCount, javax.swing.JLayeredPane.PALETTE_LAYER);
+
+        javax.swing.GroupLayout panel_CardCountMainLayout = new javax.swing.GroupLayout(panel_CardCountMain);
+        panel_CardCountMain.setLayout(panel_CardCountMainLayout);
+        panel_CardCountMainLayout.setHorizontalGroup(
+            panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(tb_CardCount, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
+            .addGroup(panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(progress_CardCount, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
+        );
+        panel_CardCountMainLayout.setVerticalGroup(
+            panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+            .addGroup(panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(tb_CardCount, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+            .addGroup(panel_CardCountMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(progress_CardCount, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+        );
+
+        z_PrimeTitle.setBackground(new java.awt.Color(255, 255, 51));
+        z_PrimeTitle.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        z_PrimeTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        z_PrimeTitle.setText("Prime Helix:");
+        z_PrimeTitle.setOpaque(true);
+        z_PrimeTitle.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        panel_PrimeSlot.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panel_PrimeSlot.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        javax.swing.GroupLayout panel_PrimeSlotLayout = new javax.swing.GroupLayout(panel_PrimeSlot);
+        panel_PrimeSlot.setLayout(panel_PrimeSlotLayout);
+        panel_PrimeSlotLayout.setHorizontalGroup(
+            panel_PrimeSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panel_PrimeSlotLayout.setVerticalGroup(
+            panel_PrimeSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 25, Short.MAX_VALUE)
+        );
+
+        z_EquipmentCardsTitle.setBackground(new java.awt.Color(51, 204, 255));
+        z_EquipmentCardsTitle.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        z_EquipmentCardsTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        z_EquipmentCardsTitle.setText("Equipment Cards:");
+        z_EquipmentCardsTitle.setOpaque(true);
+        z_EquipmentCardsTitle.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        z_EquipmentCardsTitle1.setBackground(new java.awt.Color(153, 255, 153));
+        z_EquipmentCardsTitle1.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        z_EquipmentCardsTitle1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        z_EquipmentCardsTitle1.setText("Upgrade Cards:");
+        z_EquipmentCardsTitle1.setOpaque(true);
+        z_EquipmentCardsTitle1.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        scrollpanel_EquipmentCards.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollpanel_EquipmentCards.setPreferredSize(new java.awt.Dimension(293, 209));
+
+        panel_EquipmentCards.setLayout(new java.awt.GridLayout(0, 1));
+        scrollpanel_EquipmentCards.setViewportView(panel_EquipmentCards);
+
+        scrollpanel_UpgradeCards.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollpanel_UpgradeCards.setPreferredSize(new java.awt.Dimension(293, 260));
+
+        panel_UpgradeCards.setLayout(new java.awt.GridLayout(0, 1));
+        scrollpanel_UpgradeCards.setViewportView(panel_UpgradeCards);
+
+        javax.swing.GroupLayout panel_DeckListMainLayout = new javax.swing.GroupLayout(panel_DeckListMain);
+        panel_DeckListMain.setLayout(panel_DeckListMainLayout);
+        panel_DeckListMainLayout.setHorizontalGroup(
+            panel_DeckListMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_CardCountMain)
+            .addComponent(z_PrimeTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(z_EquipmentCardsTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(z_EquipmentCardsTitle1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollpanel_EquipmentCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollpanel_UpgradeCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panel_DeckListMainLayout.setVerticalGroup(
+            panel_DeckListMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_DeckListMainLayout.createSequentialGroup()
+                .addComponent(panel_CardCountMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(z_PrimeTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(z_EquipmentCardsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollpanel_EquipmentCards, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(z_EquipmentCardsTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollpanel_UpgradeCards, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout panel_DeckBuilderLayout = new javax.swing.GroupLayout(panel_DeckBuilder);
         panel_DeckBuilder.setLayout(panel_DeckBuilderLayout);
         panel_DeckBuilderLayout.setHorizontalGroup(
             panel_DeckBuilderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_DeckBuilderLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane_DeckBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addComponent(scrollPane_DeckBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 968, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel_DeckListMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_DeckBuilderLayout.setVerticalGroup(
             panel_DeckBuilderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_DeckBuilderLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane_DeckBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(2, 2, 2)
+                .addGroup(panel_DeckBuilderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panel_DeckListMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPane_DeckBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPane_MainTabbed.addTab("Build Deck", panel_DeckBuilder);
@@ -990,19 +1325,92 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLayeredPane1.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        jButton1.setPreferredSize(new java.awt.Dimension(293, 29));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel29.setText("jLabel29");
+
+        jLabel28.setText("jLabel28");
+        jLabel28.setPreferredSize(new java.awt.Dimension(40, 29));
+
+        jLayeredPane1.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel29, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel28, javax.swing.JLayeredPane.PALETTE_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(131, 131, 131)
+                    .addComponent(jLabel29)
+                    .addContainerGap(132, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(138, 138, 138)
+                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(138, Short.MAX_VALUE)))
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(jLabel29)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(5, 5, 5)
+                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout panel_SlotDeckLayout = new javax.swing.GroupLayout(panel_SlotDeck);
         panel_SlotDeck.setLayout(panel_SlotDeckLayout);
         panel_SlotDeckLayout.setHorizontalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel_Slots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(412, Short.MAX_VALUE))
+                .addGroup(panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_SlotDeckLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panel_Slots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_SlotDeckLayout.createSequentialGroup()
+                        .addGap(256, 256, 256)
+                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(461, Short.MAX_VALUE))
         );
         panel_SlotDeckLayout.setVerticalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_SlotDeckLayout.createSequentialGroup()
-                .addContainerGap(501, Short.MAX_VALUE)
+                .addGap(92, 92, 92)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 391, Short.MAX_VALUE)
                 .addComponent(panel_Slots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1077,18 +1485,20 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panel_HeroStats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel_Affinities, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cb_Levels, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(18, 18, 18)
+                            .addComponent(panel_Affinities, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cb_Levels, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(1, 1, 1))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(panel_HeroStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabbedPane_MainTabbed)
                     .addGroup(layout.createSequentialGroup()
@@ -1110,10 +1520,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(panel_radios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(11, 11, 11)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tabbedPane_MainTabbed)
-                    .addComponent(panel_HeroStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_HeroStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tabbedPane_MainTabbed, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         tabbedPane_MainTabbed.getAccessibleContext().setAccessibleName("Deck Builder");
@@ -1230,6 +1639,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JButton btn_Slot5;
     private javax.swing.JButton btn_Slot6;
     private javax.swing.JComboBox<String> cb_Levels;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1250,6 +1660,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1257,25 +1669,39 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPanel panel_Affinities;
     private javax.swing.JPanel panel_AlternateAbility;
     private javax.swing.JPanel panel_BasicAttack;
+    private javax.swing.JLayeredPane panel_CardCountMain;
     private javax.swing.JPanel panel_DeckBuilder;
     private javax.swing.JPanel panel_DeckBuilderPanel;
+    private javax.swing.JPanel panel_DeckListMain;
+    private javax.swing.JPanel panel_EquipmentCards;
     private javax.swing.JPanel panel_HeroStats;
     private javax.swing.JPanel panel_PrimaryAbility;
+    private javax.swing.JPanel panel_PrimeSlot;
     private javax.swing.JPanel panel_SecondaryAbility;
     private javax.swing.JPanel panel_SlotDeck;
     private javax.swing.JPanel panel_Slots;
     private javax.swing.JPanel panel_UltimateAbility;
+    private javax.swing.JPanel panel_UpgradeCards;
     private javax.swing.JPanel panel_radios;
+    private javax.swing.JProgressBar progress_CardCount;
     private javax.swing.JRadioButton radio_showActive;
     private javax.swing.JRadioButton radio_showPassive;
     private javax.swing.JRadioButton radio_showPrime;
     private javax.swing.JRadioButton radio_showUpgrade;
     private javax.swing.JScrollPane scrollPane_DeckBuilder;
+    private javax.swing.JScrollPane scrollpanel_EquipmentCards;
+    private javax.swing.JScrollPane scrollpanel_UpgradeCards;
     private javax.swing.JTabbedPane tabbedPane_MainTabbed;
+    private javax.swing.JLabel tb_CardCount;
+    private javax.swing.JLabel z_EquipmentCardsTitle;
+    private javax.swing.JLabel z_EquipmentCardsTitle1;
+    private javax.swing.JLabel z_PrimeTitle;
     // End of variables declaration//GEN-END:variables
 
     

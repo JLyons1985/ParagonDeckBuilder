@@ -3,16 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/XmlParser.java</file>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/Data/Cards.xml</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardButton.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonDeckBuilderMain.java</file>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/Data/Murdock.xml</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCard.java</file>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardExcelToXml.java</file>
+            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonLayeredPane.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardSlot.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonDeck.java</file>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/Data/Dekker.xml</file>
         </group>
     </open-files>
 </project-private>

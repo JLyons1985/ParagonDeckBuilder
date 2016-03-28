@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 
 /**
  *
@@ -28,9 +29,9 @@ public class XmlParser {
      * Returns an array of cards with the basic info pulled from the card xml file
      * @return array of PAragonCard
      */
-    public static ParagonCard[] getAllCards(){
+    public static LinkedList<ParagonCard> getAllCards(){
         
-        ParagonCard[] allCards;
+        LinkedList<ParagonCard> allCards;
         
         try {
             
@@ -45,12 +46,11 @@ public class XmlParser {
             // Create a list of all the elements with Card
             NodeList nList = doc.getElementsByTagName("Card");
             
-            // Create a card array with the amount of cards
-            int numOfCards = nList.getLength();
-            allCards = new ParagonCard[numOfCards];
+            // Create a card linked list for the cards
+            allCards = new LinkedList<ParagonCard>();
             
             // Now loop through the list and add the cards to the array
-            for (int i = 0; i < numOfCards; i++) {
+            for (int i = 0; i < nList.getLength(); i++) {
                 
                 Node nNode = nList.item(i);
                 Element elem = (Element) nNode;
@@ -66,7 +66,7 @@ public class XmlParser {
                 ParagonCard tmpCard = new ParagonCard(cardName, cost, type, affinity, rarity, id);
                 
                 // Add that card to the array
-                allCards[i] = tmpCard;
+                allCards.add(tmpCard);
                 
                 //System.out.print(allCards);
                 
@@ -79,7 +79,7 @@ public class XmlParser {
         catch (Exception e) {
             e.printStackTrace();
             
-            return new ParagonCard[0];
+            return new LinkedList<ParagonCard>();
         }
         
     }

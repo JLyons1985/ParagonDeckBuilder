@@ -1,7 +1,8 @@
 
 package com.lyonsdensoftware.paragon;
 
-import java.util.Stack;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  *
@@ -9,25 +10,28 @@ import java.util.Stack;
  */
 public class ParagonDeck {
     
-    private ParagonCard[] cards;        // Holds all the cards in this deck
+    private LinkedList<ParagonCard> cards;        // Holds all the cards in this deck
     private boolean isMasterDeck;       // Is this the master deck of all the cards
     private final int MAXCARDS = 40;    // Max amoutn of cards a normal deck can have
+    private int cardCount;              // Holds the amount of cards in this deck
     
     /**
      * Default Deck Constructor
      */
     public ParagonDeck() {
-        this.cards = new ParagonCard[MAXCARDS];
+        this.cards = new LinkedList<ParagonCard>();
         this.isMasterDeck = false;
+        this.cardCount = 0;
     }
     
     /**
      * Deck Constructor
      * @param cards
      */
-    public ParagonDeck(ParagonCard[] cards) {
+    public ParagonDeck(LinkedList<ParagonCard> cards) {
         this.cards = cards;
         this.isMasterDeck = false;
+        this.cardCount = this.cards.size();
     }
     
     /**
@@ -36,20 +40,89 @@ public class ParagonDeck {
      */
     public ParagonDeck(boolean isMasterDeck) {
         this.isMasterDeck = isMasterDeck;
-        this.cards = XmlParser.getAllCards();
+        if (isMasterDeck) {
+            this.cards = XmlParser.getAllCards();
+            this.cardCount = this.cards.size();
+        }
+        else
+            this.cardCount = 0;
     }
-
+    
+    public static ParagonDeck buildStarterDeck(ParagonDeck masterDeck) {
+        ParagonDeck tmpDeck = new ParagonDeck();
+        
+        Iterator<ParagonCard> myIter = masterDeck.cards.listIterator();
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        while (myIter.hasNext()) {
+            ParagonCard testCard = myIter.next();
+            if (testCard.getRarity().equals("Starter")) {
+                if (testCard.getType().equals("Prime")) {
+                    if (testCard.getCardName().equals("The Centurion")) {
+                        tmpDeck.addCard(testCard);
+                    }
+                }
+                else {
+                    tmpDeck.addCard(testCard);     
+                }                   
+                
+            }
+        }
+        
+        return tmpDeck;
+    }
+    
+    /**
+     * Adds the card to the deck
+     * @param card 
+     */
+    public void addCard(ParagonCard card) {
+        this.cards.add(card);
+        this.cardCount = this.cards.size();
+    }
+    
+    /**
+     * Removes the specified card from the deck
+     * @param card 
+     */
+    public void removeCard(ParagonCard card) {
+        this.cards.remove(card);
+        this.cardCount = this.cards.size();
+    }
+    
+    /**
+     * Removes the prime card to add a new one
+     */
+    public void removePrimeCard() {
+        Iterator<ParagonCard> myIter = this.cards.listIterator();
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        while (myIter.hasNext()) {
+            ParagonCard tmpCard = myIter.next();
+            if (tmpCard.getType().equals("Prime"))
+                this.removeCard(tmpCard);
+        }
+    }
+    
     /**
      * @return the cards
      */
-    public ParagonCard[] getCards() {
+    public LinkedList<ParagonCard> getCards() {
         return cards;
+    }
+    
+    /**
+     * 
+     * @return max cards for this deck
+     */
+    public int getMaxCards() {
+        return this.MAXCARDS;
     }
 
     /**
      * @param cards the cards to set
      */
-    public void setCards(ParagonCard[] cards) {
+    public void setCards(LinkedList<ParagonCard> cards) {
         this.cards = cards;
     }
 
@@ -69,6 +142,17 @@ public class ParagonDeck {
     
     /**
      * 
+     * @return the cards in this deck
+     */
+    public int getCardCount() {
+        if (this.cards.isEmpty())
+            return 0;
+        else
+            return this.cards.size();
+    }
+    
+    /**
+     * 
      * @param deckToFilter
      * @param showUpgrades
      * @param showPassives
@@ -83,17 +167,18 @@ public class ParagonDeck {
             boolean showPassives, boolean showActives, boolean showPrime, String[] affinities, String rarity, 
             String searchText) {
         
-        Stack<ParagonCard> filteredDeck = new Stack();
-        ParagonCard[] tmpCards = deckToFilter.getCards();
+        LinkedList<ParagonCard> tmpDeck = new LinkedList<ParagonCard>();
+        Iterator<ParagonCard> myIter = deckToFilter.getCards().listIterator();
         
         // Now loop through the deck and add the card to the stack if it fits the filter
-        for (int i = 0; i < tmpCards.length; i ++) {
+        while (myIter.hasNext()) {
             
             boolean addCard = false;
             
             String testString;
+            ParagonCard testCard = myIter.next();
             
-            testString = tmpCards[i].getType();
+            testString = testCard.getType();
             if (showUpgrades){
                 if (!testString.equals("Upgrade")) 
                     if (addCard)
@@ -112,7 +197,7 @@ public class ParagonDeck {
                 
             
             if (showPassives) {
-                if (!tmpCards[i].getType().equals("Passive"))
+                if (!testCard.getType().equals("Passive"))
                     if (addCard)
                         addCard = true;
                     else
@@ -121,14 +206,14 @@ public class ParagonDeck {
                     addCard = true;
             }
             else {
-                if (tmpCards[i].getType().equals("Passive"))
+                if (testCard.getType().equals("Passive"))
                     continue;
                 else
                     addCard = true;
             }
             
             if (showActives) {
-                if (!tmpCards[i].getType().equals("Active"))
+                if (!testCard.getType().equals("Active"))
                     if (addCard)
                         addCard = true;
                     else
@@ -137,14 +222,14 @@ public class ParagonDeck {
                     addCard = true;
             }
             else {
-                if (tmpCards[i].getType().equals("Active"))
+                if (testCard.getType().equals("Active"))
                     continue;
                 else
                     addCard = true;
             }
             
             if (showPrime) {
-                if (!tmpCards[i].getType().equals("Prime"))
+                if (!testCard.getType().equals("Prime"))
                     if (addCard)
                         addCard = true;
                     else
@@ -153,21 +238,21 @@ public class ParagonDeck {
                     addCard = true;
             }
             else {
-                if (tmpCards[i].getType().equals("Prime"))
+                if (testCard.getType().equals("Prime"))
                     continue;
                 else
                     addCard = true;
             }
             
             if (affinities.length == 1) {
-                if (!(tmpCards[i].getAffinity().equals("Affinity." + affinities[0]) || tmpCards[i].getAffinity().equals("Affinity.Universal")))
+                if (!(testCard.getAffinity().equals("Affinity." + affinities[0]) || testCard.getAffinity().equals("Affinity.Universal")))
                     continue;
                 else
                     addCard = true;
             }
             else if (affinities.length == 2) {
-                if (!(tmpCards[i].getAffinity().equals("Affinity." + affinities[0]) || tmpCards[i].getAffinity().equals("Affinity." + affinities[1]) 
-                        || tmpCards[i].getAffinity().equals("Affinity.Universal")))
+                if (!(testCard.getAffinity().equals("Affinity." + affinities[0]) || testCard.getAffinity().equals("Affinity." + affinities[1]) 
+                        || testCard.getAffinity().equals("Affinity.Universal")))
                     continue;
                 else
                     addCard = true;
@@ -177,7 +262,7 @@ public class ParagonDeck {
             }
             
             if (!rarity.isEmpty()) {
-                if (!tmpCards[i].getRarity().equals(rarity))
+                if (!testCard.getRarity().equals(rarity))
                     continue;
                 else
                     addCard = true;
@@ -188,7 +273,7 @@ public class ParagonDeck {
                 
             
             if (!searchText.isEmpty()) {
-                if (!tmpCards[i].getCardName().contains(searchText))
+                if (!testCard.getCardName().contains(searchText))
                     continue;
                 else
                     addCard = true;
@@ -198,18 +283,11 @@ public class ParagonDeck {
             }
             
             // Card Passes
-            filteredDeck.push(tmpCards[i]);
+            tmpDeck.add(testCard);
             
         }
-                
-        // Convert stack to deck
-        ParagonCard[] myCards = new ParagonCard[filteredDeck.size()];
-        for (int i = 0; i < myCards.length; i++) {
-            if (!filteredDeck.empty())
-                myCards[i] = filteredDeck.pop();
-        }
         
-        return new ParagonDeck(myCards);
+        return new ParagonDeck(tmpDeck);
         
     }
     
@@ -221,10 +299,12 @@ public class ParagonDeck {
     public String toString() {
         String tmpString = "";
         
-        if (this.cards.length > 0) {
-            for (int i = 0; i < this.cards.length; i++) {
-                tmpString += this.cards[i].getCardName() + "\n";
-            }
+        Iterator<ParagonCard> myIter = this.cards.listIterator();
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        while (myIter.hasNext()) {
+            ParagonCard testCard = myIter.next();
+            tmpString += testCard.getCardName() + "\n";
         }
         
         return tmpString;
