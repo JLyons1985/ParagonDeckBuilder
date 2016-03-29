@@ -3,7 +3,7 @@ package com.lyonsdensoftware.paragon;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
+import java.util.LinkedList;
 import javax.swing.JButton;
 
 /**
@@ -16,13 +16,13 @@ public class ParagonCardButton extends JButton {
     private boolean slotIsActiveSlot;   // Is this an active slot
     private int slotIndex;              // Ref to slot index
     
+    
     /**
      * 
      * @param card is the card passed at construction
      */
     public ParagonCardButton (ParagonCard card) {
         this.myCard = card;
-        
     }
     
     /**
@@ -34,8 +34,7 @@ public class ParagonCardButton extends JButton {
     public ParagonCardButton (ParagonCard card, boolean isActiveSlot, int slotIndex) {
         this.myCard = card;
         this.slotIsActiveSlot = isActiveSlot;
-        this.slotIndex = slotIndex;
-        
+        this.slotIndex = slotIndex;      
     }
     
     /**

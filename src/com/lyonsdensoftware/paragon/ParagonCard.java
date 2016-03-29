@@ -1,6 +1,8 @@
 
 package com.lyonsdensoftware.paragon;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Joshua Lyons
@@ -13,6 +15,7 @@ public class ParagonCard {
     private String type;
     private String affinity;
     private String rarity;
+    private LinkedList<ParagonCard> upgrades;     // Reference to the upgrade cards
 
     /**
      * Constructor
@@ -30,6 +33,48 @@ public class ParagonCard {
         this.affinity = affinity;
         this.rarity = rarity;
         this.id = id;
+        this.upgrades = new LinkedList<ParagonCard>();
+    }
+    
+    /**
+     * 
+     * @return upgrade cards
+     */
+    public LinkedList<ParagonCard> getUpgradeCards() {
+        return this.upgrades;
+    } 
+    
+    /**
+     * Removes the provided card from the upgrades
+     * @param card to remove
+     */
+    public void removeCardFromUpgrades(ParagonCard card) {
+        this.upgrades.remove(card);
+    }
+    
+    /**
+     * Adds the upgrade card to the upgrades
+     * @param card to add
+     * @return true if success
+     */
+    public boolean addCardToUpgrades(ParagonCard card) {
+        if (this.upgrades.size() < 3 && card.getType().equals("Upgrade")) {
+            this.upgrades.add(card);
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    /**
+     * 
+     * @return if this card can be upgraded
+     */
+    public boolean canCardBeUpgraded() {
+        if (this.upgrades.size() < 3 && !this.rarity.equals("Starter"))
+            return true;
+        else
+            return false;
     }
     
     /**

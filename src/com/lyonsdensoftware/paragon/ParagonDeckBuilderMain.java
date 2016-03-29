@@ -7,7 +7,6 @@ import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
-import javax.swing.JButton;
 
 /**
  *
@@ -488,15 +487,32 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     
     /**
      * Removes the card from the slot provided
+     * and adds the card back into the deck builder deck
      * @param slot 
      */
     public void removeCardFromCardSlot(ParagonCardButton slot) {
+        
+        // Card removed from the slot so add back to the deck
+        this.deckBeingCreated.addCard(slot.getMyCard());
+        
+        // Do more logic for adding back upgrade cards
+        Iterator<ParagonCard> tmpUpgrades = slot.getMyCard().getUpgradeCards().iterator();
+        
+        while (tmpUpgrades.hasNext()) {
+            this.deckBeingCreated.addCard(tmpUpgrades.next());
+        }
+        
+        // Set the slot to null
         slot.setMyCard(null);
         slot.setIcon(null);
+        
+        // Set text back
         if (slot.getSlotIsActiveSlot())
             slot.setText("Active Slot Empty");
         else
             slot.setText("Passive Slot Empty");
+        
+        // Set the filters as needed
         this.showActive = true;
         this.radio_showActive.setSelected(true);
         this.showPassive = true;
@@ -506,6 +522,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.showPrime = true;
         this.radio_showPrime.setSelected(true);
         this.refreshSlotBuilderCards();
+        this.panel_DeckSlotBuilderPanel.revalidate();
+        this.panel_DeckSlotBuilderPanel.repaint();
     }
     
     /**
@@ -529,6 +547,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     
     /**
      * Deck slot builder cards clicked
+     * Adds the card to the slot if possible and removes
+     * from deck builder deck
      * @param evt 
      */
     private void btn_DeckSlotBuilderCardActionPerformed(java.awt.event.ActionEvent evt) {
@@ -550,6 +570,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                             tmpButton.setMyCard(tmpCard);
                             tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
                             tmpButton.setText("");
+                            
+                            // Now remove that card from the decl
+                            this.deckBeingCreated.removeCard(tmpCard);
                             break;
                         }
                     }
@@ -561,12 +584,18 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                         this.cardSlots[4].setMyCard(tmpCard);
                         this.cardSlots[4].setIcon(new StretchIcon(this.cardSlots[4].getIconPath()));
                         this.cardSlots[4].setText("");
+                        
+                        // Now remove that card from the decl
+                        this.deckBeingCreated.removeCard(tmpCard);
                     }
                     else if (this.cardSlots[5].getMyCard() == null) {
                         // Add that card to the slot
                         this.cardSlots[5].setMyCard(tmpCard);
                         this.cardSlots[5].setIcon(new StretchIcon(this.cardSlots[5].getIconPath()));
                         this.cardSlots[5].setText("");
+                        
+                        // Now remove that card from the decl
+                        this.deckBeingCreated.removeCard(tmpCard);
                     }
                     else { // search for next empty slot
                         for (ParagonCardButton tmpButton : this.cardSlots) {
@@ -575,6 +604,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                                 tmpButton.setMyCard(tmpCard);
                                 tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
                                 tmpButton.setText("");
+                                
+                                // Now remove that card from the decl
+                                this.deckBeingCreated.removeCard(tmpCard);
                                 break;
                             }
                         }
@@ -583,17 +615,51 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             }
         }
         else { // Slot is selected so run checks against selected slot
-            if (this.slotSelected.getSlotIsActiveSlot() && tmpCard.getType().equals("Active")) {
-                this.slotSelected.setMyCard(tmpCard);
-                this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
-                this.slotSelected.setText("");
+            // Is slot empty
+            if (this.slotSelected.getMyCard() == null) { // Slot is empty so add whatever
+                if (this.slotSelected.getSlotIsActiveSlot() && tmpCard.getType().equals("Active")) {
+                    this.slotSelected.setMyCard(tmpCard);
+                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
+                    this.slotSelected.setText("");
+
+                    // Now remove that card from the decl
+                    this.deckBeingCreated.removeCard(tmpCard);
+                }
+                else if (tmpCard.getType().equals("Passive")) {
+                    this.slotSelected.setMyCard(tmpCard);
+                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
+                    this.slotSelected.setText("");
+
+                    // Now remove that card from the decl
+                    this.deckBeingCreated.removeCard(tmpCard);
+                }
             }
-            else if (tmpCard.getType().equals("Passive")) {
-                this.slotSelected.setMyCard(tmpCard);
-                this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
-                this.slotSelected.setText("");
+            else { // Slot is not empty so we are either removing or upgrading
+                if (tmpCard.getType().equals("Upgrade")) { // We are upgrading
+                    if (this.slotSelected.getMyCard().canCardBeUpgraded()) {
+                        this.slotSelected.getMyCard().addCardToUpgrades(tmpCard);
+
+                        // Now remove that card from the decl
+                        this.deckBeingCreated.removeCard(tmpCard);
+                    }
+                }   
+                else { // Replacing
+                    ParagonCard cardToReplace = this.slotSelected.getMyCard();
+                    this.slotSelected.setMyCard(tmpCard);
+                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
+                    this.slotSelected.setText("");
+
+                    // Now remove that card from the dec;
+                    this.deckBeingCreated.removeCard(tmpCard);
+                    
+                    // Now add back the card replaced
+                    this.deckBeingCreated.addCard(cardToReplace);
+                }
             }
         }
+        
+        // Refresh
+        this.refreshSlotBuilderCards();
     }
     
     /**
@@ -606,7 +672,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     }
     
     /**
-     * 
+     * Removes the card from the deck builder deck
      * @param pane 
      */
     public void removeCardFromDeckBuilderPanel(ParagonLayeredPane pane) {
@@ -872,6 +938,42 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         btn_LoadDeck = new javax.swing.JButton();
         Affinity1 = new javax.swing.JLabel();
         Affinity2 = new javax.swing.JLabel();
+        panel_StatBonus = new javax.swing.JPanel();
+        icon_MaxMana = new javax.swing.JLabel();
+        icon_ManaRegen = new javax.swing.JLabel();
+        icon_CoolReduction = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        tb_MaxMana = new javax.swing.JLabel();
+        tb_ManaRegen = new javax.swing.JLabel();
+        tb_CoolReduction = new javax.swing.JLabel();
+        panel_StatBonus1 = new javax.swing.JPanel();
+        icon_MaxHEalth = new javax.swing.JLabel();
+        icon_HealthRegen = new javax.swing.JLabel();
+        icon_Lifesteal = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        tb_MaxHealth = new javax.swing.JLabel();
+        tb_HealthRegen = new javax.swing.JLabel();
+        tb_Lifesteal = new javax.swing.JLabel();
+        icon_PhysicalArmor = new javax.swing.JLabel();
+        tb_PhysicalArmor = new javax.swing.JLabel();
+        tb_EnergyArmor = new javax.swing.JLabel();
+        icon_EnergyArmor = new javax.swing.JLabel();
+        panel_StatBonus2 = new javax.swing.JPanel();
+        icon_PhysicalDamage = new javax.swing.JLabel();
+        icon_EnergyDamage = new javax.swing.JLabel();
+        icon_CritChance = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        tb_PhysicalDamage = new javax.swing.JLabel();
+        tb_EnergyDamage = new javax.swing.JLabel();
+        tb_CritChance = new javax.swing.JLabel();
+        icon_CritBonus = new javax.swing.JLabel();
+        tb_CritBonus = new javax.swing.JLabel();
+        tb_AttackSpeed = new javax.swing.JLabel();
+        icon_AttackSpeed = new javax.swing.JLabel();
+        icon_PhysicalPen = new javax.swing.JLabel();
+        tb_PhysicalPen = new javax.swing.JLabel();
+        tb_EnergyPen = new javax.swing.JLabel();
+        icon_EnergyPen = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1507,7 +1609,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         scrollPane_DeckSlotBuilder.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         scrollPane_DeckSlotBuilder.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane_DeckSlotBuilder.setHorizontalScrollBar(null);
-        scrollPane_DeckSlotBuilder.setPreferredSize(new java.awt.Dimension(990, 514));
+        scrollPane_DeckSlotBuilder.setPreferredSize(new java.awt.Dimension(990, 675));
 
         panel_DeckSlotBuilderPanel.setAutoscrolls(true);
         panel_DeckSlotBuilderPanel.setPreferredSize(new java.awt.Dimension(986, 500));
@@ -1520,7 +1622,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
         panel_DeckSlotBuilderPanelLayout.setVerticalGroup(
             panel_DeckSlotBuilderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 655, Short.MAX_VALUE)
+            .addGap(0, 671, Short.MAX_VALUE)
         );
 
         scrollPane_DeckSlotBuilder.setViewportView(panel_DeckSlotBuilderPanel);
@@ -1565,7 +1667,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_cardSlotsLayout.setVerticalGroup(
             panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cardSlotsLayout.createSequentialGroup()
-                .addContainerGap(42, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_cardSlotsLayout.createSequentialGroup()
                         .addComponent(cardSlot1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1594,10 +1696,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_SlotDeckLayout.setVerticalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                .addGroup(panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         tabbedPane_MainTabbed.addTab("Slot Cards", panel_SlotDeck);
@@ -1679,6 +1780,388 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         Affinity1.setToolTipText("");
 
+        panel_StatBonus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_MaxMana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_MaxMana.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_MaxMana.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_MaxMana.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_MaxMana.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_MaxMana.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_ManaRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_ManaRegen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_ManaRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_ManaRegen.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_ManaRegen.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_ManaRegen.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_CoolReduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_CoolReduction.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CoolReduction.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_CoolReduction.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_CoolReduction.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_CoolReduction.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Utility");
+
+        tb_MaxMana.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_MaxMana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_MaxMana.setText("100%");
+        tb_MaxMana.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_ManaRegen.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_ManaRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_ManaRegen.setText("100%");
+        tb_ManaRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_CoolReduction.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_CoolReduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_CoolReduction.setText("100%");
+        tb_CoolReduction.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout panel_StatBonusLayout = new javax.swing.GroupLayout(panel_StatBonus);
+        panel_StatBonus.setLayout(panel_StatBonusLayout);
+        panel_StatBonusLayout.setHorizontalGroup(
+            panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                        .addComponent(icon_ManaRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_ManaRegen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                        .addComponent(icon_CoolReduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_CoolReduction, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                        .addComponent(icon_MaxMana, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_MaxMana, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        panel_StatBonusLayout.setVerticalGroup(
+            panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonusLayout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(icon_MaxMana, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_MaxMana, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(icon_ManaRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_ManaRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(icon_CoolReduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_CoolReduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panel_StatBonus1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_MaxHEalth.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_MaxHEalth.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_MaxHEalth.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_MaxHEalth.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_MaxHEalth.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_MaxHEalth.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_HealthRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_HealthRegen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_HealthRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_HealthRegen.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_HealthRegen.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_HealthRegen.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_Lifesteal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_Lifesteal.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_Lifesteal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_Lifesteal.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_Lifesteal.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_Lifesteal.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        jLabel28.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel28.setText("Defense");
+
+        tb_MaxHealth.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_MaxHealth.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_MaxHealth.setText("100%");
+        tb_MaxHealth.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_HealthRegen.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_HealthRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_HealthRegen.setText("100%");
+        tb_HealthRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_Lifesteal.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_Lifesteal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_Lifesteal.setText("100%");
+        tb_Lifesteal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_PhysicalArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_PhysicalArmor.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_PhysicalArmor.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalArmor.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalArmor.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        tb_PhysicalArmor.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_PhysicalArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_PhysicalArmor.setText("100%");
+        tb_PhysicalArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_EnergyArmor.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_EnergyArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_EnergyArmor.setText("100%");
+        tb_EnergyArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_EnergyArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_EnergyArmor.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_EnergyArmor.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyArmor.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyArmor.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        javax.swing.GroupLayout panel_StatBonus1Layout = new javax.swing.GroupLayout(panel_StatBonus1);
+        panel_StatBonus1.setLayout(panel_StatBonus1Layout);
+        panel_StatBonus1Layout.setHorizontalGroup(
+            panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                        .addComponent(icon_Lifesteal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_Lifesteal, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                                .addComponent(icon_HealthRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_HealthRegen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                                .addComponent(icon_MaxHEalth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_MaxHealth, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                                .addComponent(icon_EnergyArmor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_EnergyArmor, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                                .addComponent(icon_PhysicalArmor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_PhysicalArmor, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panel_StatBonus1Layout.setVerticalGroup(
+            panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                .addComponent(jLabel28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(icon_MaxHEalth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_MaxHealth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon_HealthRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_HealthRegen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panel_StatBonus1Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(icon_PhysicalArmor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_PhysicalArmor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon_EnergyArmor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_EnergyArmor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(icon_Lifesteal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_Lifesteal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panel_StatBonus2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_PhysicalDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_PhysicalDamage.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_PhysicalDamage.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalDamage.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalDamage.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_EnergyDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_EnergyDamage.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_EnergyDamage.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyDamage.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyDamage.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_CritChance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_CritChance.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CritChance.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_CritChance.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_CritChance.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_CritChance.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        jLabel37.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel37.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel37.setText("Offense");
+
+        tb_PhysicalDamage.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_PhysicalDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_PhysicalDamage.setText("100%");
+        tb_PhysicalDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_EnergyDamage.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_EnergyDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_EnergyDamage.setText("100%");
+        tb_EnergyDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_CritChance.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_CritChance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_CritChance.setText("100%");
+        tb_CritChance.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_CritBonus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_CritBonus.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CritBonus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_CritBonus.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_CritBonus.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_CritBonus.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        tb_CritBonus.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_CritBonus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_CritBonus.setText("100%");
+        tb_CritBonus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_AttackSpeed.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_AttackSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_AttackSpeed.setText("100%");
+        tb_AttackSpeed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_AttackSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_AttackSpeed.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_AttackSpeed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_AttackSpeed.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_AttackSpeed.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_AttackSpeed.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        icon_PhysicalPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_PhysicalPen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_PhysicalPen.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalPen.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalPen.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        tb_PhysicalPen.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_PhysicalPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_PhysicalPen.setText("100%");
+        tb_PhysicalPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tb_EnergyPen.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        tb_EnergyPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_EnergyPen.setText("100%");
+        tb_EnergyPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        icon_EnergyPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_EnergyPen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_EnergyPen.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyPen.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_EnergyPen.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        javax.swing.GroupLayout panel_StatBonus2Layout = new javax.swing.GroupLayout(panel_StatBonus2);
+        panel_StatBonus2.setLayout(panel_StatBonus2Layout);
+        panel_StatBonus2Layout.setHorizontalGroup(
+            panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                        .addComponent(icon_CritChance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_CritChance, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(icon_PhysicalPen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tb_PhysicalPen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                                .addComponent(icon_EnergyDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_EnergyDamage, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                                .addComponent(icon_PhysicalDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_PhysicalDamage, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                                .addComponent(icon_AttackSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_AttackSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                                .addComponent(icon_CritBonus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_CritBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(icon_EnergyPen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tb_EnergyPen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jLabel37, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panel_StatBonus2Layout.setVerticalGroup(
+            panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                .addComponent(jLabel37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(icon_PhysicalDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_PhysicalDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon_EnergyDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_EnergyDamage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panel_StatBonus2Layout.createSequentialGroup()
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(icon_CritBonus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tb_CritBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(icon_EnergyPen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tb_EnergyPen, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon_AttackSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tb_AttackSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_StatBonus2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(icon_CritChance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_CritChance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(icon_PhysicalPen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tb_PhysicalPen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1706,6 +2189,12 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                     .addComponent(tabbedPane_MainTabbed)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panel_radios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(panel_StatBonus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(panel_StatBonus1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(panel_StatBonus2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1720,33 +2209,36 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(2, 2, 2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(panel_StatBonus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panel_StatBonus1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panel_StatBonus2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(btn_SaveDeck)
+                                            .addComponent(btn_LoadDeck))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(panel_radios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(Affinity1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(Affinity2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
+                                            .addComponent(Affinity1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(27, 27, 27)
                                         .addComponent(cb_Levels, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(11, 11, 11))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_SaveDeck)
-                            .addComponent(btn_LoadDeck))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btn_HeroSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel_HeroStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tabbedPane_MainTabbed, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tabbedPane_MainTabbed, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         tabbedPane_MainTabbed.getAccessibleContext().setAccessibleName("Deck Builder");
@@ -1882,6 +2374,22 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JButton cardSlot5;
     private javax.swing.JButton cardSlot6;
     private javax.swing.JComboBox<String> cb_Levels;
+    private javax.swing.JLabel icon_AttackSpeed;
+    private javax.swing.JLabel icon_CoolReduction;
+    private javax.swing.JLabel icon_CritBonus;
+    private javax.swing.JLabel icon_CritChance;
+    private javax.swing.JLabel icon_EnergyArmor;
+    private javax.swing.JLabel icon_EnergyDamage;
+    private javax.swing.JLabel icon_EnergyPen;
+    private javax.swing.JLabel icon_HealthRegen;
+    private javax.swing.JLabel icon_Lifesteal;
+    private javax.swing.JLabel icon_ManaRegen;
+    private javax.swing.JLabel icon_MaxHEalth;
+    private javax.swing.JLabel icon_MaxMana;
+    private javax.swing.JLabel icon_PhysicalArmor;
+    private javax.swing.JLabel icon_PhysicalDamage;
+    private javax.swing.JLabel icon_PhysicalPen;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1901,7 +2409,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1921,6 +2431,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JPanel panel_PrimeSlot;
     private javax.swing.JPanel panel_SecondaryAbility;
     private javax.swing.JPanel panel_SlotDeck;
+    private javax.swing.JPanel panel_StatBonus;
+    private javax.swing.JPanel panel_StatBonus1;
+    private javax.swing.JPanel panel_StatBonus2;
     private javax.swing.JPanel panel_UltimateAbility;
     private javax.swing.JPanel panel_UpgradeCards;
     private javax.swing.JPanel panel_cardSlots;
@@ -1935,8 +2448,23 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollpanel_EquipmentCards;
     private javax.swing.JScrollPane scrollpanel_UpgradeCards;
     private javax.swing.JTabbedPane tabbedPane_MainTabbed;
+    private javax.swing.JLabel tb_AttackSpeed;
     private javax.swing.JLabel tb_CardCount;
+    private javax.swing.JLabel tb_CoolReduction;
+    private javax.swing.JLabel tb_CritBonus;
+    private javax.swing.JLabel tb_CritChance;
     private javax.swing.JTextField tb_DeckName;
+    private javax.swing.JLabel tb_EnergyArmor;
+    private javax.swing.JLabel tb_EnergyDamage;
+    private javax.swing.JLabel tb_EnergyPen;
+    private javax.swing.JLabel tb_HealthRegen;
+    private javax.swing.JLabel tb_Lifesteal;
+    private javax.swing.JLabel tb_ManaRegen;
+    private javax.swing.JLabel tb_MaxHealth;
+    private javax.swing.JLabel tb_MaxMana;
+    private javax.swing.JLabel tb_PhysicalArmor;
+    private javax.swing.JLabel tb_PhysicalDamage;
+    private javax.swing.JLabel tb_PhysicalPen;
     private javax.swing.JLabel z_EquipmentCardsTitle;
     private javax.swing.JLabel z_EquipmentCardsTitle1;
     private javax.swing.JLabel z_PrimeTitle;
