@@ -51,9 +51,9 @@ public class ParagonCardExcelToXml {
                        
             // Now loop through the workbood creating the xml nodes
             // O(n^2) refactor as needed
-            String tmpAffinity = "Affinity.Corruption";
-            String tmpRarity = "Common";
-            int cardCountForAR = 0;
+            //String tmpAffinity = "Affinity.Corruption";
+            //String tmpRarity = "Common";
+            //int cardCountForAR = 0;
             
             for (int row = 1; row < sheet.getRows(); row++) {  // Rows
                 

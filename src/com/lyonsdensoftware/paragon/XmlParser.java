@@ -2,6 +2,7 @@
 package com.lyonsdensoftware.paragon;
 
 // Imports
+import java.awt.Image;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
@@ -9,8 +10,12 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -63,7 +68,74 @@ public class XmlParser {
                 String rarity = elem.getElementsByTagName("Rarity").item(0).getTextContent();
                 int id = Integer.parseInt(elem.getElementsByTagName("Id").item(0).getTextContent());
                 
-                ParagonCard tmpCard = new ParagonCard(cardName, cost, type, affinity, rarity, id);
+                double maxedDamage, maxedPen, damage, pen;
+                String tmpString;
+                tmpString = elem.getElementsByTagName("MaxedPhysicalDamage").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    maxedDamage = Double.parseDouble(tmpString);
+                else
+                    maxedDamage = 0;
+                
+                tmpString = elem.getElementsByTagName("MaxedPhysicalPen").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    maxedPen = Double.parseDouble(tmpString);
+                else
+                    maxedPen = 0;
+                
+                tmpString = elem.getElementsByTagName("PhysicalDamage").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    damage = Double.parseDouble(tmpString);
+                else
+                    damage = 0;
+                
+                tmpString = elem.getElementsByTagName("PhysicalPen").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    pen = Double.parseDouble(tmpString);
+                else
+                    pen = 0;
+                        
+                // add if it is physical or energy damage
+                boolean physicalDamage = (maxedDamage > 0 || maxedPen > 0 || damage > 0 || pen > 0);
+                
+                tmpString = elem.getElementsByTagName("MaxedEnergyDamage").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    maxedDamage = Double.parseDouble(tmpString);
+                else
+                    maxedDamage = 0;
+                
+                tmpString = elem.getElementsByTagName("MaxedEnergyPen").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    maxedPen = Double.parseDouble(tmpString);
+                else
+                    maxedPen = 0;
+                
+                tmpString = elem.getElementsByTagName("EnergyDamage").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    damage = Double.parseDouble(tmpString);
+                else
+                    damage = 0;
+                
+                tmpString = elem.getElementsByTagName("EnergyPen").item(0).getTextContent();
+                if (!tmpString.equals(""))
+                    pen = Double.parseDouble(tmpString);
+                else
+                    pen = 0;
+                
+                boolean energyDamage = (maxedDamage > 0 || maxedPen > 0 || damage > 0 || pen > 0);
+                
+                ParagonCard tmpCard = new ParagonCard(cardName, cost, type, affinity, rarity, id, physicalDamage, energyDamage);
+                
+                // Set the card Image
+                
+                Image tmp;
+                try {
+                    if (Paths.get("./Art/Cards/" + tmpCard.getIconPath()).toFile().exists()) {
+                        tmp = ImageIO.read(Paths.get("./Art/Cards/" + tmpCard.getIconPath()).toFile());
+                        tmpCard.setCardImage(new StretchIcon(tmp));
+                    }
+                } catch (IOException | NullPointerException ex) {
+                    System.out.println(ex);              
+                }
                 
                 // Add that card to the array
                 allCards.add(tmpCard);

@@ -1,11 +1,28 @@
 
 package com.lyonsdensoftware.paragon;
 
+import java.awt.Color;
 import java.nio.file.Paths;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.SplashScreen;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -18,22 +35,36 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private ParagonDeck deckBeingCreated;           // Holds a reference to the deck being created
     private ParagonHero myHero;                     // Holds a reference to the selected hero
     private ParagonCardButton[] cardSlots;          // Holds a reference to each of the available slots
+    private double[] cardBonuses;                     // Bonuses from cards
     private ParagonCardButton slotSelected;         // Reference to the slot selected.
     private final int CARDHEIGHT = 250, CARDWIDTH = 188, 
             PADDINGBETWEENCARDS = 5, CARDSPERROW = 5;
+    private final int IMGPADDING = 5;
     private boolean showActive = true, showPassive = true, showUpgrade = true, showPrime = true;
+    private final Color iconNormalColor = Color.GRAY;
+    private final Color iconHoverColor = Color.BLACK;
+    private final int maxCardLevels = 60;           // MAx card levels
+    private ParagonSplash splash;
 
     /**
      * Creates new form ParagonDeckBuilderMain
      */
-    public ParagonDeckBuilderMain() {
+    public ParagonDeckBuilderMain(ParagonSplash splash) {
+        
+        this.splash = splash;
+        
+        //this.splash.LoaderText.setText("Initiating components.......");
         initComponents();
         
         centreWindow(this);
         
         this.myInit();
+        
+        this.splash.dispose();
+        this.splash = null;
     }
     
+        
     private void myInit() {
         // Create the default Hero
         this.myHero = new ParagonHero("Default");
@@ -44,7 +75,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.masterDeck = new ParagonDeck(true);
         
         // New deck
-        this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck);
+        //this.splash.setLoaderText("Building the master deck.......");
+        this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck, this.myHero.getName());
         this.tb_DeckName.setText("New Deck");
         
         // Now loop through the deck and add the card to the stack if it fits the filter
@@ -124,6 +156,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             }
             
             this.cardSlots[i].addActionListener(new java.awt.event.ActionListener() {
+                @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     btn_DeckBuilderSlotsClicked(evt);
                 }
@@ -133,22 +166,90 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             this.cardSlots[i].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         }
         // Add buttons to slots
-        this.panel_cardSlots.removeAll();
+        
+        int tmpIncreaseX = 3;
+        int tmpIncreaseY = 25;
+        
+        //this.panel_cardSlots.removeAll();
         this.panel_cardSlots.add(this.cardSlots[0]);
-        this.cardSlots[0].setBounds(8, 47, 140, 187);
+        this.cardSlots[0].setBounds(8 + tmpIncreaseX, 47 + tmpIncreaseY, 140, 187);
         this.panel_cardSlots.add(this.cardSlots[1]);
-        this.cardSlots[1].setBounds(154, 47, 140, 187);
+        this.cardSlots[1].setBounds(154 + tmpIncreaseX, 47 + tmpIncreaseY, 140, 187);
         this.panel_cardSlots.add(this.cardSlots[2]);
-        this.cardSlots[2].setBounds(8, 240, 140, 187);
+        this.cardSlots[2].setBounds(8 + tmpIncreaseX, 240 + tmpIncreaseY, 140, 187);
         this.panel_cardSlots.add(this.cardSlots[3]);
-        this.cardSlots[3].setBounds(154, 240, 140, 187);
+        this.cardSlots[3].setBounds(154 + tmpIncreaseX, 240 + tmpIncreaseY, 140, 187);
         this.panel_cardSlots.add(this.cardSlots[4]);
-        this.cardSlots[4].setBounds(8, 433, 140, 187);
+        this.cardSlots[4].setBounds(8 + tmpIncreaseX, 433 + tmpIncreaseY, 140, 187);
         this.panel_cardSlots.add(this.cardSlots[5]);
-        this.cardSlots[5].setBounds(154, 433, 140, 187);
+        this.cardSlots[5].setBounds(154 + tmpIncreaseX, 433 + tmpIncreaseY, 140, 187);
+        
+        // Setup icons
+        this.setStatIconImages(this.iconNormalColor);
+        
+                
+        this.cardBonuses = new double[15];
         
         // Refresh the gui
         this.refreshGui();
+    }
+    
+    /**
+     * Sets the stat icons
+     * @param color 
+     */
+    public void setStatIconImages(Color color) {
+        // Setup bonus Icons
+        BufferedImage tmp = null;
+        try {
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Attack_Speed_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_AttackSpeed.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Cooldown_Reduction_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_CoolReduction.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Critical_Strike_Damage_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_CritBonus.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Critical_strike_Chance_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_CritChance.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Energy_Armour_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_EnergyArmor.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Energy_Rating_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_EnergyDamage.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Energy_Armour_Pierce_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_EnergyPen.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Health_Regen_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_HealthRegen.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Lifesteal_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_Lifesteal.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Mana_Regen_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_ManaRegen.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Physical_Armour_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_PhysicalArmor.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Physical_Rating_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_PhysicalDamage.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Physical_Armour_Pierce_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_PhysicalPen.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Max_Health_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_MaxHealth.setIcon(new StretchIcon(tmp));
+            tmp = ImageIO.read(Paths.get("./Art/Stats/icon_Max_Mana_128x.png").toFile());
+            colorImage(tmp, color);
+            this.icon_MaxMana.setIcon(new StretchIcon(tmp));
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
     }
     
     /**
@@ -216,11 +317,37 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
      * Refresh hero icon
      */
     public void refreshHeroIcon() {
-        // Set the hero button image to the correct image
-        String imgPath = Paths.get("./Art/Heroes/" + 
-                this.myHero.getName() + ".png").toString();
-        
-        this.btn_HeroSelect.setIcon(new StretchIcon(imgPath));
+        try {
+            // Set the hero button image to the correct image
+            BufferedImage tmp;
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/" + this.myHero.getName() + ".png").toFile());
+            
+            this.btn_HeroSelect.setIcon(new StretchIcon(tmp));
+        } catch (IOException ex) {
+            Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * 
+     * @param image
+     * @return 
+     */
+    private static BufferedImage colorImage(BufferedImage image, Color color) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int xx = 0; xx < width; xx++) {
+            for (int yy = 0; yy < height; yy++) {
+                Color originalColor = new Color(image.getRGB(xx, yy), true);
+                //System.out.println(xx + "|" + yy + " color: " + originalColor.toString() + "alpha: "
+                //        + originalColor.getAlpha());
+                if (originalColor.getAlpha() != 0) {
+                    image.setRGB(xx, yy, color.getRGB());
+                }
+            }
+        }
+        return image;
     }
     
     /**
@@ -229,23 +356,27 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     public void refreshAffinities() {
         // Set the affinities images
         String[] affinities = this.myHero.getAffinities();
-        String imgPath;
+        BufferedImage tmp;
         
         if (affinities.length > 0){
             this.Affinity1.setVisible(true);
             this.Affinity2.setVisible(true);
+            try {    
+                if (affinities.length > 1){
+                    tmp = ImageIO.read(Paths.get("./Art/Affinities/" + affinities[0] + ".png").toFile());
+                    this.Affinity1.setIcon(new StretchIcon(tmp));
+                    tmp = ImageIO.read(Paths.get("./Art/Affinities/" + affinities[1] + ".png").toFile());
+                    this.Affinity2.setIcon(new StretchIcon(tmp));
                 
-            if (affinities.length > 1){
-                imgPath = Paths.get("./Art/Affinities/" + affinities[0] + ".png").toString();
-                this.Affinity1.setIcon(new StretchIcon(imgPath));
-                imgPath = Paths.get("./Art/Affinities/" + affinities[1] + ".png").toString();
-                this.Affinity2.setIcon(new StretchIcon(imgPath));
-            }
-            else{
-                imgPath = Paths.get("./Art/Affinities/" + affinities[0] + ".png").toString();
-                this.Affinity1.setIcon(new StretchIcon(imgPath));
-                this.Affinity2.setIcon(new StretchIcon(imgPath));
-            }
+                }
+                else{
+                    tmp = ImageIO.read(Paths.get("./Art/Affinities/" + affinities[0] + ".png").toFile());
+                    this.Affinity1.setIcon(new StretchIcon(tmp));
+                    this.Affinity2.setIcon(new StretchIcon(tmp));
+                }
+            } catch (IOException ex) {
+                    Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
         else {
             this.Affinity1.setVisible(false);
@@ -264,7 +395,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.panel_DeckSlotBuilderPanel.removeAll();
         
         ParagonDeck tmpDeck = ParagonDeck.getDeckFromFilters(this.deckBeingCreated, this.showUpgrade, this.showPassive, 
-                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "");
+                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "", this.myHero.getName());
         
         // Now that the deck is built need to display it     
         int cardPosX = this.PADDINGBETWEENCARDS, cardPosY = this.PADDINGBETWEENCARDS;
@@ -280,15 +411,24 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             tmpButton.setContentAreaFilled(false);
             
             // Add event listener
-            tmpButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-                btn_DeckSlotBuilderCardActionPerformed(evt);
+            tmpButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btn_DeckSlotBuilderCardActionPerformed(evt);
+                }
             });
             
             // Add button to panel
-            this.panel_DeckSlotBuilderPanel.add(tmpButton);
+           //try {
+                // Add button to panel
+                if (!tmpButton.getIconPath().equals("")) {
+                    tmpButton.setIcon(tmpButton.getMyCard().getCardImage());
+                }
+            //} catch (IOException ex) {
+            //    Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
+            //}
             tmpButton.setBounds(cardPosX, cardPosY, this.CARDWIDTH, this.CARDHEIGHT);
-            tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
             tmpButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            this.panel_DeckSlotBuilderPanel.add(tmpButton);
             
             //this.panel_DeckBuilderPanel.revalidate();
             
@@ -301,9 +441,10 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             
         }
         
-        this.panel_DeckSlotBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckSlotBuilderPanel.getWidth(), cardPosY));
+        this.panel_DeckSlotBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckSlotBuilderPanel.getWidth(), (cardPosY + this.CARDHEIGHT)));
         this.panel_DeckSlotBuilderPanel.revalidate();
         this.panel_DeckSlotBuilderPanel.repaint();
+        //this.refreshDeckBuilderNumbers();
         //this.scrollPane_DeckBuilder.revalidate();
     }
     
@@ -316,7 +457,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.panel_DeckBuilderPanel.removeAll();
         
         ParagonDeck tmpDeck = ParagonDeck.getDeckFromFilters(this.masterDeck, this.showUpgrade, this.showPassive, 
-                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "");
+                this.showActive, this.showPrime, this.myHero.getAffinities(), "", "", this.myHero.getName());
         
         // Now that the deck is built need to display it     
         int cardPosX = this.PADDINGBETWEENCARDS, cardPosY = this.PADDINGBETWEENCARDS;
@@ -333,15 +474,25 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             //tmpButton.setBorderPainted(false);
             
             // Add event listener
-            tmpButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-                btn_DeckBuilderCardActionPerformed(evt);
+            tmpButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btn_DeckBuilderCardActionPerformed(evt);
+                }
             });
             
-            // Add button to panel
-            this.panel_DeckBuilderPanel.add(tmpButton);
             tmpButton.setBounds(cardPosX, cardPosY, this.CARDWIDTH, this.CARDHEIGHT);
-            tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
             tmpButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            //try {
+                 //Add button to panel
+                if (!tmpButton.getIconPath().equals("")) {
+                    tmpButton.setIcon(tmpButton.getMyCard().getCardImage());
+                }
+            //} catch (IOException ex) {
+            //    Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
+            //}
+            this.panel_DeckBuilderPanel.add(tmpButton);
+            this.panel_DeckBuilderPanel.revalidate();
+            this.panel_DeckBuilderPanel.repaint();
             
             //this.panel_DeckBuilderPanel.revalidate();
             
@@ -354,8 +505,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             
         }
         
-        this.panel_DeckBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckBuilderPanel.getWidth(), cardPosY));
+        this.panel_DeckBuilderPanel.setPreferredSize(new Dimension(this.panel_DeckBuilderPanel.getWidth(), (cardPosY + this.CARDHEIGHT)));
         this.panel_DeckBuilderPanel.revalidate();
+        this.panel_DeckBuilderPanel.repaint();
         //this.scrollPane_DeckBuilder.revalidate();
     }
     
@@ -524,6 +676,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.refreshSlotBuilderCards();
         this.panel_DeckSlotBuilderPanel.revalidate();
         this.panel_DeckSlotBuilderPanel.repaint();
+        this.refreshDeckBuilderNumbers();
     }
     
     /**
@@ -554,112 +707,128 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private void btn_DeckSlotBuilderCardActionPerformed(java.awt.event.ActionEvent evt) {
         
         ParagonCard tmpCard = ((ParagonCardButton) evt.getSource()).getMyCard();
-        
-        if (this.slotSelected == null) { // No slot selected so any card other than upgrade can be slotted
-            
-            if (tmpCard.getType().equals("Upgrade") || tmpCard.getType().equals("Prime")) {
-                //Do Nothing
-            }
-            else {
-                // Add the card. If active must go in active slot passive in any
-                if (tmpCard.getType().equals("Active")) {
-                    // Active card can only got in active slot find next active slot
-                    for (ParagonCardButton tmpButton : this.cardSlots) {
-                        if (tmpButton.getSlotIsActiveSlot() && tmpButton.getMyCard() == null) {
-                            // Add that card to the slot
-                            tmpButton.setMyCard(tmpCard);
-                            tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
-                            tmpButton.setText("");
-                            
-                            // Now remove that card from the decl
-                            this.deckBeingCreated.removeCard(tmpCard);
-                            break;
-                        }
-                    }
+        BufferedImage tmp;
+        try {
+            if (this.slotSelected == null) { // No slot selected so any card other than upgrade can be slotted
+
+                if (tmpCard.getType().equals("Upgrade") || tmpCard.getType().equals("Prime")) {
+                    //Do Nothing
                 }
                 else {
-                    // Passive card first check slot 4 or 5 then move onto the rest
-                    if (this.cardSlots[4].getMyCard() == null) {
-                        // Add that card to the slot
-                        this.cardSlots[4].setMyCard(tmpCard);
-                        this.cardSlots[4].setIcon(new StretchIcon(this.cardSlots[4].getIconPath()));
-                        this.cardSlots[4].setText("");
-                        
-                        // Now remove that card from the decl
-                        this.deckBeingCreated.removeCard(tmpCard);
-                    }
-                    else if (this.cardSlots[5].getMyCard() == null) {
-                        // Add that card to the slot
-                        this.cardSlots[5].setMyCard(tmpCard);
-                        this.cardSlots[5].setIcon(new StretchIcon(this.cardSlots[5].getIconPath()));
-                        this.cardSlots[5].setText("");
-                        
-                        // Now remove that card from the decl
-                        this.deckBeingCreated.removeCard(tmpCard);
-                    }
-                    else { // search for next empty slot
+                    // Add the card. If active must go in active slot passive in any
+                    if (tmpCard.getType().equals("Active")) {
+                        // Active card can only got in active slot find next active slot
                         for (ParagonCardButton tmpButton : this.cardSlots) {
-                            if (tmpButton.getMyCard() == null) {
+                            if (tmpButton.getSlotIsActiveSlot() && tmpButton.getMyCard() == null) {
                                 // Add that card to the slot
                                 tmpButton.setMyCard(tmpCard);
-                                tmpButton.setIcon(new StretchIcon(tmpButton.getIconPath()));
+                                tmp = ImageIO.read(getClass().getResource("/Art/Cards/" + tmpButton.getIconPath()));
+                                tmpButton.setIcon(new StretchIcon(tmp));
                                 tmpButton.setText("");
-                                
+
                                 // Now remove that card from the decl
                                 this.deckBeingCreated.removeCard(tmpCard);
                                 break;
                             }
                         }
                     }
+                    else {
+                        // Passive card first check slot 4 or 5 then move onto the rest
+                        if (this.cardSlots[4].getMyCard() == null) {
+                            // Add that card to the slot
+                            this.cardSlots[4].setMyCard(tmpCard);
+                            tmp = ImageIO.read(Paths.get("./Art/Cards/" + this.cardSlots[4].getIconPath()).toFile());
+                            this.cardSlots[4].setIcon(new StretchIcon(tmp));
+                            this.cardSlots[4].setText("");
+
+                            // Now remove that card from the decl
+                            this.deckBeingCreated.removeCard(tmpCard);
+                        }
+                        else if (this.cardSlots[5].getMyCard() == null) {
+                            // Add that card to the slot
+                            this.cardSlots[5].setMyCard(tmpCard);
+                            tmp = ImageIO.read(Paths.get("./Art/Cards/" + this.cardSlots[5].getIconPath()).toFile());
+                            this.cardSlots[5].setIcon(new StretchIcon(tmp));
+                            this.cardSlots[5].setText("");
+
+                            // Now remove that card from the decl
+                            this.deckBeingCreated.removeCard(tmpCard);
+                        }
+                        else { // search for next empty slot
+                            for (ParagonCardButton tmpButton : this.cardSlots) {
+                                if (tmpButton.getMyCard() == null) {
+                                    // Add that card to the slot
+                                    tmpButton.setMyCard(tmpCard);
+                                    tmp = ImageIO.read(Paths.get("./Art/Cards/" + tmpButton.getIconPath()).toFile());
+                                    tmpButton.setIcon(new StretchIcon(tmp));
+                                    tmpButton.setText("");
+
+                                    // Now remove that card from the decl
+                                    this.deckBeingCreated.removeCard(tmpCard);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
-        else { // Slot is selected so run checks against selected slot
-            // Is slot empty
-            if (this.slotSelected.getMyCard() == null) { // Slot is empty so add whatever
-                if (this.slotSelected.getSlotIsActiveSlot() && tmpCard.getType().equals("Active")) {
-                    this.slotSelected.setMyCard(tmpCard);
-                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
-                    this.slotSelected.setText("");
-
-                    // Now remove that card from the decl
-                    this.deckBeingCreated.removeCard(tmpCard);
-                }
-                else if (tmpCard.getType().equals("Passive")) {
-                    this.slotSelected.setMyCard(tmpCard);
-                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
-                    this.slotSelected.setText("");
-
-                    // Now remove that card from the decl
-                    this.deckBeingCreated.removeCard(tmpCard);
-                }
-            }
-            else { // Slot is not empty so we are either removing or upgrading
-                if (tmpCard.getType().equals("Upgrade")) { // We are upgrading
-                    if (this.slotSelected.getMyCard().canCardBeUpgraded()) {
-                        this.slotSelected.getMyCard().addCardToUpgrades(tmpCard);
+            else { // Slot is selected so run checks against selected slot
+                // Is slot empty
+                if (this.slotSelected.getMyCard() == null) { // Slot is empty so add whatever
+                    if (this.slotSelected.getSlotIsActiveSlot() && tmpCard.getType().equals("Active")) {
+                        this.slotSelected.setMyCard(tmpCard);
+                        tmp = ImageIO.read(Paths.get("./Art/Cards/" + this.slotSelected.getIconPath()).toFile());
+                        this.slotSelected.setIcon(new StretchIcon(tmp));
+                        this.slotSelected.setText("");
+                        this.slotSelected = null;
 
                         // Now remove that card from the decl
                         this.deckBeingCreated.removeCard(tmpCard);
                     }
-                }   
-                else { // Replacing
-                    ParagonCard cardToReplace = this.slotSelected.getMyCard();
-                    this.slotSelected.setMyCard(tmpCard);
-                    this.slotSelected.setIcon(new StretchIcon(this.slotSelected.getIconPath()));
-                    this.slotSelected.setText("");
+                    else if (tmpCard.getType().equals("Passive")) {
+                        this.slotSelected.setMyCard(tmpCard);
+                        tmp = ImageIO.read(Paths.get("./Art/Cards/" + this.slotSelected.getIconPath()).toFile());
+                        this.slotSelected.setIcon(new StretchIcon(tmp));
+                        this.slotSelected.setText("");
+                        this.slotSelected = null;
 
-                    // Now remove that card from the dec;
-                    this.deckBeingCreated.removeCard(tmpCard);
-                    
-                    // Now add back the card replaced
-                    this.deckBeingCreated.addCard(cardToReplace);
+                        // Now remove that card from the decl
+                        this.deckBeingCreated.removeCard(tmpCard);
+                    }
+                }
+                else { // Slot is not empty so we are either removing or upgrading
+                    if (tmpCard.getType().equals("Upgrade")) { // We are upgrading
+                        if (this.slotSelected.getMyCard().canCardBeUpgraded()) {
+                            this.slotSelected.getMyCard().addCardToUpgrades(tmpCard);
+
+                            // Now remove that card from the decl
+                            this.deckBeingCreated.removeCard(tmpCard);
+                        }
+                    }   
+                    else { // Replacing
+                        ParagonCard cardToReplace = this.slotSelected.getMyCard();
+                        this.slotSelected.setMyCard(tmpCard);
+                        tmp = ImageIO.read(Paths.get("./Art/Cards/" + this.slotSelected.getIconPath()).toFile());
+                        this.slotSelected.setIcon(new StretchIcon(tmp));
+                        this.slotSelected.setText("");
+                        this.slotSelected = null;
+
+                        // Now remove that card from the dec;
+                        this.deckBeingCreated.removeCard(tmpCard);
+
+                        // Now add back the card replaced
+                        this.deckBeingCreated.addCard(cardToReplace);
+                    }
                 }
             }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         // Refresh
         this.refreshSlotBuilderCards();
+        this.refreshDeckBuilderNumbers();
     }
     
     /**
@@ -705,6 +874,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     public void refreshDeckBuilderNumbers() {
         
         String tmpString;
+        this.cardBonuses = new double[15];
         
         // Card count
         tmpString = this.deckBeingCreated.getCardCount() + "/" + this.deckBeingCreated.getMaxCards();
@@ -714,7 +884,44 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.progress_CardCount.setMinimum(0);
         this.progress_CardCount.setMaximum(this.deckBeingCreated.getMaxCards());
         this.progress_CardCount.setValue(this.deckBeingCreated.getCardCount());
-                
+        
+        // Refresh all the stats based on the cards sloted
+        //double cardBonuses[] = new double[15];
+        
+        int tmpInt = 0;
+        
+        for (ParagonCardButton cardBtn : this.cardSlots) {
+            if (cardBtn.getMyCard() != null) {
+                double[] tmpDouble = cardBtn.getMyCard().getCardBonuses();
+                for (int i = 0; i < 15; i++){
+                    this.cardBonuses[i] += tmpDouble[i];
+                }
+                tmpInt += cardBtn.getMyCard().getCardPoints();
+            }
+        }
+        
+        this.tb_CardCountSlot.setText(tmpInt + "/" + this.maxCardLevels);
+        this.progress_CardCountSlot.setMinimum(0);
+        this.progress_CardCountSlot.setMaximum(this.maxCardLevels);
+        this.progress_CardCountSlot.setValue(tmpInt);
+        
+        this.tb_AttackSpeed.setText(String.valueOf(this.cardBonuses[0])); //= this.getAttackSpeed();
+        this.tb_CoolReduction.setText(String.valueOf(this.cardBonuses[1])); //= this.getCooldownReduction();
+        this.tb_CritBonus.setText(String.valueOf(this.cardBonuses[2])); //= this.getCritBonus();
+        this.tb_CritChance.setText(String.valueOf(this.cardBonuses[3])); //= this.getCritChance();
+        this.tb_EnergyArmor.setText(String.valueOf(this.cardBonuses[4])); //= this.getEnergyArmor();
+        this.tb_EnergyDamage.setText(String.valueOf(this.cardBonuses[5])); //= this.getEnergyDamage();
+        this.tb_EnergyPen.setText(String.valueOf(this.cardBonuses[6])); //= this.getEnergyPen();
+        this.tb_HealthRegen.setText(String.valueOf(this.cardBonuses[7])); //= this.getHealthRegen();
+        this.tb_Lifesteal.setText(String.valueOf(this.cardBonuses[8])); //= this.getLifesteal();
+        this.tb_ManaRegen.setText(String.valueOf(this.cardBonuses[9])); //= this.getManaRegen();
+        this.tb_MaxHealth.setText(String.valueOf(this.cardBonuses[10])); //= this.getMaxHealth();
+        this.tb_MaxMana.setText(String.valueOf(this.cardBonuses[11])); //= this.getMaxMana();
+        this.tb_PhysicalArmor.setText(String.valueOf(this.cardBonuses[12])); //= this.getPhysicalArmor();
+        this.tb_PhysicalDamage.setText(String.valueOf(this.cardBonuses[13])); //= this.getPhysicalDamage();
+        this.tb_PhysicalPen.setText(String.valueOf(this.cardBonuses[14])); //= this.getPhysicalPen();     
+        
+        this.refreshStats();
     }
        
     /**
@@ -726,100 +933,110 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             // get the hero level
             int heroLevel = Integer.parseInt((String.valueOf(this.cb_Levels.getSelectedItem()).split("\\s+"))[1]);
 
+            
+            BufferedImage tmp;
+            String imgPath;
+            try {
+                // Basic Attack LMB
+                // Icon
+                tmp = ImageIO.read(Paths.get("./Art/Abilities/" + this.myHero.getName() + "_LMB.png").toFile());
+                colorImage(tmp, this.iconNormalColor);
+                this.BasicAttack_Icon.setIcon(new StretchIcon(tmp));
+                
+                // Alternate Ability RMB
+                // Icon
+                tmp = ImageIO.read(Paths.get("./Art/Abilities/" + this.myHero.getName() + "_RMB.png").toFile());
+                colorImage(tmp, this.iconNormalColor);
+                this.AlternateAbility_Icon.setIcon(new StretchIcon(tmp));
+                
+                // Icon
+                tmp = ImageIO.read(Paths.get("./Art/Abilities/" + this.myHero.getName() + "_Q.png").toFile());
+                colorImage(tmp, this.iconNormalColor);
+                this.PrimaryAbility_Icon.setIcon(new StretchIcon(tmp));
+                
+                // Icon
+                tmp = ImageIO.read(Paths.get("./Art/Abilities/" + this.myHero.getName() + "_E.png").toFile());
+                colorImage(tmp, this.iconNormalColor);
+                this.SecondaryAbility_Icon.setIcon(new StretchIcon(tmp));
+                
+                // Icon
+                tmp = ImageIO.read(Paths.get("./Art/Abilities/" + this.myHero.getName() + "_R.png").toFile());
+                colorImage(tmp, this.iconNormalColor);
+                this.UltimateAbility_Icon.setIcon(new StretchIcon(tmp));
+                           
+            } catch (IOException | IllegalArgumentException ex) {
+                Logger.getLogger(ParagonDeckBuilderMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             // Basic Attack LMB
-            // Icon
-            String imgPath = Paths.get("./Art/Abilities/" + 
-                    this.myHero.getName() + "_LMB.png").toString();
-            this.BasicAttack_Icon.setIcon(new StretchIcon(imgPath));
-
             // Attack Speed
             this.BasicAttack_AS.setText(String.valueOf(ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "BasicAttack", heroLevel)));
+                    "BasicAttack", heroLevel) + this.cardBonuses[0]));
             
             // Damage
             this.BasicAttack_AD.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "BasicAttack", heroLevel)));
+                    "BasicAttack", heroLevel, this.cardBonuses)));
             
             // DPS
             this.BasicAttack_DPS.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "BasicAttack", heroLevel) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "BasicAttack", heroLevel)));
+                    "BasicAttack", heroLevel, this.cardBonuses) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
+                    "BasicAttack", heroLevel) + this.cardBonuses[0]));
             
             // Alternate Ability RMB
-            // Icon
-            imgPath = Paths.get("./Art/Abilities/" + 
-                    this.myHero.getName() + "_RMB.png").toString();
-            this.AlternateAbility_Icon.setIcon(new StretchIcon(imgPath));
-
             // Attack Speed
             this.AlternateAbility_AS.setText(String.valueOf(ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "AlternateAbility", heroLevel)));
+                    "AlternateAbility", heroLevel) + this.cardBonuses[0]));
             
             // Damage
             this.AlternateAbility_AD.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "AlternateAbility", heroLevel)));
+                    "AlternateAbility", heroLevel, this.cardBonuses)));
             
             // DPS
             this.AlternateAbility_DPS.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "AlternateAbility", heroLevel) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "AlternateAbility", heroLevel)));
+                    "AlternateAbility", heroLevel, this.cardBonuses) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
+                    "AlternateAbility", heroLevel) + this.cardBonuses[0]));
             
             // Primary Ability Q
-            // Icon
-            imgPath = Paths.get("./Art/Abilities/" + 
-                    this.myHero.getName() + "_Q.png").toString();
-            this.PrimaryAbility_Icon.setIcon(new StretchIcon(imgPath));
-
             // Attack Speed
             this.PrimaryAbility_AS.setText(String.valueOf(ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "PrimaryAbility", heroLevel)));
+                    "PrimaryAbility", heroLevel) + this.cardBonuses[0]));
             
             // Damage
             this.PrimaryAbility_AD.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "AlternateAbility", heroLevel)));
+                    "AlternateAbility", heroLevel, this.cardBonuses)));
             
             // DPS
             this.PrimaryAbility_DPS.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "PrimaryAbility", heroLevel) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "PrimaryAbility", heroLevel)));
+                    "PrimaryAbility", heroLevel, this.cardBonuses) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
+                    "PrimaryAbility", heroLevel) + this.cardBonuses[0]));
             
             // Secondary Ability R
-            // Icon
-            imgPath = Paths.get("./Art/Abilities/" + 
-                    this.myHero.getName() + "_E.png").toString();
-            this.SecondaryAbility_Icon.setIcon(new StretchIcon(imgPath));
-
             // Attack Speed
             this.SecondaryAbility_AS.setText(String.valueOf(ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "SecondaryAbility", heroLevel)));
+                    "SecondaryAbility", heroLevel) + this.cardBonuses[0]));
             
             // Damage
             this.SecondaryAbility_AD.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "SecondaryAbility", heroLevel)));
+                    "SecondaryAbility", heroLevel, this.cardBonuses)));
             
             // DPS
             this.SecondaryAbility_DPS.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "SecondaryAbility", heroLevel) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "SecondaryAbility", heroLevel)));
+                    "SecondaryAbility", heroLevel, this.cardBonuses) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
+                    "SecondaryAbility", heroLevel) + this.cardBonuses[0]));
             
             // Ultimate Ability R
-            // Icon
-            imgPath = Paths.get("./Art/Abilities/" + 
-                    this.myHero.getName() + "_R.png").toString();
-            this.UltimateAbility_Icon.setIcon(new StretchIcon(imgPath));
-
             // Attack Speed
             this.UltimateAbility_AS.setText(String.valueOf(ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "UltimateAbility", heroLevel)));
+                    "UltimateAbility", heroLevel) + this.cardBonuses[0]));
             
             // Damage
             this.UltimateAbility_AD.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "UltimateAbility", heroLevel)));
+                    "UltimateAbility", heroLevel, this.cardBonuses)));
             
             // DPS
             this.UltimateAbility_DPS.setText(String.valueOf(ParagonMath.getAttackDamage(this.myHero.getName(), 
-                    "UltimateAbility", heroLevel) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
-                    "UltimateAbility", heroLevel)));
+                    "UltimateAbility", heroLevel, this.cardBonuses) / ParagonMath.getAttackSpeed(this.myHero.getName(), 
+                    "UltimateAbility", heroLevel) + this.cardBonuses[0]));
         }
         
     }
@@ -832,8 +1049,88 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         this.myHero.setName(heroName);
         
-        // Set levles combo box
+        // Set levels combo box
         this.cb_Levels.setModel(new javax.swing.DefaultComboBoxModel(this.getLevels()));
+        
+        // New deck
+        this.tb_DeckName.setText("New " + heroName + " Deck");
+        
+        this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck, this.myHero.getName());
+        this.panel_EquipmentCards.removeAll();
+        this.panel_UpgradeCards.removeAll();
+        
+        // Now loop through the deck and add the card to the stack if it fits the filter
+        for (ParagonCard testCard : this.deckBeingCreated.getCards()) {
+            
+            ParagonLayeredPane tmpPane = new ParagonLayeredPane(testCard, this);
+            java.awt.Component[] tmpComp;
+            boolean cardDuplicated = false;
+            
+            switch (testCard.getType()) {
+                case "Prime":
+                    // Clear the prime panel and add new one
+                    this.panel_PrimeSlot.removeAll();
+                    this.panel_PrimeSlot.add(tmpPane);
+                    tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                    break;
+                case "Upgrade":
+                    tmpComp = this.panel_UpgradeCards.getComponents();
+                
+                    if (tmpComp.length > 0) {
+                        for (java.awt.Component comp : tmpComp) {
+                            ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                            if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                                testPane.setCardCount(testPane.getCardCount() + 1);
+                                cardDuplicated = true;
+                            }
+                        }      
+                    }
+                    else {
+                        // Add to upgrade pane
+                        this.panel_UpgradeCards.add(tmpPane);
+                    }
+
+                    if (!cardDuplicated) {
+                        // Add to upgrade pane
+                        this.panel_UpgradeCards.add(tmpPane);
+                    }
+                    break;
+                case "Passive":
+                case "Active":
+                    tmpComp = this.panel_EquipmentCards.getComponents();
+                
+                    if (tmpComp.length > 0) {
+                        for (java.awt.Component comp : tmpComp) {
+                            ParagonLayeredPane testPane = (ParagonLayeredPane) comp;
+
+                            if (tmpPane.getMyCard().equals(testPane.getMyCard())) { // Card already added so no need to add again
+                                testPane.setCardCount(testPane.getCardCount() + 1);
+                                cardDuplicated = true;
+                            }
+                        }      
+                    }
+                    else {
+                        // Add to upgrade pane
+                        this.panel_EquipmentCards.add(tmpPane);
+                    }
+
+                    if (!cardDuplicated) {
+                        // Add to equipment pane
+                        this.panel_EquipmentCards.add(tmpPane);
+                    }
+                    break;                    
+            }
+        }
+        
+        for (int i = 0; i < this.cardSlots.length; i ++) {
+            this.cardSlots[i].setMyCard(null);
+            this.cardSlots[i].setIcon(null);
+                if (this.cardSlots[i].getSlotIsActiveSlot())
+                    this.cardSlots[i].setText("Empty Active Slot");
+                else
+                    this.cardSlots[i].setText("Empty Passive Slot");  
+        }
         
         // Refresh gui
         this.refreshGui();
@@ -922,12 +1219,9 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         scrollPane_DeckSlotBuilder = new javax.swing.JScrollPane();
         panel_DeckSlotBuilderPanel = new javax.swing.JPanel();
         panel_cardSlots = new javax.swing.JPanel();
-        cardSlot2 = new javax.swing.JButton();
-        cardSlot1 = new javax.swing.JButton();
-        cardSlot3 = new javax.swing.JButton();
-        cardSlot4 = new javax.swing.JButton();
-        cardSlot6 = new javax.swing.JButton();
-        cardSlot5 = new javax.swing.JButton();
+        panel_CardCountSlot = new javax.swing.JLayeredPane();
+        progress_CardCountSlot = new javax.swing.JProgressBar();
+        tb_CardCountSlot = new javax.swing.JLabel();
         panel_radios = new javax.swing.JPanel();
         radio_showActive = new javax.swing.JRadioButton();
         radio_showPassive = new javax.swing.JRadioButton();
@@ -947,7 +1241,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_ManaRegen = new javax.swing.JLabel();
         tb_CoolReduction = new javax.swing.JLabel();
         panel_StatBonus1 = new javax.swing.JPanel();
-        icon_MaxHEalth = new javax.swing.JLabel();
+        icon_MaxHealth = new javax.swing.JLabel();
         icon_HealthRegen = new javax.swing.JLabel();
         icon_Lifesteal = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
@@ -976,6 +1270,8 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         icon_EnergyPen = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Paragon Deck Builder");
+        setIconImages(null);
 
         btn_HeroSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -990,6 +1286,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         jLabel4.setText("Statistics");
 
         BasicAttack_Icon.setBackground(new java.awt.Color(0, 0, 0));
+        BasicAttack_Icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel5.setText("Basic Attack");
@@ -1074,6 +1378,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
 
         AlternateAbility_Icon.setBackground(new java.awt.Color(0, 0, 0));
+        AlternateAbility_Icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel8.setText("Alternate Ability");
@@ -1160,6 +1472,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
 
         PrimaryAbility_Icon.setBackground(new java.awt.Color(0, 0, 0));
+        PrimaryAbility_Icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel13.setText("Primary Ability");
@@ -1244,6 +1564,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
 
         SecondaryAbility_Icon.setBackground(new java.awt.Color(0, 0, 0));
+        SecondaryAbility_Icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel18.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel18.setText("Secondary Ability");
@@ -1328,6 +1656,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         );
 
         UltimateAbility_Icon.setBackground(new java.awt.Color(0, 0, 0));
+        UltimateAbility_Icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel23.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel23.setText("Ultimate Ability");
@@ -1561,7 +1897,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             panel_DeckListMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_CardCountMain)
             .addComponent(z_PrimeTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+            .addComponent(panel_PrimeSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
             .addComponent(z_EquipmentCardsTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(z_EquipmentCardsTitle1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(scrollpanel_EquipmentCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1629,23 +1965,39 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         panel_cardSlots.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        cardSlot2.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot2.setText("Empty");
+        panel_CardCountSlot.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        cardSlot1.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot1.setText("Empty");
+        progress_CardCountSlot.setBorderPainted(false);
+        progress_CardCountSlot.setOpaque(true);
 
-        cardSlot3.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot3.setText("Empty");
+        tb_CardCountSlot.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        tb_CardCountSlot.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tb_CardCountSlot.setText("0 / 0");
+        tb_CardCountSlot.setToolTipText("");
 
-        cardSlot4.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot4.setText("Empty");
+        panel_CardCountSlot.setLayer(progress_CardCountSlot, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panel_CardCountSlot.setLayer(tb_CardCountSlot, javax.swing.JLayeredPane.PALETTE_LAYER);
 
-        cardSlot6.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot6.setText("Empty");
-
-        cardSlot5.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        cardSlot5.setText("Empty");
+        javax.swing.GroupLayout panel_CardCountSlotLayout = new javax.swing.GroupLayout(panel_CardCountSlot);
+        panel_CardCountSlot.setLayout(panel_CardCountSlotLayout);
+        panel_CardCountSlotLayout.setHorizontalGroup(
+            panel_CardCountSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(progress_CardCountSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+            .addGroup(panel_CardCountSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_CardCountSlotLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(tb_CardCountSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        panel_CardCountSlotLayout.setVerticalGroup(
+            panel_CardCountSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(progress_CardCountSlot, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+            .addGroup(panel_CardCountSlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_CardCountSlotLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(tb_CardCountSlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
 
         javax.swing.GroupLayout panel_cardSlotsLayout = new javax.swing.GroupLayout(panel_cardSlots);
         panel_cardSlots.setLayout(panel_cardSlotsLayout);
@@ -1653,35 +2005,15 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cardSlotsLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cardSlot1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardSlot3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardSlot5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cardSlot2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardSlot4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardSlot6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panel_CardCountSlot)
+                .addContainerGap())
         );
         panel_cardSlotsLayout.setVerticalGroup(
             panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cardSlotsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel_cardSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_cardSlotsLayout.createSequentialGroup()
-                        .addComponent(cardSlot1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardSlot3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardSlot5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_cardSlotsLayout.createSequentialGroup()
-                        .addComponent(cardSlot2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardSlot4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardSlot6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(40, 40, 40))
+                .addComponent(panel_CardCountSlot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(639, 639, 639))
         );
 
         javax.swing.GroupLayout panel_SlotDeckLayout = new javax.swing.GroupLayout(panel_SlotDeck);
@@ -1691,14 +2023,15 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
             .addGroup(panel_SlotDeckLayout.createSequentialGroup()
                 .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 968, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_SlotDeckLayout.setVerticalGroup(
             panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_SlotDeckLayout.createSequentialGroup()
-                .addComponent(panel_cardSlots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panel_SlotDeckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(scrollPane_DeckSlotBuilder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_cardSlots, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPane_MainTabbed.addTab("Slot Cards", panel_SlotDeck);
@@ -1770,6 +2103,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_DeckName.setText("Deck Name");
 
         btn_SaveDeck.setText("Save");
+        btn_SaveDeck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SaveDeckActionPerformed(evt);
+            }
+        });
 
         btn_LoadDeck.setText("Load");
         btn_LoadDeck.addActionListener(new java.awt.event.ActionListener() {
@@ -1783,25 +2121,49 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_StatBonus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_MaxMana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_MaxMana.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_MaxMana.setToolTipText("Max Mana");
         icon_MaxMana.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_MaxMana.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_MaxMana.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_MaxMana.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_MaxMana.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_ManaRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_ManaRegen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_ManaRegen.setToolTipText("Max Regen");
         icon_ManaRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_ManaRegen.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_ManaRegen.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_ManaRegen.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_ManaRegen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_CoolReduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_CoolReduction.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CoolReduction.setToolTipText("Cooldown Reduction");
         icon_CoolReduction.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_CoolReduction.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_CoolReduction.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_CoolReduction.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_CoolReduction.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1868,26 +2230,50 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         panel_StatBonus1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        icon_MaxHEalth.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_MaxHEalth.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
-        icon_MaxHEalth.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        icon_MaxHEalth.setMaximumSize(new java.awt.Dimension(25, 25));
-        icon_MaxHEalth.setMinimumSize(new java.awt.Dimension(25, 25));
-        icon_MaxHEalth.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_MaxHealth.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_MaxHealth.setToolTipText("Max Health");
+        icon_MaxHealth.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        icon_MaxHealth.setMaximumSize(new java.awt.Dimension(25, 25));
+        icon_MaxHealth.setMinimumSize(new java.awt.Dimension(25, 25));
+        icon_MaxHealth.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_MaxHealth.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_HealthRegen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_HealthRegen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_HealthRegen.setToolTipText("Health Regen");
         icon_HealthRegen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_HealthRegen.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_HealthRegen.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_HealthRegen.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_HealthRegen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_Lifesteal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_Lifesteal.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_Lifesteal.setToolTipText("Lifesteal");
         icon_Lifesteal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_Lifesteal.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_Lifesteal.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_Lifesteal.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_Lifesteal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel28.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1909,11 +2295,19 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_Lifesteal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_PhysicalArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_PhysicalArmor.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalArmor.setToolTipText("Physical Armour");
         icon_PhysicalArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_PhysicalArmor.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalArmor.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalArmor.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalArmor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         tb_PhysicalArmor.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         tb_PhysicalArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1926,11 +2320,19 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_EnergyArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_EnergyArmor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_EnergyArmor.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyArmor.setToolTipText("Energy Armour");
         icon_EnergyArmor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_EnergyArmor.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_EnergyArmor.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_EnergyArmor.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_EnergyArmor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_StatBonus1Layout = new javax.swing.GroupLayout(panel_StatBonus1);
         panel_StatBonus1.setLayout(panel_StatBonus1Layout);
@@ -1950,7 +2352,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tb_HealthRegen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_StatBonus1Layout.createSequentialGroup()
-                                .addComponent(icon_MaxHEalth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(icon_MaxHealth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tb_MaxHealth, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1974,7 +2376,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                 .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_StatBonus1Layout.createSequentialGroup()
                         .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(icon_MaxHEalth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(icon_MaxHealth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tb_MaxHealth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_StatBonus1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1998,25 +2400,49 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         panel_StatBonus2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_PhysicalDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_PhysicalDamage.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalDamage.setToolTipText("Physical Damage");
         icon_PhysicalDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_PhysicalDamage.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalDamage.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalDamage.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalDamage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_EnergyDamage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_EnergyDamage.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyDamage.setToolTipText("Energy Damage");
         icon_EnergyDamage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_EnergyDamage.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_EnergyDamage.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_EnergyDamage.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_EnergyDamage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_CritChance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_CritChance.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CritChance.setToolTipText("Crit Chance");
         icon_CritChance.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_CritChance.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_CritChance.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_CritChance.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_CritChance.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         jLabel37.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel37.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -2038,11 +2464,19 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_CritChance.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_CritBonus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_CritBonus.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_CritBonus.setToolTipText("Crit Bonus");
         icon_CritBonus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_CritBonus.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_CritBonus.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_CritBonus.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_CritBonus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         tb_CritBonus.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         tb_CritBonus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -2055,18 +2489,34 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_AttackSpeed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_AttackSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_AttackSpeed.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_AttackSpeed.setToolTipText("Attack Speed");
         icon_AttackSpeed.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_AttackSpeed.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_AttackSpeed.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_AttackSpeed.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_AttackSpeed.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         icon_PhysicalPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_PhysicalPen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_PhysicalPen.setToolTipText("Physical Penetration");
         icon_PhysicalPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_PhysicalPen.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalPen.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_PhysicalPen.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_PhysicalPen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         tb_PhysicalPen.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         tb_PhysicalPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -2079,11 +2529,19 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         tb_EnergyPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         icon_EnergyPen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_EnergyPen.setIcon(new javax.swing.ImageIcon("C:\\Users\\jlyon\\Documents\\NetBeansProjects\\ParagonDeckBuilder\\Art\\Stats\\icon_Attack_Speed_128x.png")); // NOI18N
+        icon_EnergyPen.setToolTipText("Energy Penetration");
         icon_EnergyPen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         icon_EnergyPen.setMaximumSize(new java.awt.Dimension(25, 25));
         icon_EnergyPen.setMinimumSize(new java.awt.Dimension(25, 25));
         icon_EnergyPen.setPreferredSize(new java.awt.Dimension(25, 25));
+        icon_EnergyPen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icon_StatMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                icon_StatMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_StatBonus2Layout = new javax.swing.GroupLayout(panel_StatBonus2);
         panel_StatBonus2.setLayout(panel_StatBonus2Layout);
@@ -2176,8 +2634,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(Affinity1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0))
+                                .addComponent(Affinity2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cb_Levels, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(1, 1, 1))))
@@ -2195,13 +2652,16 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
                         .addComponent(panel_StatBonus1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(panel_StatBonus2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(tb_DeckName, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
                                 .addComponent(btn_SaveDeck, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_LoadDeck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_LoadDeck, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2250,7 +2710,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
 
         // Open the hero select form
         ParagonHeroSelector heroSelector = new ParagonHeroSelector(this, true);
-        heroSelector.setVisible(true);
+        //heroSelector.setVisible(true);
 
     }//GEN-LAST:event_btn_HeroSelectActionPerformed
 
@@ -2284,17 +2744,215 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     }//GEN-LAST:event_radio_showPrimeActionPerformed
 
     private void btn_LoadDeckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LoadDeckActionPerformed
-        // TODO add your handling code here:
+        FileInputStream fileIn = null;
+        BufferedImage tmp;
+        try {
+                          
+            // Now serialize to a file
+            String outFilePath = Paths.get("./DeckSaves/" + this.tb_DeckName.getText().replaceAll("\\s", "") + ".ser").toString();
+            fileIn = new FileInputStream(outFilePath);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+                        
+            Object tmpObj = in.readObject();
+            this.deckBeingCreated = (ParagonDeck) tmpObj;
+            
+            // Fix images
+            Iterator<ParagonCard> myIter = this.deckBeingCreated.getCards().iterator();
+            
+            while (myIter.hasNext()) {
+                ParagonCard tmpCard = myIter.next();
+                
+                // Fix the image on this cars
+                if (Paths.get("./Art/Cards/" + tmpCard.getIconPath()) != null) {
+                    tmp = ImageIO.read(Paths.get("./Art/Cards/" + tmpCard.getIconPath()).toFile());
+                    tmpCard.setCardImage(new StretchIcon(tmp));
+                }
+                
+                // If this card has upgrades fix those images
+                if (!tmpCard.getUpgradeCards().isEmpty()){
+                    Iterator<ParagonCard> myIterTwo = tmpCard.getUpgradeCards().iterator();
+                    while (myIterTwo.hasNext()) {
+                        ParagonCard tmpCardTwo = myIter.next();
+                        // Fix the image on this cars
+                        if (Paths.get("./Art/Cards/" + tmpCardTwo.getIconPath()) != null) {
+                            tmp = ImageIO.read(Paths.get("./Art/Cards/" + tmpCardTwo.getIconPath()).toFile());
+                            tmpCardTwo.setCardImage(new StretchIcon(tmp));
+                        }
+                    }
+                }
+                
+            }
+            
+            this.panel_PrimeSlot.removeAll();
+            this.panel_EquipmentCards.removeAll();
+            this.panel_UpgradeCards.removeAll();
+            
+            // First add the slotted cards to the deck
+            for (int i = 0; i < this.cardSlots.length; i++) {
+                this.cardSlots[i].setMyCard(this.deckBeingCreated.getSlottedCards()[i]);
+                if (this.cardSlots[i].getMyCard() != null) {
+                    //tmp = ImageIO.read(getClass().getResource("/Art/Cards/" + this.cardSlots[i].getIconPath()));
+                    this.cardSlots[i].setIcon(this.cardSlots[i].getMyCard().getCardImage());
+                    this.cardSlots[i].setText("");
+                    ParagonCard tmpCard = this.cardSlots[i].getMyCard();
+                    ParagonLayeredPane tmpPane = new ParagonLayeredPane(tmpCard, this);
+                    switch (tmpCard.getType()) {
+                        case "Prime":
+                            // Clear the prime panel and add new one
+                            this.deckBeingCreated.removePrimeCard();
+                            this.panel_PrimeSlot.add(tmpPane);
+                            tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                            break;
+                        case "Upgrade":
+                            this.panel_UpgradeCards.add(tmpPane);
+                            break;
+                        case "Passive":
+                        case "Active":
+                            this.panel_EquipmentCards.add(tmpPane);
+                            break;
+                    }
+                    
+                    // Check for upgrade cards
+                    myIter = this.cardSlots[i].getMyCard().getUpgradeCards().iterator();
+                    while (myIter.hasNext()) {                
+                        tmpCard = myIter.next();
+                        tmpPane = new ParagonLayeredPane(tmpCard, this);
+                        switch (tmpCard.getType()) {
+                            case "Prime":
+                                // Clear the prime panel and add new one
+                                this.deckBeingCreated.removePrimeCard();
+                                this.panel_PrimeSlot.add(tmpPane);
+                                tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                                break;
+                            case "Upgrade":
+                                this.panel_UpgradeCards.add(tmpPane);
+                                break;
+                            case "Passive":
+                            case "Active":
+                                this.panel_EquipmentCards.add(tmpPane);
+                                break;
+                        }
+                    }
+                }
+                else {
+                    this.cardSlots[i].setIcon(null);
+                    if (this.cardSlots[i].getSlotIsActiveSlot())
+                        this.cardSlots[i].setText("Empty Active Slot");
+                    else
+                        this.cardSlots[i].setText("Empty Passive Slot");  
+                }
+            }
+            
+            myIter = this.deckBeingCreated.getCards().iterator();
+                        
+            while (myIter.hasNext()) {                
+                ParagonCard tmpCard = myIter.next();
+                ParagonLayeredPane tmpPane = new ParagonLayeredPane(tmpCard, this);
+                
+                // Loop through the cards and add to deck builder
+                // Switch on card type
+                switch (tmpCard.getType()) {
+                    case "Prime":
+                        // Clear the prime panel and add new one
+                        this.panel_PrimeSlot.add(tmpPane);
+                        tmpPane.setBounds(0, 0, this.panel_PrimeSlot.getWidth(), this.panel_PrimeSlot.getHeight());
+                        break;
+                    case "Upgrade":
+                        this.panel_UpgradeCards.add(tmpPane);
+                        break;
+                    case "Passive":
+                    case "Active":
+                        this.panel_EquipmentCards.add(tmpPane);
+                        break;
+                }
+            }
+            
+            this.myHero.setName(this.deckBeingCreated.getHeroName());
+            
+            // Set levels combo box
+            this.cb_Levels.setModel(new javax.swing.DefaultComboBoxModel(this.getLevels()));
+            
+            this.refreshGui();
+            
+            in.close();
+            fileIn.close();
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
     }//GEN-LAST:event_btn_LoadDeckActionPerformed
 
     private void tabbedPane_MainTabbedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPane_MainTabbedStateChanged
        if (this.tabbedPane_MainTabbed.getSelectedIndex() == 0 && !(this.masterDeck == null)) {
-           this.refreshDeckBuilderCards();
+           //this.refreshDeckBuilderCards();
        }
        else if (this.tabbedPane_MainTabbed.getSelectedIndex() == 1 && !(this.deckBeingCreated == null)) {
            this.refreshSlotBuilderCards();
        }
     }//GEN-LAST:event_tabbedPane_MainTabbedStateChanged
+
+    private void icon_StatMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon_StatMouseEntered
+        JLabel tmpLabel = (JLabel) evt.getComponent();
+        if (tmpLabel.getIcon() != null) {
+            ImageIcon myImage = (ImageIcon)tmpLabel.getIcon();
+            Image image = (Image) myImage.getImage();
+            BufferedImage tmpImage = (BufferedImage) image;
+            colorImage(tmpImage, this.iconHoverColor);
+            tmpLabel.setIcon(new StretchIcon(tmpImage));
+        }
+    }//GEN-LAST:event_icon_StatMouseEntered
+
+    private void icon_StatMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon_StatMouseExited
+        JLabel tmpLabel = (JLabel) evt.getComponent();
+        if (tmpLabel.getIcon() != null) {
+            ImageIcon myImage = (ImageIcon)tmpLabel.getIcon();
+            Image image = (Image) myImage.getImage();
+            BufferedImage tmpImage = (BufferedImage) image;
+            colorImage(tmpImage, this.iconNormalColor);
+            tmpLabel.setIcon(new StretchIcon(tmpImage));
+        }
+    }//GEN-LAST:event_icon_StatMouseExited
+
+    // Saves the deck
+    private void btn_SaveDeckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveDeckActionPerformed
+        
+        FileOutputStream fileOut = null;
+        try {
+            // First add the slotted cards to the deck
+            for (int i = 0; i < this.cardSlots.length; i++) {
+                this.deckBeingCreated.setSlottedCard(this.cardSlots[i].getMyCard(), i);
+            }   
+            
+            this.deckBeingCreated.setHeroName(this.myHero.getName());
+            
+            // Now serialize to a file
+            String outFilePath = Paths.get("./DeckSaves/" + this.tb_DeckName.getText().replaceAll("\\s", "") + ".ser").toString();
+            File tmpFile = new File(outFilePath);
+            if (!(new File("./DeckSaves/").exists())) {
+                new File("./DeckSaves/").mkdir();
+            }
+            if (!tmpFile.exists())
+                tmpFile.createNewFile();
+            
+            fileOut = new FileOutputStream(tmpFile);
+            
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this.deckBeingCreated);
+            
+            out.close();
+            fileOut.close();
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+        
+    }//GEN-LAST:event_btn_SaveDeckActionPerformed
 
     /**
      * Returns the point of the hero selector button
@@ -2310,6 +2968,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+             
+        final ParagonSplash tmp = new ParagonSplash();
+        centreWindow(tmp);
+        tmp.setVisible(true);
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -2336,9 +2999,11 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ParagonDeckBuilderMain().setVisible(true);
+                new ParagonDeckBuilderMain(tmp).setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2367,12 +3032,6 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JButton btn_HeroSelect;
     private javax.swing.JButton btn_LoadDeck;
     private javax.swing.JButton btn_SaveDeck;
-    private javax.swing.JButton cardSlot1;
-    private javax.swing.JButton cardSlot2;
-    private javax.swing.JButton cardSlot3;
-    private javax.swing.JButton cardSlot4;
-    private javax.swing.JButton cardSlot5;
-    private javax.swing.JButton cardSlot6;
     private javax.swing.JComboBox<String> cb_Levels;
     private javax.swing.JLabel icon_AttackSpeed;
     private javax.swing.JLabel icon_CoolReduction;
@@ -2384,7 +3043,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JLabel icon_HealthRegen;
     private javax.swing.JLabel icon_Lifesteal;
     private javax.swing.JLabel icon_ManaRegen;
-    private javax.swing.JLabel icon_MaxHEalth;
+    private javax.swing.JLabel icon_MaxHealth;
     private javax.swing.JLabel icon_MaxMana;
     private javax.swing.JLabel icon_PhysicalArmor;
     private javax.swing.JLabel icon_PhysicalDamage;
@@ -2421,6 +3080,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JPanel panel_AlternateAbility;
     private javax.swing.JPanel panel_BasicAttack;
     private javax.swing.JLayeredPane panel_CardCountMain;
+    private javax.swing.JLayeredPane panel_CardCountSlot;
     private javax.swing.JPanel panel_DeckBuilder;
     private javax.swing.JPanel panel_DeckBuilderPanel;
     private javax.swing.JPanel panel_DeckListMain;
@@ -2439,6 +3099,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JPanel panel_cardSlots;
     private javax.swing.JPanel panel_radios;
     private javax.swing.JProgressBar progress_CardCount;
+    private javax.swing.JProgressBar progress_CardCountSlot;
     private javax.swing.JRadioButton radio_showActive;
     private javax.swing.JRadioButton radio_showPassive;
     private javax.swing.JRadioButton radio_showPrime;
@@ -2450,6 +3111,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedPane_MainTabbed;
     private javax.swing.JLabel tb_AttackSpeed;
     private javax.swing.JLabel tb_CardCount;
+    private javax.swing.JLabel tb_CardCountSlot;
     private javax.swing.JLabel tb_CoolReduction;
     private javax.swing.JLabel tb_CritBonus;
     private javax.swing.JLabel tb_CritChance;

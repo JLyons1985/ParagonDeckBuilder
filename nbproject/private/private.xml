@@ -5,10 +5,12 @@
         <group>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardButton.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonDeckBuilderMain.java</file>
+            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardSlotDialog.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCard.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonLayeredPane.java</file>
-            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonCardSlot.java</file>
             <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonDeck.java</file>
+            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonSplash.java</file>
+            <file>file:/C:/Users/jlyon/Documents/NetBeansProjects/ParagonDeckBuilder/src/com/lyonsdensoftware/paragon/ParagonHeroSelector.java</file>
         </group>
     </open-files>
 </project-private>

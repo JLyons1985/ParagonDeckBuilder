@@ -93,13 +93,18 @@ public class ParagonCardButton extends JButton {
         else
             id = String.valueOf(this.myCard.getId());
         
-        String imgPath = Paths.get("./Art/Cards/Beta_" + 
-                rarity + "_" + affinity + "_" + id + "_Full.png").toString();
+               
+        if (!Paths.get("./Art/Cards/Beta_" + rarity + "_" + affinity + "_" + id + "_Full.png").toFile().exists()) {
+            
+            System.out.println("Can't find: " + "/Art/Cards/Beta" + 
+                rarity + "_" + affinity + "_" + id + "_Full.png" + " " + this.myCard.getCardName());
+            
+            return "";
+        }
+        else
+            return "Beta_" + rarity + "_" + affinity + "_" + id + "_Full.png";
         
-        if (!Files.exists(Paths.get(imgPath)))
-            System.out.println("Can't find: " + imgPath + " " + this.myCard.getCardName());
         
-        return imgPath;
     }
 
     /**

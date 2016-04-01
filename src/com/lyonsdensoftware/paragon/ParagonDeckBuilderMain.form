@@ -3,6 +3,10 @@
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Paragon Deck Builder"/>
+    <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.ComponentChooserEditor">
+      <ComponentRef name="null"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -34,7 +38,6 @@
                               <Component id="Affinity1" min="-2" pref="40" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="Affinity2" min="-2" pref="40" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="cb_Levels" min="-2" pref="89" max="-2" attributes="0"/>
@@ -58,15 +61,19 @@
                       <Component id="panel_StatBonus1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="panel_StatBonus2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="tb_DeckName" min="-2" pref="193" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                              <Component id="tb_DeckName" min="-2" pref="193" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="btn_SaveDeck" min="-2" pref="93" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btn_LoadDeck" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="btn_LoadDeck" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -261,6 +268,10 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
@@ -416,6 +427,10 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
@@ -568,6 +583,10 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
@@ -720,6 +739,10 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>
@@ -874,6 +897,10 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel23">
               <Properties>
@@ -1064,7 +1091,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="panel_CardCountMain" max="32767" attributes="0"/>
                       <Component id="z_PrimeTitle" alignment="0" max="32767" attributes="0"/>
-                      <Component id="panel_PrimeSlot" alignment="0" pref="302" max="32767" attributes="0"/>
+                      <Component id="panel_PrimeSlot" alignment="0" pref="309" max="32767" attributes="0"/>
                       <Component id="z_EquipmentCardsTitle" alignment="0" max="32767" attributes="0"/>
                       <Component id="z_EquipmentCardsTitle1" alignment="0" max="32767" attributes="0"/>
                       <Component id="scrollpanel_EquipmentCards" alignment="0" max="32767" attributes="0"/>
@@ -1280,17 +1307,19 @@
                   <Group type="102" attributes="0">
                       <Component id="scrollPane_DeckSlotBuilder" min="-2" pref="968" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panel_cardSlots" max="32767" attributes="0"/>
+                      <Component id="panel_cardSlots" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="panel_cardSlots" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="scrollPane_DeckSlotBuilder" max="-2" attributes="0"/>
+                          <Component id="panel_cardSlots" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Component id="scrollPane_DeckSlotBuilder" alignment="0" min="-2" pref="675" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -1348,20 +1377,10 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cardSlot1" min="-2" pref="140" max="-2" attributes="0"/>
-                              <Component id="cardSlot3" min="-2" pref="140" max="-2" attributes="0"/>
-                              <Component id="cardSlot5" min="-2" pref="140" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="panel_CardCountSlot" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cardSlot2" min="-2" pref="140" max="-2" attributes="0"/>
-                              <Component id="cardSlot4" min="-2" pref="140" max="-2" attributes="0"/>
-                              <Component id="cardSlot6" min="-2" pref="140" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1369,76 +1388,70 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cardSlot1" min="-2" pref="187" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cardSlot3" min="-2" pref="187" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cardSlot5" min="-2" pref="187" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cardSlot2" min="-2" pref="187" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cardSlot4" min="-2" pref="187" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cardSlot6" min="-2" pref="187" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="panel_CardCountSlot" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="639" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="cardSlot2">
+                <Container class="javax.swing.JLayeredPane" name="panel_CardCountSlot">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                        <EtchetBorder/>
+                      </Border>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cardSlot1">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cardSlot3">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cardSlot4">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cardSlot6">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cardSlot5">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Comic Sans MS" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Empty"/>
-                  </Properties>
-                </Component>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="progress_CardCountSlot" alignment="0" pref="289" max="32767" attributes="0"/>
+                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tb_CardCountSlot" pref="269" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="progress_CardCountSlot" alignment="0" pref="39" max="32767" attributes="0"/>
+                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tb_CardCountSlot" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JProgressBar" name="progress_CardCountSlot">
+                      <Properties>
+                        <Property name="borderPainted" type="boolean" value="false"/>
+                        <Property name="opaque" type="boolean" value="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="tb_CardCountSlot">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Comic Sans MS" size="11" style="1"/>
+                        </Property>
+                        <Property name="horizontalAlignment" type="int" value="0"/>
+                        <Property name="text" type="java.lang.String" value="0 / 0"/>
+                        <Property name="toolTipText" type="java.lang.String" value=""/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="100"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -1531,6 +1544,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_SaveDeckActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_LoadDeck">
       <Properties>
@@ -1615,9 +1631,7 @@
         <Component class="javax.swing.JLabel" name="icon_MaxMana">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Max Mana"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1633,13 +1647,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_ManaRegen">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Max Regen"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1655,13 +1671,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_CoolReduction">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Cooldown Reduction"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1677,6 +1695,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -1759,7 +1781,7 @@
                                   <Component id="tb_HealthRegen" min="-2" pref="45" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="icon_MaxHEalth" max="-2" attributes="0"/>
+                                  <Component id="icon_MaxHealth" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="tb_MaxHealth" min="-2" pref="45" max="-2" attributes="0"/>
                               </Group>
@@ -1792,7 +1814,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="icon_MaxHEalth" alignment="0" max="32767" attributes="0"/>
+                              <Component id="icon_MaxHealth" alignment="0" max="32767" attributes="0"/>
                               <Component id="tb_MaxHealth" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1824,12 +1846,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="icon_MaxHEalth">
+        <Component class="javax.swing.JLabel" name="icon_MaxHealth">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Max Health"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1845,13 +1865,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_HealthRegen">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Health Regen"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1867,13 +1889,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_Lifesteal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Lifesteal"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1889,6 +1913,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel28">
           <Properties>
@@ -1944,9 +1972,7 @@
         <Component class="javax.swing.JLabel" name="icon_PhysicalArmor">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Physical Armour"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -1962,6 +1988,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="tb_PhysicalArmor">
           <Properties>
@@ -1994,9 +2024,7 @@
         <Component class="javax.swing.JLabel" name="icon_EnergyArmor">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Energy Armour"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2012,6 +2040,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -2127,9 +2159,7 @@
         <Component class="javax.swing.JLabel" name="icon_PhysicalDamage">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Physical Damage"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2145,13 +2175,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_EnergyDamage">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Energy Damage"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2167,13 +2199,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_CritChance">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Crit Chance"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2189,6 +2223,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel37">
           <Properties>
@@ -2244,9 +2282,7 @@
         <Component class="javax.swing.JLabel" name="icon_CritBonus">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Crit Bonus"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2262,6 +2298,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="tb_CritBonus">
           <Properties>
@@ -2294,9 +2334,7 @@
         <Component class="javax.swing.JLabel" name="icon_AttackSpeed">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Attack Speed"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2312,13 +2350,15 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icon_PhysicalPen">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Physical Penetration"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2334,6 +2374,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="tb_PhysicalPen">
           <Properties>
@@ -2366,9 +2410,7 @@
         <Component class="javax.swing.JLabel" name="icon_EnergyPen">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\jlyon\Documents\NetBeansProjects\ParagonDeckBuilder\Art\Stats\icon_Attack_Speed_128x.png"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Energy Penetration"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
@@ -2384,6 +2426,10 @@
               <Dimension value="[25, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_StatMouseExited"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

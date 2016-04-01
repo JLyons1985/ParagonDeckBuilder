@@ -48,11 +48,12 @@ public class ParagonMath {
      * @param heroName is the name of the hero to search for
      * @param ability string of the ability to calculate for
      * @param level int level of hero
+     * @param cardBonuses
      * @return double
      */
-    public static double getAttackDamage(String heroName, String ability, int level) {
+    public static double getAttackDamage(String heroName, String ability, int level, double[] cardBonuses ) {
                 
-        String abilityString = "", baseStat = "";
+        String abilityString = "", baseStat = "", damageType = "";
 
         //System.out.println(XmlParser.getHeroStatAtLevel(heroName, "AttackSpeedRating", level));
         //System.out.println(XmlParser.getHeroStatAtLevel(heroName, "BaseAttackTime", level));
@@ -80,6 +81,27 @@ public class ParagonMath {
                 break;
         }
         
+        switch (heroName) {
+            case "Howitzer":
+            case "Murdock":
+            case "Gideon":
+            case "Gadget":
+            case "Dekker":
+            case "Muriel":
+                damageType = "Energy";
+                break;
+            case "Kallari":
+            case "Rampage":
+            case "Steel":
+            case "FengMao":
+            case "TwinBlast":
+            case "Grux":
+            case "Sevarog":
+            case "Sparrow":
+                damageType = "Physical";
+                break;
+        }
+        
         double aoeRating, basePower, attackRatingCoeff, 
                 attackRating, damageBonusSource, damageBonusTarget, 
                 damageResistance, energyResistRating, energyPenetrationRating, 
@@ -89,7 +111,16 @@ public class ParagonMath {
         basePower = XmlParser.getHeroAbilityStat(heroName, ability, "BasePower." + abilityString, level);
         attackRatingCoeff = XmlParser.getHeroAbilityStat(heroName, ability, "ARC." + abilityString, level);
         attackRating = XmlParser.getHeroStatAtLevel(heroName, "AttackRating", level);
-        damageBonusSource = 1;          // Not sure about this so set at 1
+        if (damageType.equals("Energy")) {
+            if (cardBonuses[5] > 0)
+                basePower += cardBonuses[5];
+        }
+        else {
+            if (cardBonuses[13] > 0)
+                basePower += cardBonuses[13];
+        }
+        
+        damageBonusSource = 1;
         damageBonusTarget = 1;          // Not sure about this so set at 1
         damageResistance = 0;           // Not sure about this so set at 0
         energyResistRating = XmlParser.getHeroStatAtLevel(heroName, "EnergyResistanceRating", level);

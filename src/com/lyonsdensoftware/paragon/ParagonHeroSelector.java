@@ -1,7 +1,13 @@
 
 package com.lyonsdensoftware.paragon;
 
+import java.awt.Image;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -10,6 +16,7 @@ import java.nio.file.Paths;
 public class ParagonHeroSelector extends javax.swing.JDialog {
     
     private ParagonDeckBuilderMain mainScreen;          // Reference to the main screen     
+    private final int IMGPADDING = 20;
 
     /**
      * Creates new form ParagonHeroSelector
@@ -19,6 +26,97 @@ public class ParagonHeroSelector extends javax.swing.JDialog {
         this.mainScreen = (ParagonDeckBuilderMain) parent;
         initComponents();
         myInit();
+        
+        this.setVisible(true);
+    }
+    
+    /**
+     * Init the buttons with images
+     */
+    public void myInit() {
+        
+        try {
+            // Set popup loc
+            this.setLocation(this.mainScreen.getBtnHeroSelectLocation());
+            
+            //BufferedImage tmp;
+            Image tmp;
+            
+            
+            // Default
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Default.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);            
+            this.btn_HeroDefault.setIcon(new ImageIcon(tmp));
+            
+            // Dekker
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Dekker.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroDekker.setIcon(new ImageIcon(tmp));
+            
+            // FengMao
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/FengMao.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroFengMao.setIcon(new ImageIcon(tmp));
+            
+            // Gadget
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Gadget.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroGadget.setIcon(new ImageIcon(tmp));
+            
+            // Gideon
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Gideon.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroGideon.setIcon(new ImageIcon(tmp));
+            
+            // Grux
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Grux.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroGrux.setIcon(new ImageIcon(tmp));
+            
+            // Howitzer
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Howitzer.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroHowitzer.setIcon(new ImageIcon(tmp));
+            
+            // Kallari
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Kallari.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroKallari.setIcon(new ImageIcon(tmp));
+            
+            // Murdock
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Murdock.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroMurdock.setIcon(new ImageIcon(tmp));
+            
+            // Muriel
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Muriel.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroMuriel.setIcon(new ImageIcon(tmp));
+            
+            // Rampage
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Rampage.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroRampage.setIcon(new ImageIcon(tmp));
+            
+            // Sparrow
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Sparrow.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroSparrow.setIcon(new ImageIcon(tmp));
+            
+            // Steel
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/Steel.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroSteel.setIcon(new ImageIcon(tmp));
+            
+            // TwinBlast
+            tmp = ImageIO.read(Paths.get("./Art/Heroes/TwinBlast.png").toFile()).getScaledInstance(this.btn_HeroDefault.getWidth() - this.IMGPADDING, 
+                    this.btn_HeroDefault.getHeight() - this.IMGPADDING, Image.SCALE_FAST);
+            this.btn_HeroTwinBlast.setIcon(new ImageIcon(tmp));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ParagonHeroSelector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -53,6 +151,7 @@ public class ParagonHeroSelector extends javax.swing.JDialog {
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
+        btn_HeroDefault.setPreferredSize(new java.awt.Dimension(100, 100));
         btn_HeroDefault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_HeroDefaultActionPerformed(evt);
@@ -323,71 +422,7 @@ public class ParagonHeroSelector extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btn_HeroTwinBlastActionPerformed
 
-    /**
-     * Init the buttons with images
-     */
-    public void myInit() {
-        
-        // Set popup loc
-        this.setLocation(this.mainScreen.getBtnHeroSelectLocation());
-        
-        // Default
-        String imgPath = Paths.get("./Art/Heroes/Default.png").toString();        
-        this.btn_HeroDefault.setIcon(new StretchIcon(imgPath));
-        
-        // Dekker
-        imgPath = Paths.get("./Art/Heroes/Dekker.png").toString();        
-        this.btn_HeroDekker.setIcon(new StretchIcon(imgPath));
-        
-        // FengMao
-        imgPath = Paths.get("./Art/Heroes/FengMao.png").toString();        
-        this.btn_HeroFengMao.setIcon(new StretchIcon(imgPath));
-        
-        // Gadget
-        imgPath = Paths.get("./Art/Heroes/Gadget.png").toString();        
-        this.btn_HeroGadget.setIcon(new StretchIcon(imgPath));
-        
-        // Gideon
-        imgPath = Paths.get("./Art/Heroes/Gideon.png").toString();        
-        this.btn_HeroGideon.setIcon(new StretchIcon(imgPath));
-        
-        // Grux
-        imgPath = Paths.get("./Art/Heroes/Grux.png").toString();        
-        this.btn_HeroGrux.setIcon(new StretchIcon(imgPath));
-        
-        // Howitzer
-        imgPath = Paths.get("./Art/Heroes/Howitzer.png").toString();        
-        this.btn_HeroHowitzer.setIcon(new StretchIcon(imgPath));
-        
-        // Kallari
-        imgPath = Paths.get("./Art/Heroes/Kallari.png").toString();        
-        this.btn_HeroKallari.setIcon(new StretchIcon(imgPath));
-        
-        // Murdock
-        imgPath = Paths.get("./Art/Heroes/Murdock.png").toString();        
-        this.btn_HeroMurdock.setIcon(new StretchIcon(imgPath));
-        
-        // Muriel
-        imgPath = Paths.get("./Art/Heroes/Muriel.png").toString();        
-        this.btn_HeroMuriel.setIcon(new StretchIcon(imgPath));
-        
-        // Rampage
-        imgPath = Paths.get("./Art/Heroes/Rampage.png").toString();        
-        this.btn_HeroRampage.setIcon(new StretchIcon(imgPath));
-        
-        // Sparrow
-        imgPath = Paths.get("./Art/Heroes/Sparrow.png").toString();        
-        this.btn_HeroSparrow.setIcon(new StretchIcon(imgPath));
-        
-        // Steel
-        imgPath = Paths.get("./Art/Heroes/Steel.png").toString();        
-        this.btn_HeroSteel.setIcon(new StretchIcon(imgPath));
-        
-        // TwinBlast
-        imgPath = Paths.get("./Art/Heroes/TwinBlast.png").toString();        
-        this.btn_HeroTwinBlast.setIcon(new StretchIcon(imgPath));
-        
-    }
+    
     
     /**
      * @param args the command line arguments
@@ -426,7 +461,7 @@ public class ParagonHeroSelector extends javax.swing.JDialog {
                         System.exit(0);
                     }
                 });
-                dialog.setVisible(true);
+                
             }
         });
     }
