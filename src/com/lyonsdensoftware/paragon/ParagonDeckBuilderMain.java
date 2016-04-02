@@ -53,11 +53,12 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         
         this.splash = splash;
         
-        //this.splash.LoaderText.setText("Initiating components.......");
+        this.splash.setLoaderText("Initiating components.......");
         initComponents();
         
         centreWindow(this);
         
+        this.splash.setLoaderText("Building the master deck.......");
         this.myInit();
         
         this.splash.dispose();
@@ -75,7 +76,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.masterDeck = new ParagonDeck(true);
         
         // New deck
-        //this.splash.setLoaderText("Building the master deck.......");
+        this.splash.setLoaderText("Building the master deck.......");
         this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck, this.myHero.getName());
         this.tb_DeckName.setText("New Deck");
         
@@ -2969,9 +2970,7 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
              
-        final ParagonSplash tmp = new ParagonSplash();
-        centreWindow(tmp);
-        tmp.setVisible(true);
+        
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -2997,11 +2996,14 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        //java.awt.EventQueue.invokeLater(new Runnable() {
+            //public void run() {
+                ParagonSplash tmp = new ParagonSplash();
+                centreWindow(tmp);
+                tmp.setVisible(true);
                 new ParagonDeckBuilderMain(tmp).setVisible(true);
-            }
-        });
+            //}
+        //});
         
         
     }
