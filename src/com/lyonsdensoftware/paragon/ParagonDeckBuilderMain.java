@@ -73,10 +73,10 @@ public class ParagonDeckBuilderMain extends javax.swing.JFrame {
         this.cb_Levels.setModel(new javax.swing.DefaultComboBoxModel(this.getLevels()));
         
         // Create the master deck
-        this.masterDeck = new ParagonDeck(true);
+        this.masterDeck = new ParagonDeck(true, this.splash);
         
         // New deck
-        this.splash.setLoaderText("Building the master deck.......");
+        this.splash.setLoaderText("Building the starter deck.......");
         this.deckBeingCreated = ParagonDeck.buildStarterDeck(this.masterDeck, this.myHero.getName());
         this.tb_DeckName.setText("New Deck");
         

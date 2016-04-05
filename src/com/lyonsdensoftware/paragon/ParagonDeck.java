@@ -45,10 +45,10 @@ public class ParagonDeck implements Iterable<ParagonCard>, java.io.Serializable 
      * Deck constructor to construct the master deck
      * @param isMasterDeck tells the object it holds all the cards
      */
-    public ParagonDeck(boolean isMasterDeck) {
+    public ParagonDeck(boolean isMasterDeck, ParagonSplash splash) {
         this.isMasterDeck = isMasterDeck;
         if (isMasterDeck) {
-            this.cards = XmlParser.getAllCards();
+            this.cards = XmlParser.getAllCards(splash);
             this.cardCount = this.cards.size();
         }
         else

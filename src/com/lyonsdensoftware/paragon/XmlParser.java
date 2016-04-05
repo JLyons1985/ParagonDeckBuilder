@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ public class XmlParser {
      * Returns an array of cards with the basic info pulled from the card xml file
      * @return array of PAragonCard
      */
-    public static LinkedList<ParagonCard> getAllCards(){
+    public static LinkedList<ParagonCard> getAllCards(ParagonSplash splash){
         
         LinkedList<ParagonCard> allCards;
         
@@ -53,9 +54,16 @@ public class XmlParser {
             
             // Create a card linked list for the cards
             allCards = new LinkedList<ParagonCard>();
+            int listSize = nList.getLength();
+            float percentDone;
             
             // Now loop through the list and add the cards to the array
-            for (int i = 0; i < nList.getLength(); i++) {
+            for (int i = 0; i < listSize; i++) {
+                
+                percentDone = (((float) i / (float) listSize) * 100);
+                DecimalFormat df = new DecimalFormat("#");
+                
+                splash.setLoaderText("Building the master deck......." + df.format(percentDone) + "%");
                 
                 Node nNode = nList.item(i);
                 Element elem = (Element) nNode;

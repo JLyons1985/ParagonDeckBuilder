@@ -67,8 +67,7 @@ public class ParagonSplash extends javax.swing.JFrame {
      */
     public void setLoaderText(String text) {
         this.loaderText.setText(text);
-        //pane.revalidate();
-        //pane.repaint();
+        this.loaderText.repaint();
         
     }
 
